@@ -17,6 +17,7 @@ import hu.logcontrol.wasteprogram.enums.ActivityEnums;
 import hu.logcontrol.wasteprogram.interfaces.IModesOneView;
 import hu.logcontrol.wasteprogram.interfaces.IProgramPresenter;
 import hu.logcontrol.wasteprogram.interfaces.IMainView;
+import hu.logcontrol.wasteprogram.interfaces.IRawMaterialCreationView;
 import hu.logcontrol.wasteprogram.logger.ApplicationLogger;
 import hu.logcontrol.wasteprogram.logger.LogLevel;
 import hu.logcontrol.wasteprogram.taskmanager.CustomThreadPoolManager;
@@ -26,6 +27,7 @@ public class ProgramPresenter implements IProgramPresenter, PresenterThreadCallb
 
     private IMainView iMainView;
     private IModesOneView iModesOneView;
+    private IRawMaterialCreationView iRawMaterialCreationView;
 
     private Context context;
     private CustomThreadPoolManager mCustomThreadPoolManager;
@@ -38,6 +40,11 @@ public class ProgramPresenter implements IProgramPresenter, PresenterThreadCallb
 
     public ProgramPresenter(IModesOneView iModesOneView, Context context) {
         this.iModesOneView = iModesOneView;
+        this.context = context;
+    }
+
+    public ProgramPresenter(IRawMaterialCreationView iRawMaterialCreationView, Context context) {
+        this.iRawMaterialCreationView = iRawMaterialCreationView;
         this.context = context;
     }
 
