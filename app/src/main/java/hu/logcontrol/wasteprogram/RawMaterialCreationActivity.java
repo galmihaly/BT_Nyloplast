@@ -138,7 +138,6 @@ public class RawMaterialCreationActivity extends AppCompatActivity implements IR
             {
                 if(rawMatCountTextBox != null ||rawMatTypeTextBox != null){
                     if(rawMatCountTextBox.isFocused()){
-                        hideSwitch = false;
                         clearRawMatCountTextBox();
                     }
                     else if(rawMatTypeTextBox.isFocused()){
