@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DesignSurface">
+    <option name="filePathToZoomLevelMap">
+      <map>
+        <entry key="..\:/Munka/Waste/Waste/program/app/src/main/res/drawable/add_button_background.xml" value="0.2985" />
+        <entry key="..\:/Munka/Waste/Waste/program/app/src/main/res/drawable/delete_button_background.xml" value="0.2985" />
+        <entry key="..\:/Munka/Waste/Waste/program/app/src/main/res/drawable/delete_icon.xml" value="0.2985" />
+        <entry key="..\:/Munka/Waste/Waste/program/app/src/main/res/drawable/ic_delete_icon.xml" value="0.2985" />
+        <entry key="..\:/Munka/Waste/Waste/program/app/src/main/res/drawable/modesbuttons_background.xml" value="0.2985" />
+        <entry key="..\:/Munka/Waste/Waste/program/app/src/main/res/layout/activity_main.xml" value="0.25" />
+        <entry key="..\:/Munka/Waste/Waste/program/app/src/main/res/layout/activity_modes_one.xml" value="0.33" />
+        <entry key="..\:/Munka/Waste/Waste/program/app/src/main/res/layout/activity_raw_material_creation.xml" value="0.27853260869565216" />
+        <entry key="..\:/Munka/Waste/Waste/program/app/src/main/res/layout/modes1.xml" value="0.4282238442822384" />
+      </map>
+    </option>
+  </component>
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="Android Studio default JDK" project-jdk-type="JavaSDK">
+    <output url="file://$PROJECT_DIR$/build/classes" />
+  </component>
+  <component name="ProjectType">
+    <option name="id" value="Android" />
+  </component>
+</project>
