@@ -32,6 +32,8 @@ public class RawMaterialCreationActivity extends AppCompatActivity implements IR
 
     private ProgramPresenter programPresenter;
 
+    private boolean hideSwitch = true;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -79,8 +81,11 @@ public class RawMaterialCreationActivity extends AppCompatActivity implements IR
                     else {
 
                         rawMatCountCL.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.cardview_green_background));
+                        rawMatCountTextBox.clearFocus();
 
-                        if(rawMatTypeTextBox != null) rawMatTypeTextBox.requestFocus();
+                        if(hideSwitch){
+                            if(rawMatTypeTextBox != null) rawMatTypeTextBox.requestFocus();
+                        }
                         if(rawMaterialTypeCV != null)showRawMaterialTypeCV();
                         if(addRawMatButton != null) setBackgroundAddRawMatButton(false);
                     }
@@ -122,21 +127,29 @@ public class RawMaterialCreationActivity extends AppCompatActivity implements IR
                 }
             });
         }
-
-        Log.e("CL", String.valueOf(2));
     }
 
     @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
+    public boolean onKeyUp(int keyCode, KeyEvent event) {
+
         Log.e("", String.valueOf(keyCode));
         switch (keyCode) {
-            case KeyEvent.KEYCODE_A:
+            case 67:
             {
-                //your Action code
-                return true;
+                if(rawMatCountTextBox != null ||rawMatTypeTextBox != null){
+                    if(rawMatCountTextBox.isFocused()){
+                        hideSwitch = false;
+                        clearRawMatCountTextBox();
+                    }
+                    else if(rawMatTypeTextBox.isFocused()){
+                        clearRawMatTypeTextBox();
+                    }
+                }
+                break;
             }
         }
-        return super.onKeyDown(keyCode, event);
+
+        return super.onKeyUp(keyCode, event);
     }
 
     private void initView() {
@@ -162,6 +175,11 @@ public class RawMaterialCreationActivity extends AppCompatActivity implements IR
     private void clearRawMatTypeTextBox(){
         if(rawMatTypeTextBox == null) return;
         if(!rawMatTypeTextBox.getText().toString().equals("")) rawMatTypeTextBox.setText("");
+    }
+
+    private void clearRawMatCountTextBox() {
+        if(rawMatCountTextBox == null) return;
+        if(!rawMatCountTextBox.getText().toString().equals("")) rawMatCountTextBox.setText("");
     }
 
     private void showRawMaterialTypeCV() {
