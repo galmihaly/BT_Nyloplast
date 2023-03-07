@@ -1,5 +1,6 @@
 package hu.logcontrol.wasteprogram.adapters;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -13,16 +14,15 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.List;
 import java.util.Locale;
 
+import hu.logcontrol.wasteprogram.models.LocalRawMaterialsStorage;
 import hu.logcontrol.wasteprogram.models.RawMaterial;
 import hu.logcontrol.wasteprogram.R;
 
 public class RawMaterialAdapter extends RecyclerView.Adapter<RawMaterialAdapter.RawMaterialItemViewHolder> {
 
-    private Context context;
     private List<RawMaterial> rawMaterialList;
 
-    public RawMaterialAdapter(Context context, List<RawMaterial> rawMaterialList) {
-        this.context = context.getApplicationContext();
+    public RawMaterialAdapter(List<RawMaterial> rawMaterialList) {
         this.rawMaterialList = rawMaterialList;
     }
 
@@ -35,12 +35,24 @@ public class RawMaterialAdapter extends RecyclerView.Adapter<RawMaterialAdapter.
         return new RawMaterialItemViewHolder(v);
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     public void onBindViewHolder(@NonNull RawMaterialItemViewHolder holder, int position) {
+
+        for (int i = 0; i < rawMaterialList.size(); i++) {
+            Log.d("adapter", rawMaterialList.get(i).getMaterialType());
+        }
+
         if(rawMaterialList != null){
+
+            for (int i = 0; i < rawMaterialList.size(); i++) {
+                Log.d("adapter", rawMaterialList.get(i).getMaterialType());
+            }
+
             holder.getRawMaterialTimeStampInput().setText(rawMaterialList.get(position).getDate());
             holder.getRawMaterialTypeInput().setText(rawMaterialList.get(position).getMaterialType());
             holder.getRawMaterialCountInput().setText(rawMaterialList.get(position).getDoseNumber());
+            holder.getNumberOfItem().setText(position + 1 + ".");
         }
     }
 
@@ -54,6 +66,7 @@ public class RawMaterialAdapter extends RecyclerView.Adapter<RawMaterialAdapter.
         private TextView rawMaterialTimeStampInput;
         private TextView rawMaterialTypeInput;
         private TextView rawMaterialCountInput;
+        private TextView numberOfItem;
 
         public RawMaterialItemViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -61,6 +74,7 @@ public class RawMaterialAdapter extends RecyclerView.Adapter<RawMaterialAdapter.
             rawMaterialTimeStampInput = itemView.findViewById(R.id.rawMaterialTimeStampInput);
             rawMaterialTypeInput = itemView.findViewById(R.id.rawMaterialTypeInput);
             rawMaterialCountInput = itemView.findViewById(R.id.rawMaterialCountInput);
+            numberOfItem = itemView.findViewById(R.id.numberOfItem);
         }
 
         public TextView getRawMaterialTimeStampInput() {
@@ -73,6 +87,10 @@ public class RawMaterialAdapter extends RecyclerView.Adapter<RawMaterialAdapter.
 
         public TextView getRawMaterialCountInput() {
             return rawMaterialCountInput;
+        }
+
+        public TextView getNumberOfItem() {
+            return numberOfItem;
         }
     }
 }

@@ -43,6 +43,7 @@ public class ProgramPresenter implements IProgramPresenter, PresenterThreadCallb
     public ProgramPresenter(IMainView iMainView, Context context) {
         this.iMainView = iMainView;
         this.context = context.getApplicationContext();
+        this.rawMaterialList = new ArrayList<>();
     }
 
     public ProgramPresenter(IModesOneView iModesOneView, Context context) {
@@ -106,10 +107,7 @@ public class ProgramPresenter implements IProgramPresenter, PresenterThreadCallb
     }
 
     @Override
-    public void addRawMaterialToAdapterList(RawMaterial rawMaterial, List<RawMaterial> rawMaterialList) {
-
-        rawMaterialList.add(rawMaterial);
-        sendAdapterToView(rawMaterialList);
+    public void addRawMaterialToAdapterList(RawMaterial rawMaterial) {
 
 //        for (int i = 0; i < rawMaterialList.size(); i++) {
 //            Log.e("presenter", rawMaterialList.get(i).getDate());
@@ -120,7 +118,7 @@ public class ProgramPresenter implements IProgramPresenter, PresenterThreadCallb
         try {
             ApplicationLogger.logging(LogLevel.INFORMATION, "A RawMaterial objetum hozzáadása az Adapter listájához elkezdődött.");
 
-            CreateRawMaterialList callable = new CreateRawMaterialList(rawMaterial, rawMaterialList);
+            CreateRawMaterialList callable = new CreateRawMaterialList(rawMaterial);
             callable.setCustomThreadPoolManager(mCustomThreadPoolManager);
             mCustomThreadPoolManager.addCallableMethod(callable);
 
@@ -133,9 +131,9 @@ public class ProgramPresenter implements IProgramPresenter, PresenterThreadCallb
     }
 
     @Override
-    public void sendAdapterToView(List<RawMaterial> rawMaterialList) {
+    public void sendAdapterToView() {
         if(iModesOneView == null) return;
-        iModesOneView.getAdapterFromPresenter(rawMaterialList);
+        iModesOneView.getAdapterFromPresenter();
     }
 
     @Override
@@ -160,10 +158,7 @@ public class ProgramPresenter implements IProgramPresenter, PresenterThreadCallb
 
             switch (msg.what){
                 case HandlerMessageIdentifiers.ADAPTER_CREATED:{
-
-                    if(msg.obj instanceof List){
-                        iProgramPresenterWeakReference.get().sendAdapterToView((List) msg.obj);
-                    }
+                    iProgramPresenterWeakReference.get().sendAdapterToView();
                     break;
                 }
             }

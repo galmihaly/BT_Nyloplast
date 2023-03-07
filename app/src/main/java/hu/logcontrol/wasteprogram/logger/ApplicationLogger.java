@@ -177,7 +177,7 @@ public class ApplicationLogger {
     }
 
     @SuppressLint("SimpleDateFormat")
-    private static String getUTCDateTimeString(){
+    public static String getUTCDateTimeString(){
 
         String result = null;
 

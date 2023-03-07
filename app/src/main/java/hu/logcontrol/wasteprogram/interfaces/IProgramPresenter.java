@@ -10,6 +10,6 @@ public interface IProgramPresenter {
     void initTaskManager();
     void openActivityByEnum(ActivityEnums activityEnum);
     void exitApplicationPresenter();
-    void addRawMaterialToAdapterList(RawMaterial rawMaterial, List<RawMaterial> rawMaterialList);
-    void sendAdapterToView(List<RawMaterial> rawMaterialList);
+    void addRawMaterialToAdapterList(RawMaterial rawMaterial);
+    void sendAdapterToView();
 }

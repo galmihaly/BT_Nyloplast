@@ -18,6 +18,8 @@ import hu.logcontrol.wasteprogram.adapters.RawMaterialAdapter;
 import hu.logcontrol.wasteprogram.enums.ActivityEnums;
 import hu.logcontrol.wasteprogram.helpers.Helper;
 import hu.logcontrol.wasteprogram.interfaces.IModesOneView;
+import hu.logcontrol.wasteprogram.logger.ApplicationLogger;
+import hu.logcontrol.wasteprogram.models.LocalRawMaterialsStorage;
 import hu.logcontrol.wasteprogram.models.RawMaterial;
 import hu.logcontrol.wasteprogram.presenters.ProgramPresenter;
 
@@ -29,8 +31,8 @@ public class ModesOne extends AppCompatActivity implements IModesOneView {
 
     private RecyclerView recycleViewModesOneRV;
 
+    private List<RawMaterial> rawMaterialListView;
     private RawMaterialAdapter rawMaterialAdapter;
-    private List<RawMaterial> rawMaterialListView = new ArrayList<>();
 
     ActivityResultLauncher<Intent> activityResultLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
@@ -41,9 +43,9 @@ public class ModesOne extends AppCompatActivity implements IModesOneView {
                     String rawMatTypeTextBox = intent.getStringExtra("rawMatTypeTextBox");
                     String rawMatCountTextBox = intent.getStringExtra("rawMatCountTextBox");
 
-                    RawMaterial rawMaterial = new RawMaterial(Helper.getReadableTime(),rawMatTypeTextBox, rawMatCountTextBox);
+                    RawMaterial rawMaterial = new RawMaterial(ApplicationLogger.getUTCDateTimeString(),rawMatTypeTextBox, rawMatCountTextBox);
 
-                    programPresenter.addRawMaterialToAdapterList(rawMaterial, rawMaterialListView);
+                    programPresenter.addRawMaterialToAdapterList(rawMaterial);
                 }
             }
     );
@@ -53,8 +55,11 @@ public class ModesOne extends AppCompatActivity implements IModesOneView {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_modes_one);
         initView();
+
         programPresenter = new ProgramPresenter(this, getApplicationContext());
         programPresenter.initTaskManager();
+
+        rawMaterialListView = LocalRawMaterialsStorage.getInstance().getRawMaterialList();
     }
 
     @Override
@@ -64,7 +69,6 @@ public class ModesOne extends AppCompatActivity implements IModesOneView {
         if(programPresenter != null){
             if(addButton != null){
                 addButton.setOnClickListener(view -> {
-                    Log.e("", String.valueOf(rawMaterialListView.size()));
                     programPresenter.openActivityByEnum(ActivityEnums.RawMaterialCreationActivity);
                 });
             }
@@ -74,6 +78,9 @@ public class ModesOne extends AppCompatActivity implements IModesOneView {
                 });
             }
         }
+
+        rawMaterialAdapter = new RawMaterialAdapter(rawMaterialListView);
+        recycleViewModesOneRV.setAdapter(rawMaterialAdapter);
     }
 
     @Override
@@ -82,13 +89,16 @@ public class ModesOne extends AppCompatActivity implements IModesOneView {
     }
 
     @Override
-    public void getAdapterFromPresenter(List<RawMaterial> rawMaterialList) {
-        if(recycleViewModesOneRV == null) return;
+    public void getAdapterFromPresenter() {
+        //if(recycleViewModesOneRV == null) return;
 
-        RawMaterialAdapter rawMaterialAdapter = new RawMaterialAdapter(getApplicationContext(), rawMaterialList);
-        recycleViewModesOneRV.setAdapter(rawMaterialAdapter);
-        recycleViewModesOneRV.setLayoutManager(new LinearLayoutManager(this));
+//        for (int i = 0; i < rawMaterialListView.size(); i++) {
+//            Log.e("", rawMaterialListView.get(i).getDate());
+//            Log.e("", rawMaterialListView.get(i).getMaterialType());
+//            Log.e("", rawMaterialListView.get(i).getDoseNumber());
+//        }
 
+        Log.e("", "rv után");
     }
 
     private void initView() {
@@ -97,5 +107,6 @@ public class ModesOne extends AppCompatActivity implements IModesOneView {
         backButton = findViewById(R.id.backButton);
 
         recycleViewModesOneRV = findViewById(R.id.recycleViewModesOneRV);
+        recycleViewModesOneRV.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
     }
 }

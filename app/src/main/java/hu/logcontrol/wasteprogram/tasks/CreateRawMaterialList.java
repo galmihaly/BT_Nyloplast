@@ -10,6 +10,7 @@ import java.util.concurrent.Callable;
 import hu.logcontrol.wasteprogram.adapters.RawMaterialAdapter;
 import hu.logcontrol.wasteprogram.enums.HandlerMessageIdentifiers;
 import hu.logcontrol.wasteprogram.helpers.Helper;
+import hu.logcontrol.wasteprogram.models.LocalRawMaterialsStorage;
 import hu.logcontrol.wasteprogram.models.RawMaterial;
 import hu.logcontrol.wasteprogram.taskmanager.CustomThreadPoolManager;
 
@@ -25,9 +26,8 @@ public class CreateRawMaterialList implements Callable {
         this.customThreadPoolManagerWeakReference = new WeakReference<>(customThreadPoolManager);
     }
 
-    public CreateRawMaterialList(RawMaterial rawMaterial, List<RawMaterial> rawMaterialList) {
+    public CreateRawMaterialList(RawMaterial rawMaterial) {
         this.rawMaterial = rawMaterial;
-        this.rawMaterialList = rawMaterialList;
     }
 
     @Override
@@ -35,17 +35,18 @@ public class CreateRawMaterialList implements Callable {
         try {
             if (Thread.interrupted()) throw new InterruptedException();
 
-            for (int i = 0; i < rawMaterialList.size(); i++) {
-                Log.e("task", rawMaterialList.get(i).getDate());
-                Log.e("task", rawMaterialList.get(i).getMaterialType());
-                Log.e("task", rawMaterialList.get(i).getDoseNumber());
-            }
+            rawMaterialList = LocalRawMaterialsStorage.getInstance().getRawMaterialList();
 
             if(rawMaterialList != null) {
                 rawMaterialList.add(rawMaterial);
 
+                for (int i = 0; i < rawMaterialList.size(); i++) {
+                    Log.e("task", rawMaterialList.get(i).getDate());
+                    Log.e("task", rawMaterialList.get(i).getMaterialType());
+                    Log.e("task", rawMaterialList.get(i).getDoseNumber());
+                }
+
                 message = Helper.createMessage(HandlerMessageIdentifiers.ADAPTER_CREATED, "Az adapter lista létrehozása sikerült!");
-                message.obj = rawMaterialList;
             }
 
             if(customThreadPoolManagerWeakReference != null && customThreadPoolManagerWeakReference.get() != null) {

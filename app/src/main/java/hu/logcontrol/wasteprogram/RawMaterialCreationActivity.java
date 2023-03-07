@@ -6,16 +6,14 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
-import android.view.KeyEvent;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 
-import hu.logcontrol.wasteprogram.interfaces.IRawMaterialCreationView;
 import hu.logcontrol.wasteprogram.presenters.ProgramPresenter;
 
 public class RawMaterialCreationActivity extends AppCompatActivity {
@@ -29,8 +27,9 @@ public class RawMaterialCreationActivity extends AppCompatActivity {
     private EditText rawMatCountTextBox;
     private EditText rawMatTypeTextBox;
 
-    private Button addRawMatButton;
-    private Button backRawMatButton;
+    private ImageButton addRawMatButton;
+    private ImageButton deleteRawButton;
+    private ImageButton backRawButton;
 
     private ProgramPresenter programPresenter;
 
@@ -58,8 +57,27 @@ public class RawMaterialCreationActivity extends AppCompatActivity {
             });
         }
 
-        if(backRawMatButton != null){
-            backRawMatButton.setOnClickListener(view -> {
+        if(deleteRawButton != null){
+            deleteRawButton.setOnClickListener(view -> {
+                if(rawMaterialTypeCV != null){
+                    rawMatCountTextBox.setEnabled(true);
+                    rawMatCountTextBox.requestFocus();
+                    rawMatTypeTextBox.setText("");
+                    rawMatCountTextBox.setText("");
+                    rawMaterialTypeCV.setVisibility(View.INVISIBLE);
+                }
+            });
+        }
+
+        if(backRawButton != null){
+            backRawButton.setOnClickListener(view -> {
+                Intent intent = new Intent(getApplicationContext(), ModesOne.class);
+                startActivity(intent);
+            });
+        }
+
+        if(deleteRawButton != null){
+            deleteRawButton.setOnClickListener(view -> {
                 if(rawMaterialTypeCV != null){
                     rawMatCountTextBox.setEnabled(true);
                     rawMatCountTextBox.requestFocus();
@@ -93,19 +111,20 @@ public class RawMaterialCreationActivity extends AppCompatActivity {
                         }
 
                         if(addRawMatButton != null) setBackgroundAddRawMatButton(false);
-                        if(backRawMatButton != null) setBackgroundBackRawMatButton(false);
+                        if(deleteRawButton != null) setBackgroundBackRawMatButton(false);
                     }
                     else {
 
                         rawMatCountCL.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.cardview_green_background));
                         rawMatCountTextBox.setEnabled(false);
+                        rawMatCountTextBox.setTextColor(Color.parseColor("#B7C0C1"));
 
                         if(rawMaterialTypeCV != null) {
                             rawMaterialTypeCV.setVisibility(View.VISIBLE);
                             rawMatTypeTextBox.setEnabled(true);
                             rawMatTypeTextBox.requestFocus();
                         }
-                        if(backRawMatButton != null) setBackgroundBackRawMatButton(true);
+                        if(deleteRawButton != null) setBackgroundBackRawMatButton(true);
                     }
                 }
 
@@ -137,6 +156,7 @@ public class RawMaterialCreationActivity extends AppCompatActivity {
                     else {
                         rawMatTypeCL.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.cardview_green_background));
                         rawMatTypeTextBox.setEnabled(false);
+                        rawMatTypeTextBox.setTextColor(Color.parseColor("#B7C0C1"));
                         setBackgroundAddRawMatButton(true);
                     }
                 }
@@ -162,7 +182,8 @@ public class RawMaterialCreationActivity extends AppCompatActivity {
         rawMatTypeCL = findViewById(R.id.rawMatTypeCL);
 
         addRawMatButton = findViewById(R.id.addRawMatButton);
-        backRawMatButton = findViewById(R.id.backRawMatButton);
+        deleteRawButton = findViewById(R.id.deleteRawButton);
+        backRawButton = findViewById(R.id.backRawButton);
     }
 
     private void setBackgroundAddRawMatButton(boolean value){
@@ -170,26 +191,26 @@ public class RawMaterialCreationActivity extends AppCompatActivity {
 
         if(value){
             addRawMatButton.setEnabled(true);
-            addRawMatButton.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.cardview_green_background));
+            addRawMatButton.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.add_button_background));
         }
         else
         {
             addRawMatButton.setEnabled(false);
-            addRawMatButton.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.cardview_red_background));
+            addRawMatButton.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.disable_button_background));
         }
     }
 
     private void setBackgroundBackRawMatButton(boolean value) {
-        if(backRawMatButton == null) return;
+        if(deleteRawButton == null) return;
 
         if(value){
-            backRawMatButton.setEnabled(true);
-            backRawMatButton.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.cardview_green_background));
+            deleteRawButton.setEnabled(true);
+            deleteRawButton.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.delete_button_background));
         }
         else
         {
-            backRawMatButton.setEnabled(false);
-            backRawMatButton.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.cardview_red_background));
+            deleteRawButton.setEnabled(false);
+            deleteRawButton.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.disable_button_background));
         }
     }
 }
