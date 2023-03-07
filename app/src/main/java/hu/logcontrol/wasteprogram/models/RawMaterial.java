@@ -5,15 +5,21 @@ import java.util.TimeZone;
 
 public class RawMaterial {
 
-    private Date date;
+    private String date;
     private String doseNumber;
     private String materialType;
 
-    public Date getDate() {
+    public RawMaterial(String date, String doseNumber, String materialType) {
+        this.date = date;
+        this.doseNumber = doseNumber;
+        this.materialType = materialType;
+    }
+
+    public String getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(String date) {
         this.date = date;
     }
 

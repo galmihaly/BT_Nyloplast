@@ -13,16 +13,38 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
 
-        <Button
-            android:id="@+id/addRawMatButton"
-            android:layout_width="110dp"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/cardview_red_background"
-            android:text="Hozzáadás"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent">
+
+            <Button
+                android:id="@+id/backRawMatButton"
+                android:layout_width="110dp"
+                android:layout_height="wrap_content"
+                android:background="@drawable/cardview_red_background"
+                android:text="MÉGSEM"
+                android:textColor="@color/black"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <Button
+                android:id="@+id/addRawMatButton"
+                android:layout_width="110dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="20dp"
+                android:background="@drawable/cardview_red_background"
+                android:text="Hozzáadás"
+                android:textColor="@color/black"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/backRawMatButton"
+                app:layout_constraintTop_toTopOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.cardview.widget.CardView
@@ -47,6 +69,7 @@
                 android:layout_marginStart="15dp"
                 android:layout_marginTop="15dp"
                 android:text="Alapanyag típusa:"
+                android:textColor="@color/black"
                 android:textSize="16sp"
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="parent"
@@ -59,6 +82,7 @@
                 android:layout_marginStart="15dp"
                 android:ems="10"
                 android:inputType="textPersonName"
+                android:textColor="@color/black"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/rawMaterialTypeText" />
@@ -109,6 +133,7 @@
                 android:layout_marginStart="15dp"
                 android:layout_marginTop="15dp"
                 android:text="Alapanyag adagszáma:"
+                android:textColor="@color/black"
                 android:textSize="16sp"
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="parent"
@@ -121,6 +146,7 @@
                 android:layout_marginStart="15dp"
                 android:ems="10"
                 android:inputType="textPersonName"
+                android:textColor="@color/black"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/rawMaterialCountText" />

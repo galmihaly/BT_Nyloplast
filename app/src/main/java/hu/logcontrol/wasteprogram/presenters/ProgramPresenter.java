@@ -5,33 +5,40 @@ import android.content.Intent;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
+import android.util.Log;
 
 import java.lang.ref.WeakReference;
+import java.util.ArrayList;
+import java.util.List;
 
 import hu.logcontrol.wasteprogram.MainActivity;
 import hu.logcontrol.wasteprogram.ModesOne;
 import hu.logcontrol.wasteprogram.ModesThree;
 import hu.logcontrol.wasteprogram.ModesTwo;
 import hu.logcontrol.wasteprogram.RawMaterialCreationActivity;
+import hu.logcontrol.wasteprogram.adapters.RawMaterialAdapter;
 import hu.logcontrol.wasteprogram.enums.ActivityEnums;
+import hu.logcontrol.wasteprogram.enums.HandlerMessageIdentifiers;
 import hu.logcontrol.wasteprogram.interfaces.IModesOneView;
 import hu.logcontrol.wasteprogram.interfaces.IProgramPresenter;
 import hu.logcontrol.wasteprogram.interfaces.IMainView;
-import hu.logcontrol.wasteprogram.interfaces.IRawMaterialCreationView;
 import hu.logcontrol.wasteprogram.logger.ApplicationLogger;
 import hu.logcontrol.wasteprogram.logger.LogLevel;
+import hu.logcontrol.wasteprogram.models.RawMaterial;
 import hu.logcontrol.wasteprogram.taskmanager.CustomThreadPoolManager;
 import hu.logcontrol.wasteprogram.taskmanager.PresenterThreadCallback;
+import hu.logcontrol.wasteprogram.tasks.CreateRawMaterialList;
 
 public class ProgramPresenter implements IProgramPresenter, PresenterThreadCallback {
 
     private IMainView iMainView;
     private IModesOneView iModesOneView;
-    private IRawMaterialCreationView iRawMaterialCreationView;
 
     private Context context;
     private CustomThreadPoolManager mCustomThreadPoolManager;
     private ProgramHandler programHandler;
+
+    private List<RawMaterial> rawMaterialList;
 
     public ProgramPresenter(IMainView iMainView, Context context) {
         this.iMainView = iMainView;
@@ -40,11 +47,6 @@ public class ProgramPresenter implements IProgramPresenter, PresenterThreadCallb
 
     public ProgramPresenter(IModesOneView iModesOneView, Context context) {
         this.iModesOneView = iModesOneView;
-        this.context = context;
-    }
-
-    public ProgramPresenter(IRawMaterialCreationView iRawMaterialCreationView, Context context) {
-        this.iRawMaterialCreationView = iRawMaterialCreationView;
         this.context = context;
     }
 
@@ -103,13 +105,44 @@ public class ProgramPresenter implements IProgramPresenter, PresenterThreadCallb
         if(iMainView != null) iMainView.exitApplication();
     }
 
+    @Override
+    public void addRawMaterialToAdapterList(RawMaterial rawMaterial, List<RawMaterial> rawMaterialList) {
+
+        rawMaterialList.add(rawMaterial);
+        sendAdapterToView(rawMaterialList);
+
+//        for (int i = 0; i < rawMaterialList.size(); i++) {
+//            Log.e("presenter", rawMaterialList.get(i).getDate());
+//            Log.e("presenter", rawMaterialList.get(i).getMaterialType());
+//            Log.e("presenter", rawMaterialList.get(i).getDoseNumber());
+//        }
+
+        try {
+            ApplicationLogger.logging(LogLevel.INFORMATION, "A RawMaterial objetum hozzáadása az Adapter listájához elkezdődött.");
+
+            CreateRawMaterialList callable = new CreateRawMaterialList(rawMaterial, rawMaterialList);
+            callable.setCustomThreadPoolManager(mCustomThreadPoolManager);
+            mCustomThreadPoolManager.addCallableMethod(callable);
+
+            ApplicationLogger.logging(LogLevel.INFORMATION, "A RawMaterial objetum hozzáadása az Adapter listájához befejeződött.");
+        }
+        catch (Exception e){
+            e.printStackTrace();
+            ApplicationLogger.logging(LogLevel.FATAL, e.getMessage());
+        }
+    }
+
+    @Override
+    public void sendAdapterToView(List<RawMaterial> rawMaterialList) {
+        if(iModesOneView == null) return;
+        iModesOneView.getAdapterFromPresenter(rawMaterialList);
+    }
 
     @Override
     public void sendResultToPresenter(Message message) {
         if(programHandler == null) return;
         programHandler.handleMessage(message);
     }
-
 
     private static class ProgramHandler extends Handler {
 
@@ -126,7 +159,13 @@ public class ProgramPresenter implements IProgramPresenter, PresenterThreadCallb
             super.handleMessage(msg);
 
             switch (msg.what){
+                case HandlerMessageIdentifiers.ADAPTER_CREATED:{
 
+                    if(msg.obj instanceof List){
+                        iProgramPresenterWeakReference.get().sendAdapterToView((List) msg.obj);
+                    }
+                    break;
+                }
             }
         }
     }
