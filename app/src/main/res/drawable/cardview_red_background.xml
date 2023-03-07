@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <rotate android:pivotX="50%"
+            android:pivotY="50%">
+            <shape>
+                <solid android:color="#F24F4B"/>
+            </shape>
+        </rotate>
+    </item>
+</selector>
