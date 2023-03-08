@@ -193,4 +193,22 @@ public class ApplicationLogger {
         if(result == null) return null;
         return result;
     }
+
+    @SuppressLint("SimpleDateFormat")
+    public static String getDateTimeString(){
+
+        String result = null;
+
+        try {
+            Calendar date = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+            SimpleDateFormat df = new SimpleDateFormat("yyyy_MM_dd_HH_mm");
+            result = df.format(date.getTimeInMillis());
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+
+        if(result == null) return null;
+        return result;
+    }
 }

@@ -19,4 +19,6 @@ public class LocalRawMaterialsStorage {
     public List<RawMaterial> getRawMaterialList(){
         return rawMaterialList;
     }
+
+    public void clearRawMaterialList() { rawMaterialList.clear(); };
 }

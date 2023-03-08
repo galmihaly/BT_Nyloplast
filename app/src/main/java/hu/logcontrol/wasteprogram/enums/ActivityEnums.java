@@ -6,5 +6,6 @@ public enum ActivityEnums {
     ModesActivty_One,
     ModesActivity_Two,
     ModesActivity_Three,
-    RawMaterialCreationActivity
+    RawMaterialCreationActivity,
+    FOLDERPICKER_ACTIVITY
 }

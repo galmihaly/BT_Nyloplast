@@ -2,6 +2,7 @@ package hu.logcontrol.wasteprogram.presenters;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
@@ -28,6 +29,7 @@ import hu.logcontrol.wasteprogram.models.RawMaterial;
 import hu.logcontrol.wasteprogram.taskmanager.CustomThreadPoolManager;
 import hu.logcontrol.wasteprogram.taskmanager.PresenterThreadCallback;
 import hu.logcontrol.wasteprogram.tasks.CreateRawMaterialList;
+import hu.logcontrol.wasteprogram.tasks.CreateTextFile;
 
 public class ProgramPresenter implements IProgramPresenter, PresenterThreadCallback {
 
@@ -38,12 +40,9 @@ public class ProgramPresenter implements IProgramPresenter, PresenterThreadCallb
     private CustomThreadPoolManager mCustomThreadPoolManager;
     private ProgramHandler programHandler;
 
-    private List<RawMaterial> rawMaterialList;
-
     public ProgramPresenter(IMainView iMainView, Context context) {
         this.iMainView = iMainView;
         this.context = context.getApplicationContext();
-        this.rawMaterialList = new ArrayList<>();
     }
 
     public ProgramPresenter(IModesOneView iModesOneView, Context context) {
@@ -72,6 +71,7 @@ public class ProgramPresenter implements IProgramPresenter, PresenterThreadCallb
         if(activityEnum == null) return;
 
         Intent intent = null;
+        int requestCode = -1;
 
         switch (activityEnum){
             case MAIN_ACTIVITY:{
@@ -92,6 +92,10 @@ public class ProgramPresenter implements IProgramPresenter, PresenterThreadCallb
             }
             case RawMaterialCreationActivity:{
                 intent = new Intent(context, RawMaterialCreationActivity.class);
+                break;
+            }
+            case FOLDERPICKER_ACTIVITY:{
+                intent = new Intent(Intent.ACTION_OPEN_DOCUMENT_TREE);
                 break;
             }
         }
@@ -125,6 +129,23 @@ public class ProgramPresenter implements IProgramPresenter, PresenterThreadCallb
     }
 
     @Override
+    public void createTextFileFromRawMaterialList(Uri uri) {
+        try {
+            ApplicationLogger.logging(LogLevel.INFORMATION, "A RawMaterial lista átmásolása txt fájlba elkezdődött.");
+
+            CreateTextFile callable = new CreateTextFile(context, uri);
+            callable.setCustomThreadPoolManager(mCustomThreadPoolManager);
+            mCustomThreadPoolManager.addCallableMethod(callable);
+
+            ApplicationLogger.logging(LogLevel.INFORMATION, "A RawMaterial lista átmásolása txt fájlba befejeződött.");
+        }
+        catch (Exception e){
+            e.printStackTrace();
+            ApplicationLogger.logging(LogLevel.FATAL, e.getMessage());
+        }
+    }
+
+    @Override
     public void sendResultToPresenter(Message message) {
         if(programHandler == null) return;
         programHandler.handleMessage(message);
@@ -145,8 +166,20 @@ public class ProgramPresenter implements IProgramPresenter, PresenterThreadCallb
             super.handleMessage(msg);
 
             switch (msg.what){
-                case HandlerMessageIdentifiers.ADAPTER_CREATED:{
-
+                case HandlerMessageIdentifiers.RAWMATERIAL_LIST_ADD_ELEMENT_SUCCESS:{
+                    ApplicationLogger.logging(LogLevel.INFORMATION, "Az RawMaterial elem hozzáadása a listához sikerült!");
+                    break;
+                }
+                case HandlerMessageIdentifiers.RAWMATERIAL_LIST_ADD_ELEMENT_FAILED:{
+                    ApplicationLogger.logging(LogLevel.ERROR, "Az RawMaterial elem hozzáadása a listához sikertelen!");
+                    break;
+                }
+                case HandlerMessageIdentifiers.TEXTFILE_ADD_TO_DIRECTORY_PATH_SUCCES:{
+                    ApplicationLogger.logging(LogLevel.INFORMATION, "Az fájl létrehozása és hozzádadása a mappaútvonalhoz sikerült!");
+                    break;
+                }
+                case HandlerMessageIdentifiers.TEXTFILE_ADD_TO_DIRECTORY_PATH_FAILED:{
+                    ApplicationLogger.logging(LogLevel.ERROR, "Az fájl létrehozása és hozzádadása a mappaútvonalhoz sikertelen!");
                     break;
                 }
             }

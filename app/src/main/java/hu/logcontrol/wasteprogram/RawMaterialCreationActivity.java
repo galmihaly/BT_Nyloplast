@@ -39,10 +39,6 @@ public class RawMaterialCreationActivity extends AppCompatActivity {
     private ImageButton deleteRawButton;
     private ImageButton backRawButton;
 
-    private ProgramPresenter programPresenter;
-
-    private boolean hideSwitch = true;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -225,14 +221,6 @@ public class RawMaterialCreationActivity extends AppCompatActivity {
         AlertDialog alertDialog = builder.create();
         Window window = alertDialog.getWindow();
         alertDialog.show();
-
-//        if(alertDialog.isShowing()) {
-//            WindowCompat.setDecorFitsSystemWindows(window, false);
-//            WindowInsetsControllerCompat windowInsetsCompat = new WindowInsetsControllerCompat(window, window.getDecorView());
-//            windowInsetsCompat.hide(WindowInsetsCompat.Type.navigationBars());
-//
-//            hideNavigationBar();
-//        };
     }
 
     private void initView() {

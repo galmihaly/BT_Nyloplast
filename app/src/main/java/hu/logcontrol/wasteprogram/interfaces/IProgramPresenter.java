@@ -1,5 +1,8 @@
 package hu.logcontrol.wasteprogram.interfaces;
 
+import android.content.Context;
+import android.net.Uri;
+
 import java.util.List;
 
 import hu.logcontrol.wasteprogram.adapters.RawMaterialAdapter;
@@ -11,4 +14,5 @@ public interface IProgramPresenter {
     void openActivityByEnum(ActivityEnums activityEnum);
     void exitApplicationPresenter();
     void addRawMaterialToAdapterList(RawMaterial rawMaterial);
+    void createTextFileFromRawMaterialList(Uri uri);
 }

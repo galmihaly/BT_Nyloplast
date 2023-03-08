@@ -38,4 +38,7 @@ public class RawMaterial {
     public void setMaterialType(String materialType) {
         this.materialType = materialType;
     }
+
+    @Override
+    public String toString() { return String.format("%s;%s;%s", this.date, this.materialType, this.doseNumber); }
 }

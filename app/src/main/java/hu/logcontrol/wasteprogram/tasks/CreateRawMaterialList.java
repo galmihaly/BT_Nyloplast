@@ -39,14 +39,7 @@ public class CreateRawMaterialList implements Callable {
 
             if(rawMaterialList != null) {
                 rawMaterialList.add(rawMaterial);
-
-                for (int i = 0; i < rawMaterialList.size(); i++) {
-                    Log.e("task", rawMaterialList.get(i).getDate());
-                    Log.e("task", rawMaterialList.get(i).getMaterialType());
-                    Log.e("task", rawMaterialList.get(i).getDoseNumber());
-                }
-
-                message = Helper.createMessage(HandlerMessageIdentifiers.ADAPTER_CREATED, "Az adapter lista létrehozása sikerült!");
+                message = Helper.createMessage(HandlerMessageIdentifiers.RAWMATERIAL_LIST_ADD_ELEMENT_SUCCESS, "Az RawMaterial elem hozzáadása a listához sikerült!");
             }
 
             if(customThreadPoolManagerWeakReference != null && customThreadPoolManagerWeakReference.get() != null) {
@@ -57,6 +50,15 @@ public class CreateRawMaterialList implements Callable {
 
         } catch (InterruptedException e) {
             e.printStackTrace();
+
+            message = Helper.createMessage(HandlerMessageIdentifiers.RAWMATERIAL_LIST_ADD_ELEMENT_FAILED, "Az RawMaterial elem hozzáadása a listához sikertelen!");
+
+
+            if(customThreadPoolManagerWeakReference != null && customThreadPoolManagerWeakReference.get() != null) {
+                if(message != null) {
+                    customThreadPoolManagerWeakReference.get().sendResultToPresenter(message);
+                }
+            }
         }
 
         return null;
