@@ -11,5 +11,4 @@ public interface IProgramPresenter {
     void openActivityByEnum(ActivityEnums activityEnum);
     void exitApplicationPresenter();
     void addRawMaterialToAdapterList(RawMaterial rawMaterial);
-    void sendAdapterToView();
 }

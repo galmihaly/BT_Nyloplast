@@ -125,12 +125,6 @@ public class ProgramPresenter implements IProgramPresenter, PresenterThreadCallb
     }
 
     @Override
-    public void sendAdapterToView() {
-        if(iModesOneView == null) return;
-        iModesOneView.getAdapterFromPresenter();
-    }
-
-    @Override
     public void sendResultToPresenter(Message message) {
         if(programHandler == null) return;
         programHandler.handleMessage(message);
@@ -152,7 +146,7 @@ public class ProgramPresenter implements IProgramPresenter, PresenterThreadCallb
 
             switch (msg.what){
                 case HandlerMessageIdentifiers.ADAPTER_CREATED:{
-                    iProgramPresenterWeakReference.get().sendAdapterToView();
+
                     break;
                 }
             }

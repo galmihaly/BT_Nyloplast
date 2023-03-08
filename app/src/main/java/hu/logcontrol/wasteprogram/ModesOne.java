@@ -4,6 +4,7 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -11,6 +12,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.ImageButton;
 
 import java.util.ArrayList;
@@ -32,6 +34,8 @@ public class ModesOne extends AppCompatActivity implements IModesOneView {
     private ImageButton backButton;
 
     private RecyclerView recycleViewModesOneRV;
+
+    private ConstraintLayout mainModesOneCL;
 
     private List<RawMaterial> rawMaterialListView;
     private RawMaterialAdapter rawMaterialAdapter;
@@ -69,6 +73,12 @@ public class ModesOne extends AppCompatActivity implements IModesOneView {
     protected void onResume() {
         super.onResume();
 
+        if(mainModesOneCL != null){
+            mainModesOneCL.setOnClickListener(view -> {
+                hideNavigationBar();
+            });
+        }
+
         if(programPresenter != null){
             if(addButton != null){
                 addButton.setOnClickListener(view -> {
@@ -98,6 +108,8 @@ public class ModesOne extends AppCompatActivity implements IModesOneView {
 
         recycleViewModesOneRV = findViewById(R.id.recycleViewModesOneRV);
         recycleViewModesOneRV.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+
+        mainModesOneCL = findViewById(R.id.mainModesOneCL);
 
         hideNavigationBar();
     }
