@@ -9,5 +9,4 @@ import hu.logcontrol.wasteprogram.models.RawMaterial;
 
 public interface IModesOneView {
     void openActivityByIntent(Intent intent);
-    void getAdapterFromPresenter();
 }

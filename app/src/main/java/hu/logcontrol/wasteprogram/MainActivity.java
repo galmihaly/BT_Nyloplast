@@ -8,6 +8,7 @@ import android.widget.Button;
 import android.widget.ImageButton;
 
 import hu.logcontrol.wasteprogram.enums.ActivityEnums;
+import hu.logcontrol.wasteprogram.helpers.Helper;
 import hu.logcontrol.wasteprogram.interfaces.IMainView;
 import hu.logcontrol.wasteprogram.presenters.ProgramPresenter;
 
@@ -63,6 +64,8 @@ public class MainActivity extends AppCompatActivity implements IMainView {
         mode3 = findViewById(R.id.modeThree);
 
         exitButton = findViewById(R.id.exitButton);
+
+        Helper.hideNavigationBar(this);
     }
 
     @Override

@@ -2,10 +2,12 @@ package hu.logcontrol.wasteprogram;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -34,7 +36,7 @@ public class ModesOne extends AppCompatActivity implements IModesOneView {
     private List<RawMaterial> rawMaterialListView;
     private RawMaterialAdapter rawMaterialAdapter;
 
-    ActivityResultLauncher<Intent> activityResultLauncher = registerForActivityResult(
+    private ActivityResultLauncher<Intent> activityResultLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             result -> {
                 if(result.getResultCode() == 1){
@@ -46,6 +48,7 @@ public class ModesOne extends AppCompatActivity implements IModesOneView {
                     RawMaterial rawMaterial = new RawMaterial(ApplicationLogger.getUTCDateTimeString(),rawMatTypeTextBox, rawMatCountTextBox);
 
                     programPresenter.addRawMaterialToAdapterList(rawMaterial);
+                    hideNavigationBar();
                 }
             }
     );
@@ -88,19 +91,6 @@ public class ModesOne extends AppCompatActivity implements IModesOneView {
         activityResultLauncher.launch(intent);
     }
 
-    @Override
-    public void getAdapterFromPresenter() {
-        //if(recycleViewModesOneRV == null) return;
-
-//        for (int i = 0; i < rawMaterialListView.size(); i++) {
-//            Log.e("", rawMaterialListView.get(i).getDate());
-//            Log.e("", rawMaterialListView.get(i).getMaterialType());
-//            Log.e("", rawMaterialListView.get(i).getDoseNumber());
-//        }
-
-        Log.e("", "rv után");
-    }
-
     private void initView() {
 
         addButton = findViewById(R.id.addButton);
@@ -108,5 +98,11 @@ public class ModesOne extends AppCompatActivity implements IModesOneView {
 
         recycleViewModesOneRV = findViewById(R.id.recycleViewModesOneRV);
         recycleViewModesOneRV.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+
+        hideNavigationBar();
+    }
+
+    private void hideNavigationBar(){
+        Helper.hideNavigationBar(this);
     }
 }

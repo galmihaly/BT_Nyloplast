@@ -3,6 +3,10 @@ package hu.logcontrol.wasteprogram.helpers;
 import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.os.Message;
+import android.view.View;
+import android.view.WindowManager;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -22,9 +26,22 @@ public class Helper {
         return message;
     }
 
-    @SuppressLint("SimpleDateFormat")
-    public static String getReadableTime() {
-        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss.SSS");
-        return sdf.format(new Date());
+    public static void hideNavigationBar(AppCompatActivity appCompatActivity){
+        View decorView = appCompatActivity.getWindow().getDecorView();
+
+        int flags = //View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                 View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+                | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                | View.SYSTEM_UI_FLAG_FULLSCREEN;
+
+        decorView.setSystemUiVisibility(flags);
+
+//        decorView.setOnSystemUiVisibilityChangeListener(i -> {
+//            if((i & View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION) != 0){
+//                decorView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION);
+//            }
+//        });
     }
 }

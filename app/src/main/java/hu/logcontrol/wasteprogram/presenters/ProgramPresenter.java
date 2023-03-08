@@ -109,12 +109,6 @@ public class ProgramPresenter implements IProgramPresenter, PresenterThreadCallb
     @Override
     public void addRawMaterialToAdapterList(RawMaterial rawMaterial) {
 
-//        for (int i = 0; i < rawMaterialList.size(); i++) {
-//            Log.e("presenter", rawMaterialList.get(i).getDate());
-//            Log.e("presenter", rawMaterialList.get(i).getMaterialType());
-//            Log.e("presenter", rawMaterialList.get(i).getDoseNumber());
-//        }
-
         try {
             ApplicationLogger.logging(LogLevel.INFORMATION, "A RawMaterial objetum hozzáadása az Adapter listájához elkezdődött.");
 

@@ -1,19 +1,27 @@
 package hu.logcontrol.wasteprogram;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
+import androidx.core.view.WindowCompat;
+import androidx.core.view.WindowInsetsCompat;
+import androidx.core.view.WindowInsetsControllerCompat;
 
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
+import android.view.Window;
 import android.widget.EditText;
 import android.widget.ImageButton;
 
+import hu.logcontrol.wasteprogram.enums.EditButtonEnums;
+import hu.logcontrol.wasteprogram.helpers.Helper;
 import hu.logcontrol.wasteprogram.presenters.ProgramPresenter;
 
 public class RawMaterialCreationActivity extends AppCompatActivity {
@@ -40,33 +48,15 @@ public class RawMaterialCreationActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_raw_material_creation);
         initView();
-    }
+     }
 
     @Override
     protected void onResume() {
         super.onResume();
 
-        if(addRawMatButton != null){
-            addRawMatButton.setOnClickListener(view -> {
-                Intent intent = new Intent();
-                intent.putExtra("rawMatTypeTextBox", rawMatTypeTextBox.getText().toString());
-                intent.putExtra("rawMatCountTextBox", rawMatCountTextBox.getText().toString());
-                setResult(1, intent);
-
-                RawMaterialCreationActivity.super.onBackPressed();
-            });
-        }
-
-        if(deleteRawButton != null){
-            deleteRawButton.setOnClickListener(view -> {
-                if(rawMaterialTypeCV != null){
-                    rawMatCountTextBox.setEnabled(true);
-                    rawMatCountTextBox.requestFocus();
-                    rawMatTypeTextBox.setText("");
-                    rawMatCountTextBox.setText("");
-                    rawMaterialTypeCV.setVisibility(View.INVISIBLE);
-                }
-            });
+        if(rawMatTypeTextBox.getText().toString().equals("") && rawMatCountTextBox.getText().toString().equals("")) {
+            addRawMatButton.setEnabled(false);
+            deleteRawButton.setEnabled(false);
         }
 
         if(backRawButton != null){
@@ -76,20 +66,7 @@ public class RawMaterialCreationActivity extends AppCompatActivity {
             });
         }
 
-        if(deleteRawButton != null){
-            deleteRawButton.setOnClickListener(view -> {
-                if(rawMaterialTypeCV != null){
-                    rawMatCountTextBox.setEnabled(true);
-                    rawMatCountTextBox.requestFocus();
-                    rawMatTypeTextBox.setText("");
-                    rawMatCountTextBox.setText("");
-                    rawMaterialTypeCV.setVisibility(View.INVISIBLE);
-                }
-            });
-        }
-
         if(rawMaterialCountCV != null && rawMatCountTextBox != null && rawMatCountCL != null){
-
             rawMatCountTextBox.addTextChangedListener(new TextWatcher() {
                 @Override
                 public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -110,8 +87,7 @@ public class RawMaterialCreationActivity extends AppCompatActivity {
                             rawMatTypeTextBox.setEnabled(false);
                         }
 
-                        if(addRawMatButton != null) setBackgroundAddRawMatButton(false);
-                        if(deleteRawButton != null) setBackgroundBackRawMatButton(false);
+                        settingDeleteAndAddButtons(EditButtonEnums.DELETE_BUTTON_DISABLED);
                     }
                     else {
 
@@ -124,7 +100,22 @@ public class RawMaterialCreationActivity extends AppCompatActivity {
                             rawMatTypeTextBox.setEnabled(true);
                             rawMatTypeTextBox.requestFocus();
                         }
-                        if(deleteRawButton != null) setBackgroundBackRawMatButton(true);
+
+                        settingDeleteAndAddButtons(EditButtonEnums.DELETE_BUTTON_ENABLED);
+
+                        if(deleteRawButton != null){
+                            if(deleteRawButton.isEnabled()){
+                                deleteRawButton.setOnClickListener(view -> {
+                                    if(rawMaterialTypeCV != null){
+                                        rawMatCountTextBox.setEnabled(true);
+                                        rawMatCountTextBox.requestFocus();
+                                        rawMatTypeTextBox.setText("");
+                                        rawMatCountTextBox.setText("");
+                                        rawMaterialTypeCV.setVisibility(View.INVISIBLE);
+                                    }
+                                });
+                            }
+                        }
                     }
                 }
 
@@ -151,13 +142,23 @@ public class RawMaterialCreationActivity extends AppCompatActivity {
 
                         rawMatTypeCL.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.cardview_red_background));
                         rawMatCountTextBox.setEnabled(true);
-                        setBackgroundAddRawMatButton(false);
+
+                        settingDeleteAndAddButtons(EditButtonEnums.ADD_BUTTON_DISABLED);
                     }
                     else {
                         rawMatTypeCL.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.cardview_green_background));
                         rawMatTypeTextBox.setEnabled(false);
                         rawMatTypeTextBox.setTextColor(Color.parseColor("#B7C0C1"));
-                        setBackgroundAddRawMatButton(true);
+
+                        settingDeleteAndAddButtons(EditButtonEnums.ADD_BUTTON_ENABLED);
+
+                        if(addRawMatButton != null){
+                            if(addRawMatButton.isEnabled()){
+                                addRawMatButton.setOnClickListener(view -> {
+                                    openDialog();
+                                });
+                            }
+                        }
                     }
                 }
 
@@ -167,6 +168,71 @@ public class RawMaterialCreationActivity extends AppCompatActivity {
                 }
             });
         }
+    }
+
+    private void settingDeleteAndAddButtons(EditButtonEnums editButtonEnum){
+        switch (editButtonEnum){
+            case ADD_BUTTON_ENABLED:{
+
+                addRawMatButton.setEnabled(true);
+                addRawMatButton.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.add_button_background));
+
+                break;
+            }
+            case ADD_BUTTON_DISABLED:{
+
+                addRawMatButton.setEnabled(false);
+                addRawMatButton.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.disable_button_background));
+
+                break;
+            }
+            case DELETE_BUTTON_ENABLED:{
+
+                deleteRawButton.setEnabled(true);
+                deleteRawButton.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.delete_button_background));
+
+                break;
+            }
+            case DELETE_BUTTON_DISABLED:{
+
+                deleteRawButton.setEnabled(false);
+                deleteRawButton.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.disable_button_background));
+
+                break;
+            }
+        }
+    }
+
+    private void openDialog() {
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Alapanyag Hozzáadás")
+                .setMessage("Biztosan hozzá szeretnéd adni az alapanyag listához?")
+                .setNegativeButton("Nem", (dialogInterface, i) -> {
+                    hideNavigationBar();
+                    dialogInterface.dismiss();
+                })
+                .setPositiveButton("Igen", (dialogInterface, i) -> {
+
+                    Intent intent = new Intent();
+                    intent.putExtra("rawMatTypeTextBox", rawMatTypeTextBox.getText().toString());
+                    intent.putExtra("rawMatCountTextBox", rawMatCountTextBox.getText().toString());
+                    setResult(1, intent);
+
+                    RawMaterialCreationActivity.super.onBackPressed();
+                });
+
+        AlertDialog alertDialog = builder.create();
+        Window window = alertDialog.getWindow();
+        alertDialog.show();
+
+//        if(alertDialog.isShowing()) {
+//            WindowCompat.setDecorFitsSystemWindows(window, false);
+//            WindowInsetsControllerCompat windowInsetsCompat = new WindowInsetsControllerCompat(window, window.getDecorView());
+//            windowInsetsCompat.hide(WindowInsetsCompat.Type.navigationBars());
+//
+//            hideNavigationBar();
+//        };
     }
 
     private void initView() {
@@ -184,33 +250,11 @@ public class RawMaterialCreationActivity extends AppCompatActivity {
         addRawMatButton = findViewById(R.id.addRawMatButton);
         deleteRawButton = findViewById(R.id.deleteRawButton);
         backRawButton = findViewById(R.id.backRawButton);
+
+        hideNavigationBar();
     }
 
-    private void setBackgroundAddRawMatButton(boolean value){
-        if(addRawMatButton == null) return;
-
-        if(value){
-            addRawMatButton.setEnabled(true);
-            addRawMatButton.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.add_button_background));
-        }
-        else
-        {
-            addRawMatButton.setEnabled(false);
-            addRawMatButton.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.disable_button_background));
-        }
-    }
-
-    private void setBackgroundBackRawMatButton(boolean value) {
-        if(deleteRawButton == null) return;
-
-        if(value){
-            deleteRawButton.setEnabled(true);
-            deleteRawButton.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.delete_button_background));
-        }
-        else
-        {
-            deleteRawButton.setEnabled(false);
-            deleteRawButton.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.disable_button_background));
-        }
+    private void hideNavigationBar(){
+        Helper.hideNavigationBar(this);
     }
 }
