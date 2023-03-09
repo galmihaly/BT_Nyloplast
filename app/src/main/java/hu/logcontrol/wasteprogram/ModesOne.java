@@ -2,22 +2,27 @@ package hu.logcontrol.wasteprogram;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.documentfile.provider.DocumentFile;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.Toast;
 
 import org.w3c.dom.Document;
 
@@ -76,6 +81,8 @@ public class ModesOne extends AppCompatActivity implements IModesOneView {
 
                     Uri uri = intent.getData();
                     Log.e("uripath", uri.getPath());
+
+                    Log.e("intent", intent.getDataString());
                     programPresenter.createTextFileFromRawMaterialList(uri);
                 }
             }
@@ -86,12 +93,37 @@ public class ModesOne extends AppCompatActivity implements IModesOneView {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_modes_one);
         initView();
+        startCamera();
 
         programPresenter = new ProgramPresenter(this, getApplicationContext());
         programPresenter.initTaskManager();
 
         rawMaterialListView = LocalRawMaterialsStorage.getInstance().getRawMaterialList();
     }
+
+    public void startCamera() {
+        if(ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+            Log.e("", "van engedély");
+        } else {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 786);
+        }
+    }
+
+        @Override
+        public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, int[] grantResults) {
+            for (int r : grantResults) {
+                if (r == PackageManager.PERMISSION_DENIED) {
+                    Toast.makeText(this, "Permission Denied", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+            }
+
+            if (requestCode == 786) {
+                Log.e("request", "van engedély");
+            }
+
+            super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        }
 
     @Override
     protected void onResume() {

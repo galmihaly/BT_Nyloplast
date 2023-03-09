@@ -58,6 +58,7 @@ public class RawMaterialAdapter extends RecyclerView.Adapter<RawMaterialAdapter.
 
     @Override
     public int getItemCount() {
+        if(rawMaterialList == null) return -1;
         return rawMaterialList.size();
     }
 

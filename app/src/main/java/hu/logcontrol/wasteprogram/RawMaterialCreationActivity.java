@@ -1,5 +1,6 @@
 package hu.logcontrol.wasteprogram;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
@@ -10,6 +11,7 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.core.view.WindowInsetsControllerCompat;
 
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Editable;
@@ -19,6 +21,7 @@ import android.view.View;
 import android.view.Window;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.Toast;
 
 import hu.logcontrol.wasteprogram.enums.EditButtonEnums;
 import hu.logcontrol.wasteprogram.helpers.Helper;
@@ -151,7 +154,12 @@ public class RawMaterialCreationActivity extends AppCompatActivity {
                         if(addRawMatButton != null){
                             if(addRawMatButton.isEnabled()){
                                 addRawMatButton.setOnClickListener(view -> {
-                                    openDialog();
+                                    Intent intent = new Intent();
+                                    intent.putExtra("rawMatTypeTextBox", rawMatTypeTextBox.getText().toString());
+                                    intent.putExtra("rawMatCountTextBox", rawMatCountTextBox.getText().toString());
+                                    setResult(1, intent);
+
+                                    RawMaterialCreationActivity.super.onBackPressed();
                                 });
                             }
                         }

@@ -1,16 +1,22 @@
 package hu.logcontrol.wasteprogram.tasks;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Environment;
 import android.os.Message;
+import android.provider.DocumentsContract;
 import android.util.Log;
+import android.widget.Toast;
 
+import androidx.core.graphics.PathUtils;
 import androidx.documentfile.provider.DocumentFile;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.lang.ref.WeakReference;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
@@ -36,6 +42,10 @@ public class CreateTextFile implements Callable {
     private File textFile;
 
     private FileOutputStream fos;
+    private DocumentFile documentFile;
+    private FileWriter writer = null;
+
+    private LocalRawMaterialsStorage localStorage;
 
     public CreateTextFile(Context context, Uri uri) {
         this.context = context.getApplicationContext();
@@ -52,51 +62,45 @@ public class CreateTextFile implements Callable {
         try {
             if (Thread.interrupted()) throw new InterruptedException();
 
-            rawMaterialList = LocalRawMaterialsStorage.getInstance().getRawMaterialList();
+            localStorage = LocalRawMaterialsStorage.getInstance();
+            rawMaterialList = localStorage.getRawMaterialList();
 
             if(rawMaterialList != null) {
 
-                fileName = ApplicationLogger.getDateTimeString() + ".txt";
-                DocumentFile df = DocumentFile.fromTreeUri(context, uri);
-                if(df != null) df.createFile("txt", fileName);
+                fileName = ApplicationLogger.getDateTimeString() + ".csv";
+                documentFile = DocumentFile.fromTreeUri(context, uri);
+                if(documentFile != null) documentFile.createFile("csv", fileName);
 
-                Log.e("path", uri.getPath());
-                Log.e("path", uri.toString());
+                fos = new FileOutputStream("/sdcard/" + uri.getPath().split(":")[1] + File.separator + fileName);
 
-                textFile = new File(context.getExternalFilesDir(uri.toString()), fileName);
-                Log.e("filename", textFile.getName());
-
-                fos = new FileOutputStream(textFile);
-                fos.write("sfdjsdfhsdkjfhsdkjfhsdkjfhdsjkfhskfjs\n\n".getBytes());
-                Log.e("size", String.valueOf(rawMaterialList.size()));
-//                for (int i = 0; i < rawMaterialList.size(); i++) {
-//                    fos.write("1".getBytes(StandardCharsets.UTF_8));
-//                }
-
-                fos.flush();
-                fos.close();
-
-                //LocalRawMaterialsStorage.getInstance().clearRawMaterialList();
-
-                message = Helper.createMessage(HandlerMessageIdentifiers.TEXTFILE_ADD_TO_DIRECTORY_PATH_SUCCES, "Az fájl létrehozása és hozzádadása a mappaútvonalhoz sikerült!");
-
-                if(customThreadPoolManagerWeakReference != null && customThreadPoolManagerWeakReference.get() != null) {
-                    if(message != null) {
-                        customThreadPoolManagerWeakReference.get().sendResultToPresenter(message);
+                try {
+                    writer = new FileWriter(fos.getFD());
+                    writer.write("TimeStamp;RawMaterialType;RawMaterialCount\n\n");
+                    for (int i = 0; i < rawMaterialList.size(); i++) {
+                        writer.write(rawMaterialList.get(i).toString() + "\n");
                     }
+                    writer.flush();
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                finally {
+                    localStorage.clearRawMaterialList();
+                    if(writer != null) writer.close();
+
+                    message = Helper.createMessage(HandlerMessageIdentifiers.TEXTFILE_ADD_TO_DIRECTORY_PATH_SUCCES, "Az fájl létrehozása és hozzádadása a mappaútvonalhoz sikerült!");
                 }
             }
 
         } catch (InterruptedException e) {
 
             e.printStackTrace();
-
             message = Helper.createMessage(HandlerMessageIdentifiers.TEXTFILE_ADD_TO_DIRECTORY_PATH_FAILED, "Az fájl létrehozása és hozzádadása a mappaútvonalhoz sikertelen!");
+        }
 
-            if(customThreadPoolManagerWeakReference != null && customThreadPoolManagerWeakReference.get() != null) {
-                if(message != null) {
-                    customThreadPoolManagerWeakReference.get().sendResultToPresenter(message);
-                }
+        if(customThreadPoolManagerWeakReference != null && customThreadPoolManagerWeakReference.get() != null) {
+            if(message != null) {
+                customThreadPoolManagerWeakReference.get().sendResultToPresenter(message);
             }
         }
 
