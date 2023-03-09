@@ -7,6 +7,7 @@ import java.util.List;
 
 import hu.logcontrol.wasteprogram.adapters.RawMaterialAdapter;
 import hu.logcontrol.wasteprogram.enums.ActivityEnums;
+import hu.logcontrol.wasteprogram.enums.EditButtonEnums;
 import hu.logcontrol.wasteprogram.models.RawMaterial;
 
 public interface IProgramPresenter {
@@ -15,4 +16,5 @@ public interface IProgramPresenter {
     void exitApplicationPresenter();
     void addRawMaterialToAdapterList(RawMaterial rawMaterial);
     void createTextFileFromRawMaterialList(Uri uri);
+    void setSaveButtonState(EditButtonEnums editButtonEnum);
 }

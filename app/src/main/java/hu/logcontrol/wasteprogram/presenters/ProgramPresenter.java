@@ -19,6 +19,7 @@ import hu.logcontrol.wasteprogram.ModesTwo;
 import hu.logcontrol.wasteprogram.RawMaterialCreationActivity;
 import hu.logcontrol.wasteprogram.adapters.RawMaterialAdapter;
 import hu.logcontrol.wasteprogram.enums.ActivityEnums;
+import hu.logcontrol.wasteprogram.enums.EditButtonEnums;
 import hu.logcontrol.wasteprogram.enums.HandlerMessageIdentifiers;
 import hu.logcontrol.wasteprogram.interfaces.IModesOneView;
 import hu.logcontrol.wasteprogram.interfaces.IProgramPresenter;
@@ -96,6 +97,7 @@ public class ProgramPresenter implements IProgramPresenter, PresenterThreadCallb
             }
             case FOLDERPICKER_ACTIVITY:{
                 intent = new Intent(Intent.ACTION_OPEN_DOCUMENT_TREE);
+                intent.putExtra("folderPicker", "3");
                 break;
             }
         }
@@ -146,6 +148,11 @@ public class ProgramPresenter implements IProgramPresenter, PresenterThreadCallb
     }
 
     @Override
+    public void setSaveButtonState(EditButtonEnums editButtonEnum) {
+        iModesOneView.settingSaveButton(editButtonEnum);
+    }
+
+    @Override
     public void sendResultToPresenter(Message message) {
         if(programHandler == null) return;
         programHandler.handleMessage(message);
@@ -176,6 +183,7 @@ public class ProgramPresenter implements IProgramPresenter, PresenterThreadCallb
                 }
                 case HandlerMessageIdentifiers.TEXTFILE_ADD_TO_DIRECTORY_PATH_SUCCES:{
                     ApplicationLogger.logging(LogLevel.INFORMATION, "Az fájl létrehozása és hozzádadása a mappaútvonalhoz sikerült!");
+                    iProgramPresenterWeakReference.get().setSaveButtonState(EditButtonEnums.SAVE_BUTTON_DISABLED);
                     break;
                 }
                 case HandlerMessageIdentifiers.TEXTFILE_ADD_TO_DIRECTORY_PATH_FAILED:{

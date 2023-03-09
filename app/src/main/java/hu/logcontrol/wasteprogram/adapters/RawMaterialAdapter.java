@@ -2,10 +2,14 @@ package hu.logcontrol.wasteprogram.adapters;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
+import android.media.Image;
+import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -14,15 +18,19 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.List;
 import java.util.Locale;
 
+import hu.logcontrol.wasteprogram.ModesOne;
+import hu.logcontrol.wasteprogram.enums.EditButtonEnums;
 import hu.logcontrol.wasteprogram.models.LocalRawMaterialsStorage;
 import hu.logcontrol.wasteprogram.models.RawMaterial;
 import hu.logcontrol.wasteprogram.R;
 
 public class RawMaterialAdapter extends RecyclerView.Adapter<RawMaterialAdapter.RawMaterialItemViewHolder> {
 
+    private Context context;
     private List<RawMaterial> rawMaterialList;
 
-    public RawMaterialAdapter(List<RawMaterial> rawMaterialList) {
+    public RawMaterialAdapter(Context context, List<RawMaterial> rawMaterialList) {
+        this.context = context.getApplicationContext();
         this.rawMaterialList = rawMaterialList;
     }
 
@@ -35,24 +43,27 @@ public class RawMaterialAdapter extends RecyclerView.Adapter<RawMaterialAdapter.
         return new RawMaterialItemViewHolder(v);
     }
 
-    @SuppressLint("SetTextI18n")
+    @SuppressLint({"SetTextI18n", "NotifyDataSetChanged"})
     @Override
     public void onBindViewHolder(@NonNull RawMaterialItemViewHolder holder, int position) {
-
-        for (int i = 0; i < rawMaterialList.size(); i++) {
-            Log.d("adapter", rawMaterialList.get(i).getMaterialType());
-        }
-
         if(rawMaterialList != null){
-
-            for (int i = 0; i < rawMaterialList.size(); i++) {
-                Log.d("adapter", rawMaterialList.get(i).getMaterialType());
-            }
 
             holder.getRawMaterialTimeStampInput().setText(rawMaterialList.get(position).getDate());
             holder.getRawMaterialTypeInput().setText(rawMaterialList.get(position).getMaterialType());
             holder.getRawMaterialCountInput().setText(rawMaterialList.get(position).getDoseNumber());
             holder.getNumberOfItem().setText(position + 1 + ".");
+
+            holder.getDeleteItemButton().setOnClickListener(view -> {
+                rawMaterialList.remove(position);
+                notifyDataSetChanged();
+
+                if(rawMaterialList.size() == 0){
+                    Intent intent  = new Intent(context, ModesOne.class);
+                    intent.putExtra("rawMaterialAdapter", "2");
+                    context.getApplicationContext().startActivity(intent);
+                }
+
+            });
         }
     }
 
@@ -69,6 +80,8 @@ public class RawMaterialAdapter extends RecyclerView.Adapter<RawMaterialAdapter.
         private TextView rawMaterialCountInput;
         private TextView numberOfItem;
 
+        private ImageButton deleteItemButton;
+
         public RawMaterialItemViewHolder(@NonNull View itemView) {
             super(itemView);
 
@@ -76,6 +89,8 @@ public class RawMaterialAdapter extends RecyclerView.Adapter<RawMaterialAdapter.
             rawMaterialTypeInput = itemView.findViewById(R.id.rawMaterialTypeInput);
             rawMaterialCountInput = itemView.findViewById(R.id.rawMaterialCountInput);
             numberOfItem = itemView.findViewById(R.id.numberOfItem);
+
+            deleteItemButton = itemView.findViewById(R.id.deleteItemButton);
         }
 
         public TextView getRawMaterialTimeStampInput() {
@@ -92,6 +107,10 @@ public class RawMaterialAdapter extends RecyclerView.Adapter<RawMaterialAdapter.
 
         public TextView getNumberOfItem() {
             return numberOfItem;
+        }
+
+        public ImageButton getDeleteItemButton() {
+            return deleteItemButton;
         }
     }
 }

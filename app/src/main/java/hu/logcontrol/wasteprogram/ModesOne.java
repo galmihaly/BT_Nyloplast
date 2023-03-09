@@ -54,8 +54,6 @@ public class ModesOne extends AppCompatActivity implements IModesOneView {
     private List<RawMaterial> rawMaterialListView;
     private RawMaterialAdapter rawMaterialAdapter;
 
-    private String fileName;
-
     private ActivityResultLauncher<Intent> activityResultLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             result -> {
@@ -73,17 +71,17 @@ public class ModesOne extends AppCompatActivity implements IModesOneView {
                     hideNavigationBar();
                 }
 
-                Log.e("", String.valueOf(result.getResultCode()));
                 if(result.getResultCode() == Activity.RESULT_OK){
                     Intent intent = result.getData();
-
                     if(intent == null) return;
 
-                    Uri uri = intent.getData();
-                    Log.e("uripath", uri.getPath());
-
-                    Log.e("intent", intent.getDataString());
-                    programPresenter.createTextFileFromRawMaterialList(uri);
+                    if(intent.getStringExtra("folderPicker").equals("2")){
+                        settingSaveButton(EditButtonEnums.SAVE_BUTTON_DISABLED);
+                    }
+                    else if(intent.getStringExtra("folderPicker").equals("3")){
+                        programPresenter.createTextFileFromRawMaterialList(intent.getData());
+                        hideNavigationBar();
+                    }
                 }
             }
     );
@@ -103,7 +101,7 @@ public class ModesOne extends AppCompatActivity implements IModesOneView {
 
     public void startCamera() {
         if(ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
-            Log.e("", "van engedély");
+            Log.e("", "Jelenleg rendelkezik írási joggal!");
         } else {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 786);
         }
@@ -113,13 +111,13 @@ public class ModesOne extends AppCompatActivity implements IModesOneView {
         public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, int[] grantResults) {
             for (int r : grantResults) {
                 if (r == PackageManager.PERMISSION_DENIED) {
-                    Toast.makeText(this, "Permission Denied", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "Engedély elutasítva!", Toast.LENGTH_SHORT).show();
                     return;
                 }
             }
 
             if (requestCode == 786) {
-                Log.e("request", "van engedély");
+                Toast.makeText(this, "Engedély elfogadva!", Toast.LENGTH_SHORT).show();
             }
 
             super.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -158,7 +156,7 @@ public class ModesOne extends AppCompatActivity implements IModesOneView {
             }
         }
 
-        rawMaterialAdapter = new RawMaterialAdapter(rawMaterialListView);
+        rawMaterialAdapter = new RawMaterialAdapter(getApplicationContext(), rawMaterialListView);
         recycleViewModesOneRV.setAdapter(rawMaterialAdapter);
     }
 
@@ -183,7 +181,8 @@ public class ModesOne extends AppCompatActivity implements IModesOneView {
         hideNavigationBar();
     }
 
-    private void settingSaveButton(EditButtonEnums editButtonEnum) {
+    @Override
+    public void settingSaveButton(EditButtonEnums editButtonEnum) {
         if(saveButton == null) return;
 
         switch (editButtonEnum){
