@@ -75,7 +75,7 @@ public class MainActivity extends AppCompatActivity implements IMainView {
 
     @Override
     public void exitApplication() {
-        finishAffinity();
+        MainActivity.this.finish();
         System.exit(0);
     }
 }
