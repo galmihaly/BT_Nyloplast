@@ -75,10 +75,8 @@ public class ModesOne extends AppCompatActivity implements IModesOneView {
                     Intent intent = result.getData();
                     if(intent == null) return;
 
-                    if(intent.getStringExtra("folderPicker").equals("3")){
-                        programPresenter.createTextFileFromRawMaterialList(intent.getData());
-                        hideNavigationBar();
-                    }
+                    programPresenter.createTextFileFromRawMaterialList(intent.getData());
+                    hideNavigationBar();
                 }
             }
     );

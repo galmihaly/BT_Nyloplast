@@ -97,7 +97,6 @@ public class ProgramPresenter implements IProgramPresenter, PresenterThreadCallb
             }
             case FOLDERPICKER_ACTIVITY:{
                 intent = new Intent(Intent.ACTION_OPEN_DOCUMENT_TREE);
-                intent.putExtra("folderPicker", "3");
                 break;
             }
         }
