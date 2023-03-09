@@ -15,11 +15,13 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.lang.ref.WeakReference;
 import java.util.List;
 import java.util.Locale;
 
 import hu.logcontrol.wasteprogram.ModesOne;
 import hu.logcontrol.wasteprogram.enums.EditButtonEnums;
+import hu.logcontrol.wasteprogram.interfaces.IModesOneView;
 import hu.logcontrol.wasteprogram.models.LocalRawMaterialsStorage;
 import hu.logcontrol.wasteprogram.models.RawMaterial;
 import hu.logcontrol.wasteprogram.R;
@@ -28,10 +30,12 @@ public class RawMaterialAdapter extends RecyclerView.Adapter<RawMaterialAdapter.
 
     private Context context;
     private List<RawMaterial> rawMaterialList;
+    private WeakReference<IModesOneView> modesOneWeakReference;
 
-    public RawMaterialAdapter(Context context, List<RawMaterial> rawMaterialList) {
+    public RawMaterialAdapter(Context context, List<RawMaterial> rawMaterialList, IModesOneView modesOneWeakReference) {
         this.context = context.getApplicationContext();
         this.rawMaterialList = rawMaterialList;
+        this.modesOneWeakReference = new WeakReference<>(modesOneWeakReference);
     }
 
     @NonNull
@@ -58,11 +62,8 @@ public class RawMaterialAdapter extends RecyclerView.Adapter<RawMaterialAdapter.
                 notifyDataSetChanged();
 
                 if(rawMaterialList.size() == 0){
-                    Intent intent  = new Intent(context, ModesOne.class);
-                    intent.putExtra("rawMaterialAdapter", "2");
-                    context.getApplicationContext().startActivity(intent);
+                    modesOneWeakReference.get().settingSaveButton(EditButtonEnums.SAVE_BUTTON_DISABLED);
                 }
-
             });
         }
     }

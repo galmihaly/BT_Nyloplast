@@ -75,10 +75,7 @@ public class ModesOne extends AppCompatActivity implements IModesOneView {
                     Intent intent = result.getData();
                     if(intent == null) return;
 
-                    if(intent.getStringExtra("folderPicker").equals("2")){
-                        settingSaveButton(EditButtonEnums.SAVE_BUTTON_DISABLED);
-                    }
-                    else if(intent.getStringExtra("folderPicker").equals("3")){
+                    if(intent.getStringExtra("folderPicker").equals("3")){
                         programPresenter.createTextFileFromRawMaterialList(intent.getData());
                         hideNavigationBar();
                     }
@@ -156,7 +153,7 @@ public class ModesOne extends AppCompatActivity implements IModesOneView {
             }
         }
 
-        rawMaterialAdapter = new RawMaterialAdapter(getApplicationContext(), rawMaterialListView);
+        rawMaterialAdapter = new RawMaterialAdapter(getApplicationContext(), rawMaterialListView, this);
         recycleViewModesOneRV.setAdapter(rawMaterialAdapter);
     }
 
