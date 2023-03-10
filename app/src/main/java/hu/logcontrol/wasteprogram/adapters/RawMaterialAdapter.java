@@ -78,6 +78,7 @@ public class RawMaterialAdapter extends RecyclerView.Adapter<RawMaterialAdapter.
         public RawMaterialItemViewHolder(@NonNull View itemView) {
             super(itemView);
 
+
             // TODO: meg kell nézni az elemek sorrendjét, nem jól íródik ki
 
             rawMaterialTimeStampInput = itemView.findViewById(R.id.rawMaterialTimeStampInput_1);
