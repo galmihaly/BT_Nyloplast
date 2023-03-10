@@ -1,26 +1,23 @@
 package hu.logcontrol.wasteprogram.models;
 
-import java.util.Date;
-import java.util.TimeZone;
-
 public class RawMaterial {
 
-    private String date;
+    private String timeStamp;
     private String doseNumber;
     private String materialType;
 
-    public RawMaterial(String date, String doseNumber, String materialType) {
-        this.date = date;
+    public RawMaterial(String timeStamp, String doseNumber, String materialType) {
+        this.timeStamp = timeStamp;
         this.doseNumber = doseNumber;
         this.materialType = materialType;
     }
 
-    public String getDate() {
-        return date;
+    public String getTimeStamp() {
+        return timeStamp;
     }
 
-    public void setDate(String date) {
-        this.date = date;
+    public void setTimeStamp(String timeStamp) {
+        this.timeStamp = timeStamp;
     }
 
     public String getDoseNumber() {
@@ -40,5 +37,9 @@ public class RawMaterial {
     }
 
     @Override
-    public String toString() { return String.format("%s;%s;%s", this.date, this.materialType, this.doseNumber); }
+    public String toString() { return String.format("%s;%s;%s", this.timeStamp, this.materialType, this.doseNumber); }
+
+    public static String getCSVHeader(){
+        return "TimeStamp;RawMaterialType;RawMaterialCount";
+    }
 }

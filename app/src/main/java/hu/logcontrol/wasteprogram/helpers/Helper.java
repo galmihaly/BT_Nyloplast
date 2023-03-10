@@ -37,11 +37,5 @@ public class Helper {
                 | View.SYSTEM_UI_FLAG_FULLSCREEN;
 
         decorView.setSystemUiVisibility(flags);
-
-//        decorView.setOnSystemUiVisibilityChangeListener(i -> {
-//            if((i & View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION) != 0){
-//                decorView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION);
-//            }
-//        });
     }
 }

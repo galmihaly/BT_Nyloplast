@@ -3,30 +3,25 @@ package hu.logcontrol.wasteprogram;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-import androidx.documentfile.provider.DocumentFile;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.Manifest;
 import android.app.Activity;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
-import android.view.View;
 import android.widget.ImageButton;
+import android.widget.TextView;
 import android.widget.Toast;
 
-import org.w3c.dom.Document;
-
-import java.util.ArrayList;
 import java.util.List;
 
 import hu.logcontrol.wasteprogram.adapters.RawMaterialAdapter;
@@ -141,7 +136,7 @@ public class ModesOne extends AppCompatActivity implements IModesOneView {
         if(programPresenter != null){
             if(addButton != null){
                 addButton.setOnClickListener(view -> {
-                    programPresenter.openActivityByEnum(ActivityEnums.RawMaterialCreationActivity);
+                    programPresenter.openActivityByEnum(ActivityEnums.RAW_MATERIAL_CREATION_ACTIVITY);
                 });
             }
             if(backButton != null){
@@ -196,6 +191,12 @@ public class ModesOne extends AppCompatActivity implements IModesOneView {
                 break;
             }
         }
+    }
+
+    @Override
+    public void getMessageFromPresenter(String message) {
+        if(message == null) return;
+        new Handler(Looper.getMainLooper()).post(() -> { Toast.makeText(getBaseContext(), message, Toast.LENGTH_LONG).show(); });
     }
 
     private void hideNavigationBar(){

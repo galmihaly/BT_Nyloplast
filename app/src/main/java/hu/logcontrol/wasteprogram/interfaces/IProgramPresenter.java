@@ -17,4 +17,5 @@ public interface IProgramPresenter {
     void addRawMaterialToAdapterList(RawMaterial rawMaterial);
     void createTextFileFromRawMaterialList(Uri uri);
     void setSaveButtonState(EditButtonEnums editButtonEnum);
+    void sendMessageToView(String message);
 }

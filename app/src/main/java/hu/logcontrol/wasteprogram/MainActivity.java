@@ -37,17 +37,17 @@ public class MainActivity extends AppCompatActivity implements IMainView {
 
         if(mode1 != null){
             mode1.setOnClickListener(view -> {
-                programPresenter.openActivityByEnum(ActivityEnums.ModesActivty_One);
+                programPresenter.openActivityByEnum(ActivityEnums.MODES_ACTIVITY_ONE);
             });
         }
         if(mode2 != null){
             mode2.setOnClickListener(view -> {
-                programPresenter.openActivityByEnum(ActivityEnums.ModesActivity_Two);
+                programPresenter.openActivityByEnum(ActivityEnums.MODES_ACTIVITY_TWO);
             });
         }
         if(mode3 != null){
             mode3.setOnClickListener(view -> {
-                programPresenter.openActivityByEnum(ActivityEnums.ModesActivity_Three);
+                programPresenter.openActivityByEnum(ActivityEnums.MODES_ACTIVITY_THREE);
             });
         }
         if(exitButton != null){

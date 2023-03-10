@@ -39,28 +39,37 @@ public class CreateRawMaterialList implements Callable {
 
             if(rawMaterialList != null) {
                 rawMaterialList.add(rawMaterial);
-                message = Helper.createMessage(HandlerMessageIdentifiers.RAWMATERIAL_LIST_ADD_ELEMENT_SUCCESS, "Az RawMaterial elem hozzáadása a listához sikerült!");
+                sendMessageToPresenterHandler(CreateRawMaterialListEnums.ADDELEMENT_SUCCES);
             }
-
-            if(customThreadPoolManagerWeakReference != null && customThreadPoolManagerWeakReference.get() != null) {
-                if(message != null) {
-                    customThreadPoolManagerWeakReference.get().sendResultToPresenter(message);
-                }
-            }
-
-        } catch (InterruptedException e) {
+        }
+        catch (InterruptedException e) {
             e.printStackTrace();
-
-            message = Helper.createMessage(HandlerMessageIdentifiers.RAWMATERIAL_LIST_ADD_ELEMENT_FAILED, "Az RawMaterial elem hozzáadása a listához sikertelen!");
-
-
-            if(customThreadPoolManagerWeakReference != null && customThreadPoolManagerWeakReference.get() != null) {
-                if(message != null) {
-                    customThreadPoolManagerWeakReference.get().sendResultToPresenter(message);
-                }
-            }
+            sendMessageToPresenterHandler(CreateRawMaterialListEnums.INTERRUPTED_EXCEPTION);
         }
 
         return null;
+    }
+
+    private void sendMessageToPresenterHandler(CreateRawMaterialListEnums createRawMaterialListEnum){
+
+        switch (createRawMaterialListEnum){
+            case INTERRUPTED_EXCEPTION:{
+                message = Helper.createMessage(HandlerMessageIdentifiers.RAWMATERIAL_LIST_ADD_ELEMENT_FAILED, "Az RawMaterial elem hozzáadása a listához sikertelen!");
+                break;
+            }
+            case ADDELEMENT_SUCCES:{
+                message = Helper.createMessage(HandlerMessageIdentifiers.RAWMATERIAL_LIST_ADD_ELEMENT_SUCCESS, "Az RawMaterial elem hozzáadása a listához sikerült!");
+                break;
+            }
+        }
+
+        if(customThreadPoolManagerWeakReference != null && customThreadPoolManagerWeakReference.get() != null) {
+            if(message != null) { customThreadPoolManagerWeakReference.get().sendResultToPresenter(message); }
+        }
+    }
+
+    private enum  CreateRawMaterialListEnums{
+        INTERRUPTED_EXCEPTION,
+        ADDELEMENT_SUCCES
     }
 }
