@@ -3,6 +3,7 @@ package hu.logcontrol.wasteprogram;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -29,6 +30,8 @@ import hu.logcontrol.wasteprogram.models.RawMaterialTypeMass;
 import hu.logcontrol.wasteprogram.presenters.ProgramPresenter;
 
 public class ModesTwo extends AppCompatActivity implements IModesTwoView {
+
+    private ConstraintLayout mainModesTwoCL;
 
     private ImageButton addButton_2;
     private  ImageButton saveButton_2;
@@ -82,6 +85,12 @@ public class ModesTwo extends AppCompatActivity implements IModesTwoView {
     @Override
     protected void onResume() {
         super.onResume();
+
+        if(mainModesTwoCL != null){
+            mainModesTwoCL.setOnClickListener(view -> {
+                hideNavigationBar();
+            });
+        }
 
         if(saveButton_2 != null && rawMaterialTypeMassList != null){
             if(rawMaterialTypeMassList.size() > 0){
@@ -153,7 +162,7 @@ public class ModesTwo extends AppCompatActivity implements IModesTwoView {
         recycleViewModesTwoRV = findViewById(R.id.recycleViewModesTwoRV);
         recycleViewModesTwoRV.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
 
-        //mainModesOneCL = findViewById(R.id.mainModesOneCL);
+        mainModesTwoCL = findViewById(R.id.mainModesTwoCL);
 
         hideNavigationBar();
     }
