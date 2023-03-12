@@ -58,91 +58,91 @@ public class RawMaterialCreationActivity extends AppCompatActivity {
             });
         }
 
-        if(rawMaterialCountCV != null && rawMatCountTextBox != null && rawMatCountCL != null){
-            rawMatCountTextBox.addTextChangedListener(new TextWatcher() {
-                @Override
-                public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
-
-                @Override
-                public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                    String rawMatCount = rawMatCountTextBox.getText().toString();
-
-                    if(rawMatCount.equals("")){
-
-                        ElementStateChangeHelper.disableCurrentElements(getApplicationContext(), rawMatCountCL, rawMaterialTypeCV, rawMatTypeTextBox, R.drawable.cardview_red_background);
-                        ElementStateChangeHelper.setDisableButton(getApplicationContext(), EditButtonEnums.DELETE_BUTTON_DISABLED, deleteRawButton);
-                    }
-                    else {
-
-                        ElementStateChangeHelper.setReadyStateElements(getApplicationContext(), rawMatCountCL, rawMatCountTextBox, disableColor, R.drawable.cardview_green_background);
-                        ElementStateChangeHelper.setEnableButton(getApplicationContext(), EditButtonEnums.DELETE_BUTTON_ENABLED, deleteRawButton);
-                        ElementStateChangeHelper.enableNextElements(rawMaterialTypeCV, rawMatTypeTextBox);
-
-                        if(deleteRawButton != null){
-                            if(deleteRawButton.isEnabled()){
-                                deleteRawButton.setOnClickListener(view -> {
-                                    if(rawMaterialTypeCV != null){
-                                        rawMatCountTextBox.setEnabled(true);
-                                        rawMatCountTextBox.requestFocus();
-                                        rawMatCountTextBox.setText("");
-
-                                        rawMaterialTypeCV.setVisibility(View.INVISIBLE);
-                                        rawMatTypeTextBox.setText("");
-                                    }
-                                });
-                            }
-                        }
-                    }
-                }
-
-                @Override
-                public void afterTextChanged(Editable editable) {}
-            });
-        }
-
-        if(rawMaterialTypeCV != null && rawMatTypeTextBox != null && rawMatTypeCL != null){
-
-            rawMatTypeTextBox.addTextChangedListener(new TextWatcher() {
-                @Override
-                public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-                }
-
-                @Override
-                public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                    String rawMatType = rawMatTypeTextBox.getText().toString();
-
-                    if(rawMatType.equals("")){
-
-                        ElementStateChangeHelper.setEnablePreviousElements(getApplicationContext(), rawMatTypeCL, rawMatCountTextBox);
-                        ElementStateChangeHelper.setDisableButton(getApplicationContext(), EditButtonEnums.ADD_BUTTON_DISABLED, addRawMatButton);
-                    }
-                    else {
-
-                        ElementStateChangeHelper.setReadyStateElements(getApplicationContext(), rawMatTypeCL, rawMatTypeTextBox, disableColor, R.drawable.cardview_green_background);
-                        ElementStateChangeHelper.setEnableButton(getApplicationContext(), EditButtonEnums.ADD_BUTTON_ENABLED, addRawMatButton);
-
-                        if(addRawMatButton != null){
-                            if(addRawMatButton.isEnabled()){
-                                addRawMatButton.setOnClickListener(view -> {
-                                    Intent intent = new Intent();
-                                    intent.putExtra("rawMatTypeTextBox", rawMatTypeTextBox.getText().toString());
-                                    intent.putExtra("rawMatCountTextBox", rawMatCountTextBox.getText().toString());
-                                    setResult(1, intent);
-
-                                    RawMaterialCreationActivity.super.onBackPressed();
-                                });
-                            }
-                        }
-                    }
-                }
-
-                @Override
-                public void afterTextChanged(Editable editable) {
-
-                }
-            });
-        }
+//        if(rawMaterialCountCV != null && rawMatCountTextBox != null && rawMatCountCL != null){
+//            rawMatCountTextBox.addTextChangedListener(new TextWatcher() {
+//                @Override
+//                public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
+//
+//                @Override
+//                public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+//                    String rawMatCount = rawMatCountTextBox.getText().toString();
+//
+//                    if(rawMatCount.equals("")){
+//
+//                        ElementStateChangeHelper.disableCurrentElements(getApplicationContext(), rawMatCountCL, rawMaterialTypeCV, rawMatTypeTextBox, R.drawable.cardview_red_background);
+//                        ElementStateChangeHelper.setDisableButton(getApplicationContext(), EditButtonEnums.DELETE_BUTTON_DISABLED, deleteRawButton);
+//                    }
+//                    else {
+//
+//                        ElementStateChangeHelper.setReadyStateElements(getApplicationContext(), rawMatCountCL, rawMatCountTextBox, disableColor, R.drawable.cardview_green_background);
+//                        ElementStateChangeHelper.setEnableButton(getApplicationContext(), EditButtonEnums.DELETE_BUTTON_ENABLED, deleteRawButton);
+//                        ElementStateChangeHelper.enableNextElements(rawMaterialTypeCV, rawMatTypeTextBox);
+//
+//                        if(deleteRawButton != null){
+//                            if(deleteRawButton.isEnabled()){
+//                                deleteRawButton.setOnClickListener(view -> {
+//                                    if(rawMaterialTypeCV != null){
+//                                        rawMatCountTextBox.setEnabled(true);
+//                                        rawMatCountTextBox.requestFocus();
+//                                        rawMatCountTextBox.setText("");
+//
+//                                        rawMaterialTypeCV.setVisibility(View.INVISIBLE);
+//                                        rawMatTypeTextBox.setText("");
+//                                    }
+//                                });
+//                            }
+//                        }
+//                    }
+//                }
+//
+//                @Override
+//                public void afterTextChanged(Editable editable) {}
+//            });
+//        }
+//
+//        if(rawMaterialTypeCV != null && rawMatTypeTextBox != null && rawMatTypeCL != null){
+//
+//            rawMatTypeTextBox.addTextChangedListener(new TextWatcher() {
+//                @Override
+//                public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+//
+//                }
+//
+//                @Override
+//                public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+//                    String rawMatType = rawMatTypeTextBox.getText().toString();
+//
+//                    if(rawMatType.equals("")){
+//
+//                        ElementStateChangeHelper.setEnablePreviousElements(getApplicationContext(), rawMatTypeCL, rawMatCountTextBox);
+//                        ElementStateChangeHelper.setDisableButton(getApplicationContext(), EditButtonEnums.ADD_BUTTON_DISABLED, addRawMatButton);
+//                    }
+//                    else {
+//
+//                        ElementStateChangeHelper.setReadyStateElements(getApplicationContext(), rawMatTypeCL, rawMatTypeTextBox, disableColor, R.drawable.cardview_green_background);
+//                        ElementStateChangeHelper.setEnableButton(getApplicationContext(), EditButtonEnums.ADD_BUTTON_ENABLED, addRawMatButton);
+//
+//                        if(addRawMatButton != null){
+//                            if(addRawMatButton.isEnabled()){
+//                                addRawMatButton.setOnClickListener(view -> {
+//                                    Intent intent = new Intent();
+//                                    intent.putExtra("rawMatTypeTextBox", rawMatTypeTextBox.getText().toString());
+//                                    intent.putExtra("rawMatCountTextBox", rawMatCountTextBox.getText().toString());
+//                                    setResult(1, intent);
+//
+//                                    RawMaterialCreationActivity.super.onBackPressed();
+//                                });
+//                            }
+//                        }
+//                    }
+//                }
+//
+//                @Override
+//                public void afterTextChanged(Editable editable) {
+//
+//                }
+//            });
+//        }
     }
 
 //    private void openDialog() {
