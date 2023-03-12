@@ -8,6 +8,14 @@ public class RawMaterialTypeMass {
     private String storageBoxIdentifier;
     private String massData;
 
+    public RawMaterialTypeMass(String timeStamp, String wasteCode, String materialType, String storageBoxIdentifier, String massData) {
+        this.timeStamp = timeStamp;
+        this.wasteCode = wasteCode;
+        this.materialType = materialType;
+        this.storageBoxIdentifier = storageBoxIdentifier;
+        this.massData = massData;
+    }
+
     public String getTimeStamp() {
         return timeStamp;
     }

@@ -3,39 +3,37 @@ package hu.logcontrol.wasteprogram.tasks;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.net.Uri;
-import android.os.Environment;
 import android.os.Message;
-import android.provider.DocumentsContract;
 import android.util.Log;
-import android.widget.Toast;
 
-import androidx.core.graphics.PathUtils;
 import androidx.documentfile.provider.DocumentFile;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.OutputStreamWriter;
 import java.lang.ref.WeakReference;
-import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.concurrent.Callable;
 
 import hu.logcontrol.wasteprogram.enums.HandlerMessageIdentifiers;
 import hu.logcontrol.wasteprogram.helpers.Helper;
 import hu.logcontrol.wasteprogram.logger.ApplicationLogger;
+import hu.logcontrol.wasteprogram.models.LocalRawMaterialTypeMassesStorage;
 import hu.logcontrol.wasteprogram.models.LocalRawMaterialsStorage;
 import hu.logcontrol.wasteprogram.models.RawMaterial;
+import hu.logcontrol.wasteprogram.models.RawMaterialTypeMass;
 import hu.logcontrol.wasteprogram.taskmanager.CustomThreadPoolManager;
 
 public class CreateFile implements Callable {
 
     private WeakReference<CustomThreadPoolManager> customThreadPoolManagerWeakReference;
     private List<RawMaterial> rawMaterialList;
+    private List<RawMaterialTypeMass> rawMaterialTypeMassList;
     private Message message = null;
 
     private Context context;
+    private RunModes runMode;
     private Uri uri;
     private String header;
     private String fileExtension;
@@ -46,10 +44,12 @@ public class CreateFile implements Callable {
     private DocumentFile documentFile;
     private FileWriter writer = null;
 
-    private LocalRawMaterialsStorage localStorage;
+    private LocalRawMaterialsStorage localRawMatStorage;
+    private LocalRawMaterialTypeMassesStorage localTypeMassStorage;
 
-    public CreateFile(Context context, Uri uri, String header, String fileExtension) {
+    public CreateFile(Context context, RunModes runMode, Uri uri, String header, String fileExtension) {
         this.context = context;
+        this.runMode = runMode;
         this.uri = uri;
         this.header = header;
         this.fileExtension = fileExtension;
@@ -65,23 +65,56 @@ public class CreateFile implements Callable {
         try {
             if (Thread.interrupted()) throw new InterruptedException();
 
-            localStorage = LocalRawMaterialsStorage.getInstance();
-            rawMaterialList = localStorage.getRawMaterialList();
+            switch (runMode){
+                case CREATE_RAWMATERIAL_CSV:{
 
-            if(rawMaterialList != null) {
+                    localRawMatStorage = LocalRawMaterialsStorage.getInstance();
+                    rawMaterialList = localRawMatStorage.getRawMaterialList();
 
-                fileName = ApplicationLogger.getDateTimeString() + "." + fileExtension;
-                documentFile = DocumentFile.fromTreeUri(context, uri);
-                if(documentFile != null) documentFile.createFile(fileExtension, fileName);
+                    fileName = ApplicationLogger.getDateTimeString() + "." + fileExtension;
+                    documentFile = DocumentFile.fromTreeUri(context, uri);
+                    if(documentFile != null) documentFile.createFile(fileExtension, fileName);
 
-                fos = new FileOutputStream(getPathFromUri() + File.separator + fileName);
+                    fos = new FileOutputStream(getPathFromUri() + File.separator + fileName);
 
-                writer = new FileWriter(fos.getFD());
-                writer.write(header + "\n\n");
-                for (int i = 0; i < rawMaterialList.size(); i++) {
-                    writer.write(rawMaterialList.get(i).toString() + "\n");
+                    if(rawMaterialList != null) {
+
+                        writer = new FileWriter(fos.getFD());
+                        writer.write(header + "\n\n");
+                        for (int i = 0; i < rawMaterialList.size(); i++) {
+                            writer.write(rawMaterialList.get(i).toString() + "\n");
+                        }
+                        writer.flush();
+                    }
+
+                    localRawMatStorage.clearRawMaterialList();
+
+                    break;
                 }
-                writer.flush();
+                case CREATE_RAWMATERIALTYPEMASS_CSV:{
+
+                    localTypeMassStorage = LocalRawMaterialTypeMassesStorage.getInstance();
+                    rawMaterialTypeMassList = localTypeMassStorage.getRawMaterialTypeMassList();
+
+                    fileName = ApplicationLogger.getDateTimeString() + "." + fileExtension;
+                    documentFile = DocumentFile.fromTreeUri(context, uri);
+                    if(documentFile != null) documentFile.createFile(fileExtension, fileName);
+
+                    fos = new FileOutputStream(getPathFromUri() + File.separator + fileName);
+
+                    if(rawMaterialList != null) {
+
+                        writer = new FileWriter(fos.getFD());
+                        writer.write(header + "\n\n");
+                        for (int i = 0; i < rawMaterialTypeMassList.size(); i++) {
+                            writer.write(rawMaterialTypeMassList.get(i).toString() + "\n");
+                        }
+                        writer.flush();
+                    }
+
+                    localTypeMassStorage.clearRawMaterialTypeMassList();
+                    break;
+                }
             }
         }
         catch (InterruptedException e) {
@@ -96,12 +129,9 @@ public class CreateFile implements Callable {
         }
         finally {
 
-            localStorage.clearRawMaterialList();
             if(writer != null) writer.close();
             sendMessageToPresenterHandler(CreateFileEnums.CREATEFILE_SUCCES);
         }
-
-        if(message != null) { customThreadPoolManagerWeakReference.get().sendResultToPresenter(message); }
 
         return null;
     }
@@ -137,5 +167,10 @@ public class CreateFile implements Callable {
         CREATEFILE_THREAD_INTERRUPTED,
         CREATEFILE_IOEXCEPTION,
         CREATEFILE_SUCCES
+    }
+
+    public enum RunModes{
+        CREATE_RAWMATERIAL_CSV,
+        CREATE_RAWMATERIALTYPEMASS_CSV
     }
 }

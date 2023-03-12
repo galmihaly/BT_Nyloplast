@@ -10,15 +10,21 @@ import java.util.concurrent.Callable;
 import hu.logcontrol.wasteprogram.adapters.RawMaterialAdapter;
 import hu.logcontrol.wasteprogram.enums.HandlerMessageIdentifiers;
 import hu.logcontrol.wasteprogram.helpers.Helper;
+import hu.logcontrol.wasteprogram.models.LocalRawMaterialTypeMassesStorage;
 import hu.logcontrol.wasteprogram.models.LocalRawMaterialsStorage;
 import hu.logcontrol.wasteprogram.models.RawMaterial;
+import hu.logcontrol.wasteprogram.models.RawMaterialTypeMass;
 import hu.logcontrol.wasteprogram.taskmanager.CustomThreadPoolManager;
 
-public class CreateRawMaterialList implements Callable {
+public class AddElementToList implements Callable {
 
     private WeakReference<CustomThreadPoolManager> customThreadPoolManagerWeakReference;
+    private RunModes runMode;
     private RawMaterial rawMaterial;
     private List<RawMaterial> rawMaterialList;
+
+    private RawMaterialTypeMass rawMaterialTypeMass;
+    private List<RawMaterialTypeMass> rawMaterialTypeMassList;
 
     private Message message = null;
 
@@ -26,8 +32,14 @@ public class CreateRawMaterialList implements Callable {
         this.customThreadPoolManagerWeakReference = new WeakReference<>(customThreadPoolManager);
     }
 
-    public CreateRawMaterialList(RawMaterial rawMaterial) {
+    public AddElementToList(RunModes runMode, RawMaterial rawMaterial) {
+        this.runMode = runMode;
         this.rawMaterial = rawMaterial;
+    }
+
+    public AddElementToList(RunModes runMode, RawMaterialTypeMass rawMaterialTypeMass) {
+        this.runMode = runMode;
+        this.rawMaterialTypeMass = rawMaterialTypeMass;
     }
 
     @Override
@@ -35,11 +47,29 @@ public class CreateRawMaterialList implements Callable {
         try {
             if (Thread.interrupted()) throw new InterruptedException();
 
-            rawMaterialList = LocalRawMaterialsStorage.getInstance().getRawMaterialList();
+            switch (runMode){
+                case ADD_RAWMATERIAL:{
 
-            if(rawMaterialList != null) {
-                rawMaterialList.add(rawMaterial);
-                sendMessageToPresenterHandler(CreateRawMaterialListEnums.ADDELEMENT_SUCCES);
+                    rawMaterialList = LocalRawMaterialsStorage.getInstance().getRawMaterialList();
+
+                    if(rawMaterialList != null) {
+                        rawMaterialList.add(rawMaterial);
+                        sendMessageToPresenterHandler(CreateRawMaterialListEnums.ADDELEMENT_SUCCES);
+                    }
+
+                    break;
+                }
+                case ADD_RAWMATERIALTYPEMASS:{
+
+                    rawMaterialTypeMassList = LocalRawMaterialTypeMassesStorage.getInstance().getRawMaterialTypeMassList();
+
+                    if(rawMaterialTypeMassList != null) {
+                        rawMaterialTypeMassList.add(rawMaterialTypeMass);
+                        sendMessageToPresenterHandler(CreateRawMaterialListEnums.ADDELEMENT_SUCCES);
+                    }
+
+                    break;
+                }
             }
         }
         catch (InterruptedException e) {
@@ -71,5 +101,10 @@ public class CreateRawMaterialList implements Callable {
     private enum  CreateRawMaterialListEnums{
         INTERRUPTED_EXCEPTION,
         ADDELEMENT_SUCCES
+    }
+
+    public enum RunModes{
+        ADD_RAWMATERIAL,
+        ADD_RAWMATERIALTYPEMASS
     }
 }

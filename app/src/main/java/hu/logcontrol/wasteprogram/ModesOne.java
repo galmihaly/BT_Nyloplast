@@ -19,7 +19,6 @@ import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
 import android.widget.ImageButton;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.List;
@@ -46,10 +45,9 @@ public class ModesOne extends AppCompatActivity implements IModesOneView {
 
     private ConstraintLayout mainModesOneCL;
 
-    private List<RawMaterial> rawMaterialListView;
-    private RawMaterialAdapter rawMaterialAdapter;
+    private List<RawMaterial> rawMaterialList;
 
-    private ActivityResultLauncher<Intent> activityResultLauncher = registerForActivityResult(
+    private final ActivityResultLauncher<Intent> activityResultLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             result -> {
                 if(result.getResultCode() == 1){
@@ -70,7 +68,7 @@ public class ModesOne extends AppCompatActivity implements IModesOneView {
                     Intent intent = result.getData();
                     if(intent == null) return;
 
-                    programPresenter.createTextFileFromRawMaterialList(intent.getData());
+                    programPresenter.createFileFromRawMaterialList(intent.getData());
                     hideNavigationBar();
                 }
             }
@@ -81,37 +79,14 @@ public class ModesOne extends AppCompatActivity implements IModesOneView {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_modes_one);
         initView();
-        startCamera();
 
         programPresenter = new ProgramPresenter(this, getApplicationContext());
         programPresenter.initTaskManager();
 
-        rawMaterialListView = LocalRawMaterialsStorage.getInstance().getRawMaterialList();
+        rawMaterialList = LocalRawMaterialsStorage.getInstance().getRawMaterialList();
     }
 
-    public void startCamera() {
-        if(ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
-            Log.e("", "Jelenleg rendelkezik írási joggal!");
-        } else {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 786);
-        }
-    }
 
-        @Override
-        public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, int[] grantResults) {
-            for (int r : grantResults) {
-                if (r == PackageManager.PERMISSION_DENIED) {
-                    Toast.makeText(this, "Engedély elutasítva!", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-            }
-
-            if (requestCode == 786) {
-                Toast.makeText(this, "Engedély elfogadva!", Toast.LENGTH_SHORT).show();
-            }
-
-            super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        }
 
     @Override
     protected void onResume() {
@@ -123,8 +98,8 @@ public class ModesOne extends AppCompatActivity implements IModesOneView {
             });
         }
 
-        if(saveButton != null && rawMaterialListView != null){
-            if(rawMaterialListView.size() > 0){
+        if(saveButton != null && rawMaterialList != null){
+            if(rawMaterialList.size() > 0){
                 settingSaveButton(EditButtonEnums.SAVE_BUTTON_ENABLED);
 
                 saveButton.setOnClickListener(view -> {
@@ -146,7 +121,7 @@ public class ModesOne extends AppCompatActivity implements IModesOneView {
             }
         }
 
-        rawMaterialAdapter = new RawMaterialAdapter(getApplicationContext(), rawMaterialListView, this);
+        RawMaterialAdapter rawMaterialAdapter = new RawMaterialAdapter(getApplicationContext(), rawMaterialList, this);
         recycleViewModesOneRV.setAdapter(rawMaterialAdapter);
     }
 
@@ -186,7 +161,7 @@ public class ModesOne extends AppCompatActivity implements IModesOneView {
             case SAVE_BUTTON_DISABLED:{
 
                 saveButton.setEnabled(false);
-                saveButton.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.disable_button_background));
+                saveButton.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.disable_button_background_circle));
 
                 break;
             }

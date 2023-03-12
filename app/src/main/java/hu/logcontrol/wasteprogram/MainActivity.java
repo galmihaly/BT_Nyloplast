@@ -1,11 +1,18 @@
 package hu.logcontrol.wasteprogram;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.Toast;
 
 import hu.logcontrol.wasteprogram.enums.ActivityEnums;
 import hu.logcontrol.wasteprogram.helpers.Helper;
@@ -27,6 +34,7 @@ public class MainActivity extends AppCompatActivity implements IMainView {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         initView();
+        startWrite();
 
         programPresenter = new ProgramPresenter(this, getApplicationContext());
     }
@@ -55,6 +63,30 @@ public class MainActivity extends AppCompatActivity implements IMainView {
                 programPresenter.exitApplicationPresenter();
             });
         }
+    }
+
+    public void startWrite() {
+        if(ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+            Log.e("", "Jelenleg rendelkezik írási joggal!");
+        } else {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 786);
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, int[] grantResults) {
+        for (int r : grantResults) {
+            if (r == PackageManager.PERMISSION_DENIED) {
+                Toast.makeText(this, "Engedély elutasítva!", Toast.LENGTH_SHORT).show();
+                return;
+            }
+        }
+
+        if (requestCode == 786) {
+            Toast.makeText(this, "Engedély elfogadva!", Toast.LENGTH_SHORT).show();
+        }
+
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 
     private void initView() {

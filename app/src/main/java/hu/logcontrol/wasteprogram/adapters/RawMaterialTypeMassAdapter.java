@@ -1,6 +1,8 @@
 package hu.logcontrol.wasteprogram.adapters;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,8 +25,8 @@ import hu.logcontrol.wasteprogram.models.RawMaterialTypeMass;
 public class RawMaterialTypeMassAdapter extends RecyclerView.Adapter<RawMaterialTypeMassAdapter.RawMaterialTypeMassViewHolder> {
 
     private Context context;
-    private List<RawMaterialTypeMass> rawMaterialTypeMassList;
-    private WeakReference<IModesTwoView> modesTwoWeakReference;
+    private final List<RawMaterialTypeMass> rawMaterialTypeMassList;
+    private final WeakReference<IModesTwoView> modesTwoWeakReference;
 
     public RawMaterialTypeMassAdapter(Context context, List<RawMaterialTypeMass> rawMaterialTypeMassList, IModesTwoView modesTwoWeakReference) {
         this.context = context.getApplicationContext();
@@ -39,6 +41,7 @@ public class RawMaterialTypeMassAdapter extends RecyclerView.Adapter<RawMaterial
         return new RawMaterialTypeMassAdapter.RawMaterialTypeMassViewHolder(v);
     }
 
+    @SuppressLint({"SetTextI18n", "NotifyDataSetChanged"})
     @Override
     public void onBindViewHolder(@NonNull RawMaterialTypeMassViewHolder holder, int position) {
         if(rawMaterialTypeMassList != null){

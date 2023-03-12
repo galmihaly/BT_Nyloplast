@@ -29,10 +29,10 @@
 
         <Button
             android:id="@+id/modeTwo"
-            android:layout_width="120dp"
-            android:layout_height="wrap_content"
+            android:layout_width="230dp"
+            android:layout_height="50dp"
             android:background="@drawable/button_background_1"
-            android:text="MODE2"
+            android:text="TÖMEGADATKEZELÉS"
             android:textSize="20sp"
             app:layout_constraintBottom_toTopOf="@+id/modeThree"
             app:layout_constraintEnd_toEndOf="parent"
