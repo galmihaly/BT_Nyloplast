@@ -50,6 +50,7 @@ public class RawMaterialTypeMassCreationActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_raw_material_type_mass_creation);
+        hideNavigationBar();
         initView();
     }
 
@@ -200,6 +201,8 @@ public class RawMaterialTypeMassCreationActivity extends AppCompatActivity {
                 storageBoxIdentifierTextBox.setText("");
 
                 if(massDataScrollView != null) massDataScrollView.fullScroll(ScrollView.FOCUS_UP);
+
+                hideNavigationBar();
             }
         });
     }
