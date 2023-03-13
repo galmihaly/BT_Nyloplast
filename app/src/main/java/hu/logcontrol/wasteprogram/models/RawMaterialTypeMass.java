@@ -56,6 +56,9 @@ public class RawMaterialTypeMass {
         this.massData = massData;
     }
 
+    @Override
+    public String toString() { return String.format("%s;%s;%s;%s;%s", this.timeStamp, this.wasteCode, this.materialType, this.storageBoxIdentifier, this.massData); }
+
     public static String getCSVHeader(){
         return "TimeStamp;WasteCode;MaterialType;StorageBoxIdentifier;MassData";
     }

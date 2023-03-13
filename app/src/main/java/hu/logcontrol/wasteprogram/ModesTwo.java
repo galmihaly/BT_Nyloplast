@@ -86,6 +86,8 @@ public class ModesTwo extends AppCompatActivity implements IModesTwoView {
     protected void onResume() {
         super.onResume();
 
+        hideNavigationBar();
+
         if(mainModesTwoCL != null){
             mainModesTwoCL.setOnClickListener(view -> {
                 hideNavigationBar();

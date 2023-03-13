@@ -71,7 +71,7 @@ public class CreateFile implements Callable {
                     localRawMatStorage = LocalRawMaterialsStorage.getInstance();
                     rawMaterialList = localRawMatStorage.getRawMaterialList();
 
-                    fileName = ApplicationLogger.getDateTimeString() + "." + fileExtension;
+                    fileName = ApplicationLogger.getDateTimeString() + "_RawMaterialList" + "." + fileExtension;
                     documentFile = DocumentFile.fromTreeUri(context, uri);
                     if(documentFile != null) documentFile.createFile(fileExtension, fileName);
 
@@ -96,13 +96,13 @@ public class CreateFile implements Callable {
                     localTypeMassStorage = LocalRawMaterialTypeMassesStorage.getInstance();
                     rawMaterialTypeMassList = localTypeMassStorage.getRawMaterialTypeMassList();
 
-                    fileName = ApplicationLogger.getDateTimeString() + "." + fileExtension;
+                    fileName = ApplicationLogger.getDateTimeString() + "_RawMaterialTypeMassList" + "." + fileExtension;
                     documentFile = DocumentFile.fromTreeUri(context, uri);
                     if(documentFile != null) documentFile.createFile(fileExtension, fileName);
 
                     fos = new FileOutputStream(getPathFromUri() + File.separator + fileName);
 
-                    if(rawMaterialList != null) {
+                    if(rawMaterialTypeMassList != null) {
 
                         writer = new FileWriter(fos.getFD());
                         writer.write(header + "\n\n");

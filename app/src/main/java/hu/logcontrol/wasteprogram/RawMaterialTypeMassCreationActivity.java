@@ -75,7 +75,9 @@ public class RawMaterialTypeMassCreationActivity extends AppCompatActivity {
         if(typeMassCountCV != null && typeMassCountTextBox != null && typeMassCountCL != null){
             typeMassCountTextBox.addTextChangedListener(new TextWatcher() {
 
-                @Override public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
+                @Override public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                    hideNavigationBar();
+                }
 
                 @Override
                 public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -167,6 +169,8 @@ public class RawMaterialTypeMassCreationActivity extends AppCompatActivity {
                             ElementStateChangeHelper.setEnableButton(getApplicationContext(), EditButtonEnums.ADD_BUTTON_ENABLED, addRawMatTypeMassButton);
                             ElementStateChangeHelper.setDisableButton(getApplicationContext(), EditButtonEnums.ENTER_BUTTON_DISABLED, enterButton);
                             addRawMatTypeMassButton.setEnabled(true);
+
+                            hideNavigationBar();
                         });
                     }
                 }

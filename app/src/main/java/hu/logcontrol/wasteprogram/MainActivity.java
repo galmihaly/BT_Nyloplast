@@ -107,7 +107,14 @@ public class MainActivity extends AppCompatActivity implements IMainView {
 
     @Override
     public void exitApplication() {
-        MainActivity.this.finish();
+        onDestroy();
+    }
+
+    @Override
+    protected void onDestroy() {
+
+        finishAndRemoveTask();
         System.exit(0);
+        super.onDestroy();
     }
 }

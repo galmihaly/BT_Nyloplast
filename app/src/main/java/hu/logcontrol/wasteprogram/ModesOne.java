@@ -92,6 +92,8 @@ public class ModesOne extends AppCompatActivity implements IModesOneView {
     protected void onResume() {
         super.onResume();
 
+        hideNavigationBar();
+
         if(mainModesOneCL != null){
             mainModesOneCL.setOnClickListener(view -> {
                 hideNavigationBar();

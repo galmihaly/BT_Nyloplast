@@ -68,6 +68,10 @@ public class AddElementToList implements Callable {
                         sendMessageToPresenterHandler(CreateRawMaterialListEnums.ADDELEMENT_SUCCES);
                     }
 
+                    for (int i = 0; i < rawMaterialTypeMassList.size(); i++) {
+                        Log.e("", rawMaterialTypeMassList.get(i).toString());
+                    }
+
                     break;
                 }
             }
