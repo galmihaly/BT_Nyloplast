@@ -48,7 +48,6 @@ public class RawMaterialTypeMassAdapter extends RecyclerView.Adapter<RawMaterial
             if(rawMaterialTypeMassList.size() != 0){
 
                 holder.getNumberOfItem_2().setText(position + 1 + ".");
-                holder.getRawMaterialTimeStampInput_2().setText(rawMaterialTypeMassList.get(position).getTimeStamp());
                 holder.getRawMaterialWasteCodeInput().setText(rawMaterialTypeMassList.get(position).getWasteCode());
                 holder.getRawMaterialTypeInput_2().setText(rawMaterialTypeMassList.get(position).getMaterialType());
                 holder.getStorageBoxIdentifierInput().setText(rawMaterialTypeMassList.get(position).getStorageBoxIdentifier());
@@ -74,7 +73,6 @@ public class RawMaterialTypeMassAdapter extends RecyclerView.Adapter<RawMaterial
     public static class RawMaterialTypeMassViewHolder extends RecyclerView.ViewHolder {
 
         private TextView numberOfItem_2;
-        private TextView rawMaterialTimeStampInput_2;
         private TextView rawMaterialWasteCodeInput;
         private TextView rawMaterialTypeInput_2;
         private TextView storageBoxIdentifierInput;
@@ -86,7 +84,6 @@ public class RawMaterialTypeMassAdapter extends RecyclerView.Adapter<RawMaterial
             super(itemView);
 
             numberOfItem_2 = itemView.findViewById(R.id.numberOfItem_2);
-            rawMaterialTimeStampInput_2 = itemView.findViewById(R.id.rawMaterialTimeStampInput_2);
             rawMaterialWasteCodeInput = itemView.findViewById(R.id.rawMaterialWasteCodeInput);
             rawMaterialTypeInput_2 = itemView.findViewById(R.id.rawMaterialTypeInput_2);
             storageBoxIdentifierInput = itemView.findViewById(R.id.storageBoxIdentifierInput);
@@ -97,10 +94,6 @@ public class RawMaterialTypeMassAdapter extends RecyclerView.Adapter<RawMaterial
 
         public TextView getNumberOfItem_2() {
             return numberOfItem_2;
-        }
-
-        public TextView getRawMaterialTimeStampInput_2() {
-            return rawMaterialTimeStampInput_2;
         }
 
         public TextView getRawMaterialWasteCodeInput() {

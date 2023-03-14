@@ -44,7 +44,6 @@ public class RawMaterialAdapter extends RecyclerView.Adapter<RawMaterialAdapter.
         if(rawMaterialList != null){
             if(rawMaterialList.size() != 0){
                 holder.getNumberOfItem().setText(position + 1 + ".");
-                holder.getRawMaterialTimeStampInput().setText(rawMaterialList.get(position).getTimeStamp());
                 holder.getRawMaterialTypeInput().setText(rawMaterialList.get(position).getMaterialType());
                 holder.getRawMaterialCountInput().setText(rawMaterialList.get(position).getDoseNumber());
             }
@@ -68,7 +67,6 @@ public class RawMaterialAdapter extends RecyclerView.Adapter<RawMaterialAdapter.
 
     public static class RawMaterialItemViewHolder extends RecyclerView.ViewHolder {
 
-        private TextView rawMaterialTimeStampInput;
         private TextView rawMaterialTypeInput;
         private TextView rawMaterialCountInput;
         private TextView numberOfItem;
@@ -81,16 +79,11 @@ public class RawMaterialAdapter extends RecyclerView.Adapter<RawMaterialAdapter.
 
             // TODO: meg kell nézni az elemek sorrendjét, nem jól íródik ki
 
-            rawMaterialTimeStampInput = itemView.findViewById(R.id.rawMaterialTimeStampInput_1);
             rawMaterialTypeInput = itemView.findViewById(R.id.rawMaterialTypeInput_1);
             rawMaterialCountInput = itemView.findViewById(R.id.rawMaterialCountInput_1);
             numberOfItem = itemView.findViewById(R.id.numberOfItem_1);
 
             deleteItemButton = itemView.findViewById(R.id.deleteItemButton_1);
-        }
-
-        public TextView getRawMaterialTimeStampInput() {
-            return rawMaterialTimeStampInput;
         }
 
         public TextView getRawMaterialTypeInput() {

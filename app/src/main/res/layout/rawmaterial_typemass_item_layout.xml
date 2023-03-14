@@ -18,8 +18,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
-            android:layout_marginTop="5dp"
-            android:layout_marginBottom="10dp"
+            android:layout_marginBottom="5dp"
             android:text="Tömegadat:"
             android:textColor="@color/black"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -31,9 +30,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
-            android:layout_marginTop="5dp"
-            android:layout_marginBottom="10dp"
+            android:layout_marginBottom="5dp"
             android:textColor="@color/black"
+            android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toEndOf="@+id/rawMaterialMassData"
             app:layout_constraintTop_toBottomOf="@+id/storageBoxIdentifierInput" />
@@ -47,7 +46,7 @@
             android:text="Hulladék kódja:"
             android:textColor="@color/black"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/rawMaterialTimeStampText_2" />
+            app:layout_constraintTop_toBottomOf="@+id/numberOfItem_2" />
 
         <TextView
             android:id="@+id/rawMaterialWasteCodeInput"
@@ -56,15 +55,15 @@
             android:layout_marginStart="10dp"
             android:layout_marginTop="5dp"
             android:textColor="@color/black"
+            android:textStyle="bold"
             app:layout_constraintStart_toEndOf="@+id/rawMaterialWasteCodeText"
-            app:layout_constraintTop_toBottomOf="@+id/rawMaterialTimeStampInput_2" />
+            app:layout_constraintTop_toBottomOf="@+id/numberOfItem_2" />
 
         <TextView
             android:id="@+id/rawMaterialStorageBoxIdentifier"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
-            android:layout_marginTop="5dp"
             android:text="Tárólóláda azonosítója:"
             android:textColor="@color/black"
             app:layout_constraintStart_toStartOf="parent"
@@ -75,7 +74,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
-            android:layout_marginTop="5dp"
             android:padding="0sp"
             android:paddingStart="0sp"
             android:paddingLeft="0sp"
@@ -90,31 +88,12 @@
             app:layout_constraintTop_toBottomOf="@+id/rawMaterialWasteCodeText" />
 
         <TextView
-            android:id="@+id/rawMaterialTimeStampText_2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:text="Időbélyeg:"
-            android:textColor="@color/black"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/deleteItemButton_2" />
-
-        <TextView
-            android:id="@+id/rawMaterialTimeStampInput_2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:textColor="@color/black"
-            app:layout_constraintStart_toEndOf="@+id/rawMaterialTimeStampText_2"
-            app:layout_constraintTop_toBottomOf="@+id/deleteItemButton_2" />
-
-        <TextView
             android:id="@+id/rawMaterialTypeInput_2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
-            android:layout_marginTop="5dp"
             android:textColor="@color/black"
+            android:textStyle="bold"
             app:layout_constraintStart_toEndOf="@+id/rawMaterialType_2"
             app:layout_constraintTop_toBottomOf="@+id/rawMaterialWasteCodeInput" />
 
@@ -123,8 +102,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
-            android:layout_marginTop="5dp"
             android:textColor="@color/black"
+            android:textStyle="bold"
             app:layout_constraintStart_toEndOf="@+id/rawMaterialStorageBoxIdentifier"
             app:layout_constraintTop_toBottomOf="@+id/rawMaterialTypeInput_2" />
 
@@ -133,7 +112,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="5dp"
             android:textColor="@color/black"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -142,9 +121,9 @@
             android:id="@+id/deleteItemButton_2"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:layout_marginTop="10dp"
             android:layout_marginEnd="10dp"
             android:background="@drawable/delete_button_background"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/ic_fluent_delete_28_regular" />

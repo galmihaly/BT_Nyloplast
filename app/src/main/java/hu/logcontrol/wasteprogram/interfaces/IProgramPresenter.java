@@ -10,6 +10,7 @@ import hu.logcontrol.wasteprogram.enums.ActivityEnums;
 import hu.logcontrol.wasteprogram.enums.EditButtonEnums;
 import hu.logcontrol.wasteprogram.models.RawMaterial;
 import hu.logcontrol.wasteprogram.models.RawMaterialTypeMass;
+import hu.logcontrol.wasteprogram.models.RecycledMaterial;
 
 public interface IProgramPresenter {
     void initTaskManager();
@@ -17,8 +18,12 @@ public interface IProgramPresenter {
     void exitApplicationPresenter();
     void addRawMaterialToAdapterList(RawMaterial rawMaterial);
     void addRawMaterialTypeMassToAdapterList(RawMaterialTypeMass rawMaterialTypeMass);
+    void addRecycledMaterialToAdapterList(RecycledMaterial recycledMaterial);
+
     void createFileFromRawMaterialList(Uri uri);
     void createFileFromRawMaterialTypeMassList(Uri uri);
+    void createFileFromRecycledMaterialTypeMassList(Uri uri);
+
     void setSaveButtonState(EditButtonEnums editButtonEnum);
     void sendMessageToView(String message);
 }

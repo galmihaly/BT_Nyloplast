@@ -17,10 +17,12 @@ import hu.logcontrol.wasteprogram.ModesThree;
 import hu.logcontrol.wasteprogram.ModesTwo;
 import hu.logcontrol.wasteprogram.RawMaterialCreationActivity;
 import hu.logcontrol.wasteprogram.RawMaterialTypeMassCreationActivity;
+import hu.logcontrol.wasteprogram.RecycledMaterialCreationActivity;
 import hu.logcontrol.wasteprogram.enums.ActivityEnums;
 import hu.logcontrol.wasteprogram.enums.EditButtonEnums;
 import hu.logcontrol.wasteprogram.enums.HandlerMessageIdentifiers;
 import hu.logcontrol.wasteprogram.interfaces.IModesOneView;
+import hu.logcontrol.wasteprogram.interfaces.IModesThreeView;
 import hu.logcontrol.wasteprogram.interfaces.IModesTwoView;
 import hu.logcontrol.wasteprogram.interfaces.IProgramPresenter;
 import hu.logcontrol.wasteprogram.interfaces.IMainView;
@@ -28,6 +30,7 @@ import hu.logcontrol.wasteprogram.logger.ApplicationLogger;
 import hu.logcontrol.wasteprogram.logger.LogLevel;
 import hu.logcontrol.wasteprogram.models.RawMaterial;
 import hu.logcontrol.wasteprogram.models.RawMaterialTypeMass;
+import hu.logcontrol.wasteprogram.models.RecycledMaterial;
 import hu.logcontrol.wasteprogram.taskmanager.CustomThreadPoolManager;
 import hu.logcontrol.wasteprogram.taskmanager.PresenterThreadCallback;
 import hu.logcontrol.wasteprogram.tasks.AddElementToList;
@@ -38,6 +41,7 @@ public class ProgramPresenter implements IProgramPresenter, PresenterThreadCallb
     private IMainView iMainView;
     private IModesOneView iModesOneView;
     private IModesTwoView iModesTwoView;
+    private IModesThreeView iModesThreeView;
 
     private Context context;
     private CustomThreadPoolManager mCustomThreadPoolManager;
@@ -55,6 +59,11 @@ public class ProgramPresenter implements IProgramPresenter, PresenterThreadCallb
 
     public ProgramPresenter(IModesTwoView iModesTwoView, Context context) {
         this.iModesTwoView = iModesTwoView;
+        this.context = context;
+    }
+
+    public ProgramPresenter(IModesThreeView iModesThreeView, Context context) {
+        this.iModesThreeView = iModesThreeView;
         this.context = context;
     }
 
@@ -106,6 +115,10 @@ public class ProgramPresenter implements IProgramPresenter, PresenterThreadCallb
                 intent = new Intent(context, RawMaterialTypeMassCreationActivity.class);
                 break;
             }
+            case RECYCLED_MATERIAL_TYPEMASS_CREATION_ACTIVITY:{
+                intent = new Intent(context, RecycledMaterialCreationActivity.class);
+                break;
+            }
             case FOLDERPICKER_ACTIVITY:{
                 intent = new Intent(Intent.ACTION_OPEN_DOCUMENT_TREE);
                 break;
@@ -116,6 +129,7 @@ public class ProgramPresenter implements IProgramPresenter, PresenterThreadCallb
         if(iMainView != null) iMainView.openActivityByIntent(intent);
         if(iModesOneView != null) iModesOneView.openActivityByIntent(intent);
         if(iModesTwoView != null) iModesTwoView.openActivityByIntent(intent);
+        if(iModesThreeView != null) iModesThreeView.openActivityByIntent(intent);
     }
 
     @Override
@@ -159,15 +173,32 @@ public class ProgramPresenter implements IProgramPresenter, PresenterThreadCallb
     }
 
     @Override
+    public void addRecycledMaterialToAdapterList(RecycledMaterial recycledMaterial) {
+        try {
+            ApplicationLogger.logging(LogLevel.INFORMATION, "A RecycledMaterial objetum hozzáadása az Adapter listájához elkezdődött.");
+
+            AddElementToList callable = new AddElementToList(AddElementToList.RunModes.ADD_RECYCLEDMATERIAL, recycledMaterial);
+            callable.setCustomThreadPoolManager(mCustomThreadPoolManager);
+            mCustomThreadPoolManager.addCallableMethod(callable);
+
+            ApplicationLogger.logging(LogLevel.INFORMATION, "A RecycledMaterial objetum hozzáadása az Adapter listájához befejeződött.");
+        }
+        catch (Exception e){
+            e.printStackTrace();
+            ApplicationLogger.logging(LogLevel.FATAL, e.getMessage());
+        }
+    }
+
+    @Override
     public void createFileFromRawMaterialList(Uri uri) {
         try {
-            ApplicationLogger.logging(LogLevel.INFORMATION, "A RawMaterial lista átmásolása txt fájlba elkezdődött.");
+            ApplicationLogger.logging(LogLevel.INFORMATION, "A RawMaterial lista átmásolása csv fájlba elkezdődött.");
 
             CreateFile callable = new CreateFile(context, CreateFile.RunModes.CREATE_RAWMATERIAL_CSV, uri, RawMaterial.getCSVHeader(), "csv");
             callable.setCustomThreadPoolManager(mCustomThreadPoolManager);
             mCustomThreadPoolManager.addCallableMethod(callable);
 
-            ApplicationLogger.logging(LogLevel.INFORMATION, "A RawMaterial lista átmásolása txt fájlba befejeződött.");
+            ApplicationLogger.logging(LogLevel.INFORMATION, "A RawMaterial lista átmásolása csv fájlba befejeződött.");
         }
         catch (Exception e){
             e.printStackTrace();
@@ -178,7 +209,7 @@ public class ProgramPresenter implements IProgramPresenter, PresenterThreadCallb
     @Override
     public void createFileFromRawMaterialTypeMassList(Uri uri) {
         try {
-            ApplicationLogger.logging(LogLevel.INFORMATION, "A RawMaterial lista átmásolása txt fájlba elkezdődött.");
+            ApplicationLogger.logging(LogLevel.INFORMATION, "A RawMaterial lista átmásolása csv fájlba elkezdődött.");
 
             CreateFile callable = new CreateFile(context, CreateFile.RunModes.CREATE_RAWMATERIALTYPEMASS_CSV, uri, RawMaterialTypeMass.getCSVHeader(), "csv");
             callable.setCustomThreadPoolManager(mCustomThreadPoolManager);
@@ -193,10 +224,28 @@ public class ProgramPresenter implements IProgramPresenter, PresenterThreadCallb
     }
 
     @Override
+    public void createFileFromRecycledMaterialTypeMassList(Uri uri) {
+        try {
+            ApplicationLogger.logging(LogLevel.INFORMATION, "A RecycledMaterial lista átmásolása csv fájlba elkezdődött.");
+
+            CreateFile callable = new CreateFile(context, CreateFile.RunModes.CREATE_RECYCLEDMATERIAL_CSV, uri, RecycledMaterial.getCSVHeader(), "csv");
+            callable.setCustomThreadPoolManager(mCustomThreadPoolManager);
+            mCustomThreadPoolManager.addCallableMethod(callable);
+
+            ApplicationLogger.logging(LogLevel.INFORMATION, "A RecycledMaterial lista átmásolása csv fájlba befejeződött.");
+        }
+        catch (Exception e){
+            e.printStackTrace();
+            ApplicationLogger.logging(LogLevel.FATAL, e.getMessage());
+        }
+    }
+
+    @Override
     public void setSaveButtonState(EditButtonEnums editButtonEnum) {
         if(editButtonEnum == null) return;
         if(iModesOneView != null) iModesOneView.settingSaveButton(editButtonEnum);
         if(iModesTwoView != null) iModesTwoView.settingSaveButton(editButtonEnum);
+        if(iModesThreeView != null) iModesThreeView.settingSaveButton(editButtonEnum);
     }
 
     @Override
@@ -205,6 +254,7 @@ public class ProgramPresenter implements IProgramPresenter, PresenterThreadCallb
         Log.e("pre", message);
         if(iModesOneView != null) iModesOneView.getMessageFromPresenter(message);
         if(iModesTwoView != null) iModesTwoView.getMessageFromPresenter(message);
+        if(iModesThreeView != null) iModesThreeView.getMessageFromPresenter(message);
     }
 
     @Override

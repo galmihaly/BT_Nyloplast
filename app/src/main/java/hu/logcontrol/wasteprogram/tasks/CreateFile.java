@@ -21,15 +21,20 @@ import hu.logcontrol.wasteprogram.helpers.Helper;
 import hu.logcontrol.wasteprogram.logger.ApplicationLogger;
 import hu.logcontrol.wasteprogram.models.LocalRawMaterialTypeMassesStorage;
 import hu.logcontrol.wasteprogram.models.LocalRawMaterialsStorage;
+import hu.logcontrol.wasteprogram.models.LocalRecycLedMaterialsStorage;
 import hu.logcontrol.wasteprogram.models.RawMaterial;
 import hu.logcontrol.wasteprogram.models.RawMaterialTypeMass;
+import hu.logcontrol.wasteprogram.models.RecycledMaterial;
 import hu.logcontrol.wasteprogram.taskmanager.CustomThreadPoolManager;
 
 public class CreateFile implements Callable {
 
     private WeakReference<CustomThreadPoolManager> customThreadPoolManagerWeakReference;
+
     private List<RawMaterial> rawMaterialList;
     private List<RawMaterialTypeMass> rawMaterialTypeMassList;
+    private List<RecycledMaterial> recycledMaterialList;
+
     private Message message = null;
 
     private Context context;
@@ -46,6 +51,7 @@ public class CreateFile implements Callable {
 
     private LocalRawMaterialsStorage localRawMatStorage;
     private LocalRawMaterialTypeMassesStorage localTypeMassStorage;
+    private LocalRecycLedMaterialsStorage localRecMatsStorage;
 
     public CreateFile(Context context, RunModes runMode, Uri uri, String header, String fileExtension) {
         this.context = context;
@@ -115,6 +121,30 @@ public class CreateFile implements Callable {
                     localTypeMassStorage.clearRawMaterialTypeMassList();
                     break;
                 }
+                case CREATE_RECYCLEDMATERIAL_CSV:{
+
+                    localRecMatsStorage = LocalRecycLedMaterialsStorage.getInstance();
+                    recycledMaterialList = localRecMatsStorage.getRecycledMaterialList();
+
+                    fileName = ApplicationLogger.getDateTimeString() + "_RecycledMaterialList" + "." + fileExtension;
+                    documentFile = DocumentFile.fromTreeUri(context, uri);
+                    if(documentFile != null) documentFile.createFile(fileExtension, fileName);
+
+                    fos = new FileOutputStream(getPathFromUri() + File.separator + fileName);
+
+                    if(rawMaterialTypeMassList != null) {
+
+                        writer = new FileWriter(fos.getFD());
+                        writer.write(header + "\n\n");
+                        for (int i = 0; i < rawMaterialTypeMassList.size(); i++) {
+                            writer.write(rawMaterialTypeMassList.get(i).toString() + "\n");
+                        }
+                        writer.flush();
+                    }
+
+                    localRecMatsStorage.clearRecycledMaterialList();
+                    break;
+                }
             }
         }
         catch (InterruptedException e) {
@@ -171,6 +201,7 @@ public class CreateFile implements Callable {
 
     public enum RunModes{
         CREATE_RAWMATERIAL_CSV,
-        CREATE_RAWMATERIALTYPEMASS_CSV
+        CREATE_RAWMATERIALTYPEMASS_CSV,
+        CREATE_RECYCLEDMATERIAL_CSV
     }
 }

@@ -12,19 +12,25 @@ import hu.logcontrol.wasteprogram.enums.HandlerMessageIdentifiers;
 import hu.logcontrol.wasteprogram.helpers.Helper;
 import hu.logcontrol.wasteprogram.models.LocalRawMaterialTypeMassesStorage;
 import hu.logcontrol.wasteprogram.models.LocalRawMaterialsStorage;
+import hu.logcontrol.wasteprogram.models.LocalRecycLedMaterialsStorage;
 import hu.logcontrol.wasteprogram.models.RawMaterial;
 import hu.logcontrol.wasteprogram.models.RawMaterialTypeMass;
+import hu.logcontrol.wasteprogram.models.RecycledMaterial;
 import hu.logcontrol.wasteprogram.taskmanager.CustomThreadPoolManager;
 
 public class AddElementToList implements Callable {
 
     private WeakReference<CustomThreadPoolManager> customThreadPoolManagerWeakReference;
+
     private RunModes runMode;
     private RawMaterial rawMaterial;
     private List<RawMaterial> rawMaterialList;
 
     private RawMaterialTypeMass rawMaterialTypeMass;
     private List<RawMaterialTypeMass> rawMaterialTypeMassList;
+
+    private RecycledMaterial recycledMaterial;
+    private List<RecycledMaterial> recycledMaterialList;
 
     private Message message = null;
 
@@ -40,6 +46,11 @@ public class AddElementToList implements Callable {
     public AddElementToList(RunModes runMode, RawMaterialTypeMass rawMaterialTypeMass) {
         this.runMode = runMode;
         this.rawMaterialTypeMass = rawMaterialTypeMass;
+    }
+
+    public AddElementToList(RunModes runMode, RecycledMaterial recycledMaterial) {
+        this.runMode = runMode;
+        this.recycledMaterial = recycledMaterial;
     }
 
     @Override
@@ -67,11 +78,16 @@ public class AddElementToList implements Callable {
                         rawMaterialTypeMassList.add(rawMaterialTypeMass);
                         sendMessageToPresenterHandler(CreateRawMaterialListEnums.ADDELEMENT_SUCCES);
                     }
+                    break;
+                }
+                case ADD_RECYCLEDMATERIAL:{
 
-                    for (int i = 0; i < rawMaterialTypeMassList.size(); i++) {
-                        Log.e("", rawMaterialTypeMassList.get(i).toString());
+                    recycledMaterialList = LocalRecycLedMaterialsStorage.getInstance().getRecycledMaterialList();
+
+                    if(recycledMaterialList != null) {
+                        recycledMaterialList.add(recycledMaterial);
+                        sendMessageToPresenterHandler(CreateRawMaterialListEnums.ADDELEMENT_SUCCES);
                     }
-
                     break;
                 }
             }
@@ -109,6 +125,7 @@ public class AddElementToList implements Callable {
 
     public enum RunModes{
         ADD_RAWMATERIAL,
-        ADD_RAWMATERIALTYPEMASS
+        ADD_RAWMATERIALTYPEMASS,
+        ADD_RECYCLEDMATERIAL
     }
 }

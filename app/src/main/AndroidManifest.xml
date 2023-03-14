@@ -18,25 +18,28 @@
         android:theme="@style/WasteProgram"
         tools:targetApi="31">
         <activity
+            android:name=".RecycledMaterialCreationActivity"
+            android:exported="false" />
+        <activity
             android:name=".RawMaterialTypeMassCreationActivity"
             android:exported="false"
-            android:launchMode="singleTop"/>
+            android:launchMode="singleTop" />
         <activity
             android:name=".RawMaterialCreationActivity"
             android:exported="false"
-            android:launchMode="singleTop"/>
+            android:launchMode="singleTop" />
         <activity
             android:name=".ModesThree"
             android:exported="false"
-            android:launchMode="singleTop"/>
+            android:launchMode="singleTop" />
         <activity
             android:name=".ModesTwo"
             android:exported="false"
-            android:launchMode="singleTop"/>
+            android:launchMode="singleTop" />
         <activity
             android:name=".ModesOne"
             android:exported="false"
-            android:launchMode="singleTop"/>
+            android:launchMode="singleTop" />
         <activity
             android:name=".MainActivity"
             android:exported="true"

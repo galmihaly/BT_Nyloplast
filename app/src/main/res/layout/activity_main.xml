@@ -15,39 +15,45 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/titleCL">
 
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/modeOne"
-            android:layout_width="230dp"
-            android:layout_height="50dp"
-            android:layout_marginTop="50dp"
-            android:background="@drawable/button_background_1"
+            android:layout_width="300dp"
+            android:layout_height="100dp"
+            android:layout_marginTop="20dp"
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
             android:text="Alapanyagkezelés"
             android:textSize="20sp"
+            app:backgroundTint="#79FF9E"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/modeTwo"
-            android:layout_width="230dp"
-            android:layout_height="50dp"
-            android:background="@drawable/button_background_1"
-            android:text="TÖMEGADATKEZELÉS"
+            android:layout_width="300dp"
+            android:layout_height="100dp"
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
+            android:text="MEGHATÁROZOTT HULLADÉKFAJTÁK TÖMEGADATKEZELÉSE"
             android:textSize="20sp"
+            app:backgroundTint="#79FF9E"
             app:layout_constraintBottom_toTopOf="@+id/modeThree"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/modeOne" />
 
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/modeThree"
-            android:layout_width="120dp"
-            android:layout_height="wrap_content"
+            android:layout_width="300dp"
+            android:layout_height="100dp"
             android:layout_marginBottom="20dp"
-            android:background="@drawable/button_background_1"
-            android:text="MODE3"
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
+            android:text="ÚJRAFELDOLGOZOTT HULLADÉKANYAGOK TÖMEGADATKEZELÉSE"
             android:textSize="20sp"
-            app:layout_constraintBottom_toTopOf="@+id/exitButton"
+            app:backgroundTint="#79FF9E"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
 
@@ -58,6 +64,7 @@
             android:layout_marginEnd="20dp"
             android:layout_marginBottom="20dp"
             android:background="@drawable/delete_button_background"
+            android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:srcCompat="@drawable/ic_delete_icon" />

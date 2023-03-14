@@ -16,24 +16,12 @@ public class RawMaterial {
         return timeStamp;
     }
 
-    public void setTimeStamp(String timeStamp) {
-        this.timeStamp = timeStamp;
-    }
-
     public String getDoseNumber() {
         return doseNumber;
     }
 
-    public void setDoseNumber(String doseNumber) {
-        this.doseNumber = doseNumber;
-    }
-
     public String getMaterialType() {
         return materialType;
-    }
-
-    public void setMaterialType(String materialType) {
-        this.materialType = materialType;
     }
 
     @Override

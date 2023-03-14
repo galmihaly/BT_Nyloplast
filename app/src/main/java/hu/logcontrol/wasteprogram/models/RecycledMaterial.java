@@ -1,16 +1,14 @@
 package hu.logcontrol.wasteprogram.models;
 
-public class RawMaterialTypeMass {
+public class RecycledMaterial {
 
     private String timeStamp;
-    private String wasteCode;
     private String materialType;
     private String storageBoxIdentifier;
     private String massData;
 
-    public RawMaterialTypeMass(String timeStamp, String wasteCode, String materialType, String storageBoxIdentifier, String massData) {
+    public RecycledMaterial(String timeStamp, String materialType, String storageBoxIdentifier, String massData) {
         this.timeStamp = timeStamp;
-        this.wasteCode = wasteCode;
         this.materialType = materialType;
         this.storageBoxIdentifier = storageBoxIdentifier;
         this.massData = massData;
@@ -18,10 +16,6 @@ public class RawMaterialTypeMass {
 
     public String getTimeStamp() {
         return timeStamp;
-    }
-
-    public String getWasteCode() {
-        return wasteCode;
     }
 
     public String getMaterialType() {
@@ -37,9 +31,9 @@ public class RawMaterialTypeMass {
     }
 
     @Override
-    public String toString() { return String.format("%s;%s;%s;%s;%s", this.timeStamp, this.wasteCode, this.materialType, this.storageBoxIdentifier, this.massData); }
+    public String toString() { return String.format("%s;%s;%s;%s;%s", this.timeStamp, this.materialType, this.storageBoxIdentifier, this.massData); }
 
     public static String getCSVHeader(){
-        return "TimeStamp;WasteCode;MaterialType;StorageBoxIdentifier;MassData";
+        return "TimeStamp;MaterialType;StorageBoxIdentifier;MassData";
     }
 }
