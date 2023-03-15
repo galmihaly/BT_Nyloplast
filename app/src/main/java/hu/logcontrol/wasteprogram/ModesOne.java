@@ -173,7 +173,7 @@ public class ModesOne extends AppCompatActivity implements IModesOneView {
     @Override
     public void getMessageFromPresenter(String message) {
         if(message == null) return;
-        new Handler(Looper.getMainLooper()).post(() -> { Toast.makeText(getBaseContext(), message, Toast.LENGTH_LONG).show(); });
+        new Handler(Looper.getMainLooper()).post(() -> { Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show(); });
     }
 
     private void hideNavigationBar(){

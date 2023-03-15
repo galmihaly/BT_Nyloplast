@@ -225,8 +225,7 @@ public class RecycledMaterialCreationActivity extends AppCompatActivity {
                 }
 
                 @Override
-                public void afterTextChanged(Editable editable) {
-                }
+                public void afterTextChanged(Editable editable) {}
             });
         }
 

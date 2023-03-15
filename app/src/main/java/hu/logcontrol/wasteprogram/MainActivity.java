@@ -28,6 +28,7 @@ public class MainActivity extends AppCompatActivity implements IMainView {
     private Button mode3;
 
     private ImageButton exitButton;
+    private ImageButton settingsButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,6 +64,11 @@ public class MainActivity extends AppCompatActivity implements IMainView {
                 programPresenter.exitApplicationPresenter();
             });
         }
+        if(settingsButton != null){
+            settingsButton.setOnClickListener(view -> {
+                programPresenter.openActivityByEnum(ActivityEnums.SETTINGS_ACTIVITY);
+            });
+        }
     }
 
     public void startWrite() {
@@ -96,6 +102,7 @@ public class MainActivity extends AppCompatActivity implements IMainView {
         mode3 = findViewById(R.id.modeThree);
 
         exitButton = findViewById(R.id.exitButton);
+        settingsButton = findViewById(R.id.settingsButton);
 
         Helper.hideNavigationBar(this);
     }

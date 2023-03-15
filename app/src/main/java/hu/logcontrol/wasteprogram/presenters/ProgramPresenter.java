@@ -18,6 +18,7 @@ import hu.logcontrol.wasteprogram.ModesTwo;
 import hu.logcontrol.wasteprogram.RawMaterialCreationActivity;
 import hu.logcontrol.wasteprogram.RawMaterialTypeMassCreationActivity;
 import hu.logcontrol.wasteprogram.RecycledMaterialCreationActivity;
+import hu.logcontrol.wasteprogram.SettingsActivity;
 import hu.logcontrol.wasteprogram.enums.ActivityEnums;
 import hu.logcontrol.wasteprogram.enums.EditButtonEnums;
 import hu.logcontrol.wasteprogram.enums.HandlerMessageIdentifiers;
@@ -26,6 +27,7 @@ import hu.logcontrol.wasteprogram.interfaces.IModesThreeView;
 import hu.logcontrol.wasteprogram.interfaces.IModesTwoView;
 import hu.logcontrol.wasteprogram.interfaces.IProgramPresenter;
 import hu.logcontrol.wasteprogram.interfaces.IMainView;
+import hu.logcontrol.wasteprogram.interfaces.ISettingsView;
 import hu.logcontrol.wasteprogram.logger.ApplicationLogger;
 import hu.logcontrol.wasteprogram.logger.LogLevel;
 import hu.logcontrol.wasteprogram.models.RawMaterial;
@@ -42,6 +44,7 @@ public class ProgramPresenter implements IProgramPresenter, PresenterThreadCallb
     private IModesOneView iModesOneView;
     private IModesTwoView iModesTwoView;
     private IModesThreeView iModesThreeView;
+    private ISettingsView iSettingsView;
 
     private Context context;
     private CustomThreadPoolManager mCustomThreadPoolManager;
@@ -54,17 +57,22 @@ public class ProgramPresenter implements IProgramPresenter, PresenterThreadCallb
 
     public ProgramPresenter(IModesOneView iModesOneView, Context context) {
         this.iModesOneView = iModesOneView;
-        this.context = context;
+        this.context = context.getApplicationContext();
     }
 
     public ProgramPresenter(IModesTwoView iModesTwoView, Context context) {
         this.iModesTwoView = iModesTwoView;
-        this.context = context;
+        this.context = context.getApplicationContext();
     }
 
     public ProgramPresenter(IModesThreeView iModesThreeView, Context context) {
         this.iModesThreeView = iModesThreeView;
-        this.context = context;
+        this.context = context.getApplicationContext();
+    }
+
+    public ProgramPresenter(ISettingsView iSettingsView, Context context) {
+        this.iSettingsView = iSettingsView;
+        this.context = context.getApplicationContext();
     }
 
     @Override
@@ -119,6 +127,10 @@ public class ProgramPresenter implements IProgramPresenter, PresenterThreadCallb
                 intent = new Intent(context, RecycledMaterialCreationActivity.class);
                 break;
             }
+            case SETTINGS_ACTIVITY:{
+                intent = new Intent(context, SettingsActivity.class);
+                break;
+            }
             case FOLDERPICKER_ACTIVITY:{
                 intent = new Intent(Intent.ACTION_OPEN_DOCUMENT_TREE);
                 break;
@@ -130,6 +142,7 @@ public class ProgramPresenter implements IProgramPresenter, PresenterThreadCallb
         if(iModesOneView != null) iModesOneView.openActivityByIntent(intent);
         if(iModesTwoView != null) iModesTwoView.openActivityByIntent(intent);
         if(iModesThreeView != null) iModesThreeView.openActivityByIntent(intent);
+        if(iSettingsView!= null) iSettingsView.openActivityByIntent(intent);
     }
 
     @Override

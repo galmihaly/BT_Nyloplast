@@ -10,6 +10,8 @@ import androidx.cardview.widget.CardView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
 
+import com.google.android.material.textfield.TextInputEditText;
+
 import hu.logcontrol.wasteprogram.R;
 import hu.logcontrol.wasteprogram.enums.EditButtonEnums;
 
@@ -44,6 +46,8 @@ public class ElementStateChangeHelper {
         constraintLayout.setBackground(ContextCompat.getDrawable(context, constraintLayoutBackground));
         editText.setEnabled(false);
         editText.setTextColor(Color.parseColor(disableColor));
+        editText.clearFocus();
+        constraintLayout.clearFocus();
     }
 
     // piros színre vált a kártya, a textbox nyitva marad, a szöveg fekete színű lesz
@@ -106,32 +110,19 @@ public class ElementStateChangeHelper {
         }
     }
 
-    public static void setReadyStateElements(Context context, ConstraintLayout cl, EditText tB, String color, int background) {
-        if(context == null) return;
-        if(cl == null) return;
-        if(tB == null) return;
-        if(color == null) return;
+    public static void enableSavePathEditor(TextInputEditText inputEditText, String enableColor){
+        if(inputEditText == null) return;
 
-        cl.setBackground(ContextCompat.getDrawable(context, background));
-        tB.setEnabled(false);
-        tB.setTextColor(Color.parseColor(color));
+        inputEditText.setEnabled(true);
+        inputEditText.setTextColor(Color.parseColor(enableColor));
+        inputEditText.requestFocus();
     }
 
-    public static void enableNextElements(CardView cv, EditText tB) {
-        if(cv == null) return;
-        if(tB == null) return;
+    public static void disableSavePathEditor(TextInputEditText inputEditText, String disableColor){
+        if(inputEditText == null) return;
 
-        cv.setVisibility(View.VISIBLE);
-        tB.setEnabled(true);
-        tB.requestFocus();
-    }
-
-    public static void setEnablePreviousElements(Context context, ConstraintLayout cl, EditText tB) {
-        if(context == null) return;
-        if(cl == null) return;
-        if(tB == null) return;
-
-        cl.setBackground(ContextCompat.getDrawable(context, R.drawable.cardview_red_background));
-        tB.setEnabled(true);
+        inputEditText.setEnabled(false);
+        inputEditText.setTextColor(Color.parseColor(disableColor));
+        inputEditText.clearFocus();
     }
 }

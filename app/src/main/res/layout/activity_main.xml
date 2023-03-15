@@ -18,7 +18,7 @@
         <com.google.android.material.button.MaterialButton
             android:id="@+id/modeOne"
             android:layout_width="300dp"
-            android:layout_height="100dp"
+            android:layout_height="50dp"
             android:layout_marginTop="20dp"
             android:insetTop="0dp"
             android:insetBottom="0dp"
@@ -33,12 +33,12 @@
             android:id="@+id/modeTwo"
             android:layout_width="300dp"
             android:layout_height="100dp"
+            android:layout_marginTop="20dp"
             android:insetTop="0dp"
             android:insetBottom="0dp"
             android:text="MEGHATÁROZOTT HULLADÉKFAJTÁK TÖMEGADATKEZELÉSE"
             android:textSize="20sp"
             app:backgroundTint="#79FF9E"
-            app:layout_constraintBottom_toTopOf="@+id/modeThree"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/modeOne" />
@@ -47,15 +47,15 @@
             android:id="@+id/modeThree"
             android:layout_width="300dp"
             android:layout_height="100dp"
-            android:layout_marginBottom="20dp"
+            android:layout_marginTop="20dp"
             android:insetTop="0dp"
             android:insetBottom="0dp"
             android:text="ÚJRAFELDOLGOZOTT HULLADÉKANYAGOK TÖMEGADATKEZELÉSE"
             android:textSize="20sp"
             app:backgroundTint="#79FF9E"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/modeTwo" />
 
         <ImageButton
             android:id="@+id/exitButton"
@@ -68,6 +68,17 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:srcCompat="@drawable/ic_delete_icon" />
+
+        <ImageButton
+            android:id="@+id/settingsButton"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:background="@drawable/settings_button_background"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/modeThree"
+            app:srcCompat="@drawable/ic_settings_icon" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -84,7 +95,7 @@
             android:id="@+id/title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Módok"
+            android:text="Kezdőlap"
             android:textColor="#FFFFFF"
             android:textSize="24sp"
             android:textStyle="bold"

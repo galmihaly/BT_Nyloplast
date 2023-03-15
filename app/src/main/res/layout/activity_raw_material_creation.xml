@@ -58,6 +58,7 @@
         android:layout_width="0dp"
         android:layout_height="100dp"
         android:layout_marginTop="5dp"
+        app:cardCornerRadius="0dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/rawMaterialCountCV">
@@ -97,7 +98,7 @@
                     android:id="@+id/rawMatTypeTextBox"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:singleLine="false" />
+                    android:singleLine="true" />
 
             </com.google.android.material.textfield.TextInputLayout>
         </androidx.constraintlayout.widget.ConstraintLayout>
@@ -130,6 +131,7 @@
         android:id="@+id/rawMaterialCountCV"
         android:layout_width="0dp"
         android:layout_height="100dp"
+        app:cardCornerRadius="0dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/titleRawMaterialCreationCL">
@@ -169,7 +171,7 @@
                     android:id="@+id/rawMatCountTextBox"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:singleLine="false" />
+                    android:singleLine="true" />
 
             </com.google.android.material.textfield.TextInputLayout>
         </androidx.constraintlayout.widget.ConstraintLayout>

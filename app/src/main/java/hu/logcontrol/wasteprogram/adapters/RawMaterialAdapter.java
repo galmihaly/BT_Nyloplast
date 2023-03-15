@@ -2,6 +2,8 @@ package hu.logcontrol.wasteprogram.adapters;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.graphics.Color;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -57,6 +59,9 @@ public class RawMaterialAdapter extends RecyclerView.Adapter<RawMaterialAdapter.
                 }
             });
         }
+
+        if(position % 2 == 0){ holder.itemView.setBackgroundColor(Color.parseColor("#6BCEFF")); }
+        else{ holder.itemView.setBackgroundColor(Color.parseColor("#506BCEFF")); }
     }
 
     @Override
