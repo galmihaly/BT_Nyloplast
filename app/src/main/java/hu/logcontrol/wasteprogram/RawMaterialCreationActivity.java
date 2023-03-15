@@ -1,6 +1,5 @@
 package hu.logcontrol.wasteprogram;
 
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -9,10 +8,13 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
-import android.view.Window;
 import android.widget.EditText;
 import android.widget.ImageButton;
+
+import com.google.android.material.textfield.TextInputLayout;
 
 import hu.logcontrol.wasteprogram.enums.EditButtonEnums;
 import hu.logcontrol.wasteprogram.helpers.ElementStateChangeHelper;
@@ -33,7 +35,13 @@ public class RawMaterialCreationActivity extends AppCompatActivity {
     private ImageButton deleteRawButton;
     private ImageButton backRawButton;
 
-    private String disableColor = "#B7C0C1";
+    private ImageButton enterButton_base_1;
+    private ImageButton enterButton_base_2;
+
+    private TextInputLayout textLayout_base_1;
+
+    private final String disableColor = "#B7C0C1";
+    private final String enableColor = "#000000";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,29 +79,41 @@ public class RawMaterialCreationActivity extends AppCompatActivity {
 
                     if(rawMatCount.equals("")){
 
-                        ElementStateChangeHelper.disableCurrentElements(getApplicationContext(), rawMatCountCL, rawMaterialTypeCV, rawMatTypeTextBox, R.drawable.cardview_red_background);
-                        ElementStateChangeHelper.setDisableButton(getApplicationContext(), EditButtonEnums.DELETE_BUTTON_DISABLED, deleteRawButton);
+                        ElementStateChangeHelper.visibleCardViewElement(rawMaterialCountCV);
+                        ElementStateChangeHelper.inVisibleCardViewElement(rawMaterialTypeCV);
+
+                        ElementStateChangeHelper.setNotReadyStateElements(getApplicationContext(), rawMatCountCL, R.drawable.cardview_red_background, rawMatCountTextBox, enableColor);
+                        ElementStateChangeHelper.clearNextCardView(getApplicationContext(), rawMatTypeCL, R.drawable.cardview_red_background ,rawMatTypeTextBox, R.color.black);
+
+                        ElementStateChangeHelper.disableButton(getApplicationContext(), EditButtonEnums.ENTER_BUTTON_DISABLED, enterButton_base_1); // enter button lezárása
+                        ElementStateChangeHelper.disableButton(getApplicationContext(), EditButtonEnums.DELETE_BUTTON_DISABLED, deleteRawButton);
+                        ElementStateChangeHelper.disableButton(getApplicationContext(), EditButtonEnums.ADD_BUTTON_DISABLED, addRawMatButton);
                     }
                     else {
 
-                        ElementStateChangeHelper.setReadyStateElements(getApplicationContext(), rawMatCountCL, rawMatCountTextBox, disableColor, R.drawable.cardview_green_background);
-                        ElementStateChangeHelper.setEnableButton(getApplicationContext(), EditButtonEnums.DELETE_BUTTON_ENABLED, deleteRawButton);
-                        ElementStateChangeHelper.enableNextElements(rawMaterialTypeCV, rawMatTypeTextBox);
+                        ElementStateChangeHelper.enableButton(getApplicationContext(), EditButtonEnums.ENTER_BUTTON_ENABLED, enterButton_base_1);
 
-                        if(deleteRawButton != null){
-                            if(deleteRawButton.isEnabled()){
-                                deleteRawButton.setOnClickListener(view -> {
-                                    if(rawMaterialTypeCV != null){
-                                        rawMatCountTextBox.setEnabled(true);
-                                        rawMatCountTextBox.requestFocus();
-                                        rawMatCountTextBox.setText("");
+                        enterButton_base_1.setOnClickListener(view -> {
+                            ElementStateChangeHelper.setReadyStateElements(getApplicationContext(), rawMatCountCL, R.drawable.cardview_green_background, rawMatCountTextBox, disableColor); // jelenlegi elemek késszé tétele
 
-                                        rawMaterialTypeCV.setVisibility(View.INVISIBLE);
-                                        rawMatTypeTextBox.setText("");
+                            ElementStateChangeHelper.visibleCardViewElement(rawMaterialTypeCV);
+                            ElementStateChangeHelper.setNotReadyStateElements(getApplicationContext(), rawMatTypeCL, R.drawable.cardview_red_background, rawMatTypeTextBox, enableColor); // következő elemek láthatóvá tétele
+
+                            ElementStateChangeHelper.disableButton(getApplicationContext(), EditButtonEnums.ENTER_BUTTON_DISABLED, enterButton_base_1); // enter button lezárása
+                            ElementStateChangeHelper.enableButton(getApplicationContext(), EditButtonEnums.DELETE_BUTTON_ENABLED, deleteRawButton);
+                            hideNavigationBar();
+                        });
+
+                        rawMatCountTextBox.setOnKeyListener((view, l, keyEvent) -> {
+                            if(l == 66){
+                                if(enterButton_base_1 != null){
+                                    if(enterButton_base_1.isEnabled()){
+                                        enterButton_base_1.callOnClick();
                                     }
-                                });
+                                }
                             }
-                        }
+                            return false;
+                        });
                     }
                 }
 
@@ -116,26 +136,34 @@ public class RawMaterialCreationActivity extends AppCompatActivity {
 
                     if(rawMatType.equals("")){
 
-                        ElementStateChangeHelper.setEnablePreviousElements(getApplicationContext(), rawMatTypeCL, rawMatCountTextBox);
-                        ElementStateChangeHelper.setDisableButton(getApplicationContext(), EditButtonEnums.ADD_BUTTON_DISABLED, addRawMatButton);
+                        ElementStateChangeHelper.inVisibleCardViewElement(rawMaterialTypeCV);
+                        ElementStateChangeHelper.setNotReadyStateElements(getApplicationContext(), rawMatTypeCL, R.drawable.cardview_red_background, rawMatTypeTextBox, enableColor);
+                        ElementStateChangeHelper.disableButton(getApplicationContext(), EditButtonEnums.ENTER_BUTTON_DISABLED, enterButton_base_2); // enter button lezárása
                     }
                     else {
 
-                        ElementStateChangeHelper.setReadyStateElements(getApplicationContext(), rawMatTypeCL, rawMatTypeTextBox, disableColor, R.drawable.cardview_green_background);
-                        ElementStateChangeHelper.setEnableButton(getApplicationContext(), EditButtonEnums.ADD_BUTTON_ENABLED, addRawMatButton);
+                        ElementStateChangeHelper.enableButton(getApplicationContext(), EditButtonEnums.ENTER_BUTTON_ENABLED, enterButton_base_2);
 
-                        if(addRawMatButton != null){
-                            if(addRawMatButton.isEnabled()){
-                                addRawMatButton.setOnClickListener(view -> {
-                                    Intent intent = new Intent();
-                                    intent.putExtra("rawMatTypeTextBox", rawMatTypeTextBox.getText().toString());
-                                    intent.putExtra("rawMatCountTextBox", rawMatCountTextBox.getText().toString());
-                                    setResult(1, intent);
+                        enterButton_base_2.setOnClickListener(view -> {
+                            ElementStateChangeHelper.setReadyStateElements(getApplicationContext(), rawMatTypeCL, R.drawable.cardview_green_background, rawMatTypeTextBox, disableColor); // jelenlegi elemek késszé tétele
+                            ElementStateChangeHelper.disableButton(getApplicationContext(), EditButtonEnums.ENTER_BUTTON_DISABLED, enterButton_base_2); // enter button lezárása
 
-                                    RawMaterialCreationActivity.super.onBackPressed();
-                                });
+                            ElementStateChangeHelper.enableButton(getApplicationContext(), EditButtonEnums.ADD_BUTTON_ENABLED, addRawMatButton);
+                            hideNavigationBar();
+                        });
+
+                        rawMatTypeTextBox.setOnKeyListener((view, k, keyEvent) -> {
+                            if(k == 66){
+                                if(enterButton_base_2 != null){
+                                    if(enterButton_base_2.isEnabled()){
+                                        enterButton_base_2.callOnClick();
+                                    }
+                                }
                             }
-                        }
+                            return false;
+                        });
+
+                        hideNavigationBar();
                     }
                 }
 
@@ -145,9 +173,58 @@ public class RawMaterialCreationActivity extends AppCompatActivity {
                 }
             });
         }
+
+        if(addRawMatButton != null){
+            addRawMatButton.setOnClickListener(view -> {
+
+                Intent intent = new Intent();
+
+                intent.putExtra("rawMatTypeTextBox", rawMatTypeTextBox.getText().toString());
+                intent.putExtra("rawMatCountTextBox", rawMatCountTextBox.getText().toString());
+
+                setResult(1, intent);
+
+                RawMaterialCreationActivity.super.onBackPressed();
+            });
+        }
+
+        if(deleteRawButton != null){
+            deleteRawButton.setOnClickListener(view -> {
+                if(rawMaterialCountCV != null){
+                    rawMatCountTextBox.setText("");
+                    textLayout_base_1.requestFocus();
+                    hideNavigationBar();
+                }
+            });
+        }
     }
 
-//    private void openDialog() {
+    @Override
+    public boolean onKeyUp(int keyCode, KeyEvent event) {
+        if(keyCode == 66){
+            Log.e("", String.valueOf(keyCode));
+        }
+
+        return super.onKeyDown(keyCode, event);
+    }
+
+    public void startEnterButton(){
+
+
+        if(enterButton_base_2 != null){
+            if(enterButton_base_2.isEnabled()) {
+                enterButton_base_2.setOnClickListener(view -> {
+                    ElementStateChangeHelper.setReadyStateElements(getApplicationContext(), rawMatTypeCL, R.drawable.cardview_green_background, rawMatTypeTextBox, disableColor); // jelenlegi elemek késszé tétele
+                    ElementStateChangeHelper.disableButton(getApplicationContext(), EditButtonEnums.ENTER_BUTTON_DISABLED, enterButton_base_2); // enter button lezárása
+
+                    ElementStateChangeHelper.enableButton(getApplicationContext(), EditButtonEnums.ADD_BUTTON_ENABLED, addRawMatButton);
+                    hideNavigationBar();
+                });
+            }
+        }
+    }
+
+    //    private void openDialog() {
 //
 //        AlertDialog.Builder builder = new AlertDialog.Builder(this);
 //        builder.setTitle("Alapanyag Hozzáadás")
@@ -186,6 +263,11 @@ public class RawMaterialCreationActivity extends AppCompatActivity {
         addRawMatButton = findViewById(R.id.addRawMatButton);
         deleteRawButton = findViewById(R.id.deleteRawButton);
         backRawButton = findViewById(R.id.backRawButton);
+
+        enterButton_base_1 = findViewById(R.id.enterButton_base_1);
+        enterButton_base_2 = findViewById(R.id.enterButton_base_2);
+
+        textLayout_base_1 = findViewById(R.id.textLayout_base_1);
 
         hideNavigationBar();
     }

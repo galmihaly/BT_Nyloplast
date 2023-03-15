@@ -13,15 +13,14 @@ import android.text.TextWatcher;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.ScrollView;
+
+import com.google.android.material.textfield.TextInputLayout;
 
 import hu.logcontrol.wasteprogram.enums.EditButtonEnums;
 import hu.logcontrol.wasteprogram.helpers.ElementStateChangeHelper;
 import hu.logcontrol.wasteprogram.helpers.Helper;
 
 public class RecycledMaterialCreationActivity extends AppCompatActivity {
-
-    private ScrollView recMatScrollView;
 
     private CardView typeRecMatCV;
     private CardView storageBoxIdentifierCV2;
@@ -43,7 +42,10 @@ public class RecycledMaterialCreationActivity extends AppCompatActivity {
     private ImageButton enterButton_rec_2;
     private ImageButton enterButton_rec_3;
 
+    private TextInputLayout textLayout_rectMat_1;
+
     private String disableColor = "#B7C0C1";
+    private String enableColor = "#000000";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,28 +86,41 @@ public class RecycledMaterialCreationActivity extends AppCompatActivity {
                     String data = typeRecMatTextBox.getText().toString();
                     if(data.equals("")){
 
-                        typeRecMatCL.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.cardview_red_background));
-                        typeRecMatTextBox.setTextColor(Color.parseColor("#000000"));
-                        ElementStateChangeHelper.setDisableButton(getApplicationContext(), EditButtonEnums.ENTER_BUTTON_DISABLED, enterButton_rec_1);
+                        ElementStateChangeHelper.visibleCardViewElement(typeRecMatCV);
+                        ElementStateChangeHelper.inVisibleCardViewElement(storageBoxIdentifierCV2);
 
-//                        ElementStateChangeHelper.disableCurrentElements(getApplicationContext(), typeRecMatCL, storageBoxIdentifierCV2, storageBoxIdentifierTextBox2, R.drawable.cardview_red_background);
-//                        ElementStateChangeHelper.setDisableButton(getApplicationContext(), EditButtonEnums.DELETE_BUTTON_DISABLED, deleteRecMatButton);
+                        ElementStateChangeHelper.setNotReadyStateElements(getApplicationContext(), typeRecMatCL, R.drawable.cardview_red_background, typeRecMatTextBox, enableColor);
+                        ElementStateChangeHelper.clearNextCardView(getApplicationContext(), storageBoxIdentifierCL2, R.drawable.cardview_red_background ,storageBoxIdentifierTextBox2, R.color.black);
+
+                        ElementStateChangeHelper.disableButton(getApplicationContext(), EditButtonEnums.ENTER_BUTTON_DISABLED, enterButton_rec_1); // enter button lezárása
+                        ElementStateChangeHelper.disableButton(getApplicationContext(), EditButtonEnums.DELETE_BUTTON_DISABLED, deleteRecMatButton);
+                        ElementStateChangeHelper.disableButton(getApplicationContext(), EditButtonEnums.ADD_BUTTON_DISABLED, addRecMatButton);
+                        hideNavigationBar();
                     }
                     else {
-//                        ElementStateChangeHelper.setReadyStateElements(getApplicationContext(), typeRecMatCL, typeRecMatTextBox, disableColor, R.drawable.cardview_green_background);
-//                        ElementStateChangeHelper.setEnableButton(getApplicationContext(), EditButtonEnums.DELETE_BUTTON_ENABLED, deleteRecMatButton);
-//                        ElementStateChangeHelper.enableNextElements(storageBoxIdentifierCV2, storageBoxIdentifierTextBox2);
 
-                        ElementStateChangeHelper.setEnableButton(getApplicationContext(), EditButtonEnums.ENTER_BUTTON_ENABLED, enterButton_rec_1);
+                        ElementStateChangeHelper.enableButton(getApplicationContext(), EditButtonEnums.ENTER_BUTTON_ENABLED, enterButton_rec_1);
 
                         enterButton_rec_1.setOnClickListener(view -> {
-                            ElementStateChangeHelper.setReadyStateElements(getApplicationContext(), typeRecMatCL, typeRecMatTextBox, disableColor, R.drawable.cardview_green_background);
-                            ElementStateChangeHelper.enableNextElements(storageBoxIdentifierCV2, storageBoxIdentifierTextBox2);
-                            ElementStateChangeHelper.setDisableButton(getApplicationContext(), EditButtonEnums.ENTER_BUTTON_DISABLED, enterButton_rec_1);
-                            ElementStateChangeHelper.setEnableButton(getApplicationContext(), EditButtonEnums.DELETE_BUTTON_ENABLED, deleteRecMatButton);
-                            addRecMatButton.setEnabled(true);
+                            ElementStateChangeHelper.setReadyStateElements(getApplicationContext(), typeRecMatCL, R.drawable.cardview_green_background, typeRecMatTextBox, disableColor); // jelenlegi elemek késszé tétele
 
+                            ElementStateChangeHelper.visibleCardViewElement(storageBoxIdentifierCV2);
+                            ElementStateChangeHelper.setNotReadyStateElements(getApplicationContext(), storageBoxIdentifierCL2, R.drawable.cardview_red_background, storageBoxIdentifierTextBox2, enableColor); // következő elemek láthatóvá tétele
+
+                            ElementStateChangeHelper.disableButton(getApplicationContext(), EditButtonEnums.ENTER_BUTTON_DISABLED, enterButton_rec_1); // enter button lezárása
+                            ElementStateChangeHelper.enableButton(getApplicationContext(), EditButtonEnums.DELETE_BUTTON_ENABLED, deleteRecMatButton);
                             hideNavigationBar();
+                        });
+
+                        typeRecMatTextBox.setOnKeyListener((view, l, keyEvent) -> {
+                            if(l == 66){
+                                if(enterButton_rec_1 != null){
+                                    if(enterButton_rec_1.isEnabled()){
+                                        enterButton_rec_1.callOnClick();
+                                    }
+                                }
+                            }
+                            return false;
                         });
 
                         hideNavigationBar();
@@ -126,22 +141,37 @@ public class RecycledMaterialCreationActivity extends AppCompatActivity {
                     String data = storageBoxIdentifierTextBox2.getText().toString();
                     if(data.equals("")){
 
-                        storageBoxIdentifierCL2.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.cardview_red_background));
-                        storageBoxIdentifierTextBox2.setTextColor(Color.parseColor("#000000"));
-                        ElementStateChangeHelper.setDisableButton(getApplicationContext(), EditButtonEnums.ENTER_BUTTON_DISABLED, enterButton_rec_2);
+                        ElementStateChangeHelper.inVisibleCardViewElement(massDataCV2);
+
+                        ElementStateChangeHelper.setNotReadyStateElements(getApplicationContext(), storageBoxIdentifierCL2, R.drawable.cardview_red_background, storageBoxIdentifierTextBox2, enableColor);
+                        ElementStateChangeHelper.clearNextCardView(getApplicationContext(), massDataCL2, R.drawable.cardview_red_background ,massDataTextBox2, R.color.black);
+
+                        ElementStateChangeHelper.disableButton(getApplicationContext(), EditButtonEnums.ENTER_BUTTON_DISABLED, enterButton_rec_2); // enter button lezárása
+                        hideNavigationBar();
                     }
                     else {
 
-                        ElementStateChangeHelper.setEnableButton(getApplicationContext(), EditButtonEnums.ENTER_BUTTON_ENABLED, enterButton_rec_2);
+                        ElementStateChangeHelper.enableButton(getApplicationContext(), EditButtonEnums.ENTER_BUTTON_ENABLED, enterButton_rec_2);
 
                         enterButton_rec_2.setOnClickListener(view -> {
-                            ElementStateChangeHelper.setReadyStateElements(getApplicationContext(), storageBoxIdentifierCL2, storageBoxIdentifierTextBox2, disableColor, R.drawable.cardview_green_background);
-                            ElementStateChangeHelper.enableNextElements(massDataCV2, massDataTextBox2);
-                            ElementStateChangeHelper.setDisableButton(getApplicationContext(), EditButtonEnums.ENTER_BUTTON_DISABLED, enterButton_rec_2);
-                            ElementStateChangeHelper.setEnableButton(getApplicationContext(), EditButtonEnums.DELETE_BUTTON_ENABLED, deleteRecMatButton);
-                            addRecMatButton.setEnabled(true);
+                            ElementStateChangeHelper.setReadyStateElements(getApplicationContext(), storageBoxIdentifierCL2, R.drawable.cardview_green_background, storageBoxIdentifierTextBox2, disableColor); // jelenlegi elemek késszé tétele
 
+                            ElementStateChangeHelper.visibleCardViewElement(massDataCV2);
+                            ElementStateChangeHelper.setNotReadyStateElements(getApplicationContext(), massDataCL2, R.drawable.cardview_red_background, massDataTextBox2, enableColor); // következő elemek láthatóvá tétele
+
+                            ElementStateChangeHelper.disableButton(getApplicationContext(), EditButtonEnums.ENTER_BUTTON_DISABLED, enterButton_rec_2); // enter button lezárása
                             hideNavigationBar();
+                        });
+
+                        storageBoxIdentifierTextBox2.setOnKeyListener((view, l, keyEvent) -> {
+                            if(l == 66){
+                                if(enterButton_rec_2 != null){
+                                    if(enterButton_rec_2.isEnabled()){
+                                        enterButton_rec_2.callOnClick();
+                                    }
+                                }
+                            }
+                            return false;
                         });
 
                         hideNavigationBar();
@@ -164,21 +194,33 @@ public class RecycledMaterialCreationActivity extends AppCompatActivity {
                     String data = massDataTextBox2.getText().toString();
                     if (data.equals("")) {
 
-                        massDataCL2.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.cardview_red_background));
-                        massDataTextBox2.setTextColor(Color.parseColor("#000000"));
-                        ElementStateChangeHelper.setDisableButton(getApplicationContext(), EditButtonEnums.ADD_BUTTON_DISABLED, addRecMatButton);
-                        ElementStateChangeHelper.setDisableButton(getApplicationContext(), EditButtonEnums.ENTER_BUTTON_DISABLED, enterButton_rec_3);
+                        ElementStateChangeHelper.inVisibleCardViewElement(massDataCV2);
+                        ElementStateChangeHelper.setNotReadyStateElements(getApplicationContext(), massDataCL2, R.drawable.cardview_red_background, massDataTextBox2, enableColor);
+                        ElementStateChangeHelper.disableButton(getApplicationContext(), EditButtonEnums.ENTER_BUTTON_DISABLED, enterButton_rec_3); // enter button lezárása
+                        hideNavigationBar();
                     } else {
-                        ElementStateChangeHelper.setEnableButton(getApplicationContext(), EditButtonEnums.ENTER_BUTTON_ENABLED, enterButton_rec_3);
+                        ElementStateChangeHelper.enableButton(getApplicationContext(), EditButtonEnums.ENTER_BUTTON_ENABLED, enterButton_rec_3);
 
                         enterButton_rec_3.setOnClickListener(view -> {
-                            ElementStateChangeHelper.setReadyStateElements(getApplicationContext(), massDataCL2, massDataTextBox2, disableColor, R.drawable.cardview_green_background);
-                            ElementStateChangeHelper.setEnableButton(getApplicationContext(), EditButtonEnums.ADD_BUTTON_ENABLED, addRecMatButton);
-                            ElementStateChangeHelper.setDisableButton(getApplicationContext(), EditButtonEnums.ENTER_BUTTON_DISABLED, enterButton_rec_3);
-                            addRecMatButton.setEnabled(true);
+                            ElementStateChangeHelper.setReadyStateElements(getApplicationContext(), massDataCL2, R.drawable.cardview_green_background, massDataTextBox2, disableColor); // jelenlegi elemek késszé tétele
+                            ElementStateChangeHelper.disableButton(getApplicationContext(), EditButtonEnums.ENTER_BUTTON_DISABLED, enterButton_rec_3); // enter button lezárása
 
+                            ElementStateChangeHelper.enableButton(getApplicationContext(), EditButtonEnums.ADD_BUTTON_ENABLED, addRecMatButton);
                             hideNavigationBar();
                         });
+
+                        massDataTextBox2.setOnKeyListener((view, l, keyEvent) -> {
+                            if(l == 66){
+                                if(enterButton_rec_3 != null){
+                                    if(enterButton_rec_3.isEnabled()){
+                                        enterButton_rec_3.callOnClick();
+                                    }
+                                }
+                            }
+                            return false;
+                        });
+
+                        hideNavigationBar();
                     }
                 }
 
@@ -205,20 +247,14 @@ public class RecycledMaterialCreationActivity extends AppCompatActivity {
 
         deleteRecMatButton.setOnClickListener(view -> {
             if(typeRecMatCV != null){
-                typeRecMatTextBox.setEnabled(true);
-                typeRecMatTextBox.requestFocus();
                 typeRecMatTextBox.setText("");
-
-                if(recMatScrollView != null) recMatScrollView.fullScroll(ScrollView.FOCUS_UP);
-
+                textLayout_rectMat_1.requestFocus();
                 hideNavigationBar();
             }
         });
     }
 
     public void initView(){
-
-        recMatScrollView = findViewById(R.id.recMatScrollView);
 
         typeRecMatCV = findViewById(R.id.typeRecMatCV);
         storageBoxIdentifierCV2 = findViewById(R.id.storageBoxIdentifierCV2);
@@ -242,6 +278,8 @@ public class RecycledMaterialCreationActivity extends AppCompatActivity {
         enterButton_rec_1 = findViewById(R.id.enterButton_rec_1);
         enterButton_rec_2 = findViewById(R.id.enterButton_rec_2);
         enterButton_rec_3 = findViewById(R.id.enterButton_rec_3);
+
+        textLayout_rectMat_1 = findViewById(R.id.textLayout_rectMat_1);
 
         hideNavigationBar();
     }

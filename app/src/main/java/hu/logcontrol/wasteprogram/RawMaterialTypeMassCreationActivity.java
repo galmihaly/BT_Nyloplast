@@ -10,11 +10,12 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ScrollView;
+
+import com.google.android.material.textfield.TextInputLayout;
 
 import hu.logcontrol.wasteprogram.enums.EditButtonEnums;
 import hu.logcontrol.wasteprogram.helpers.ElementStateChangeHelper;
@@ -42,9 +43,16 @@ public class RawMaterialTypeMassCreationActivity extends AppCompatActivity {
     private ImageButton addRawMatTypeMassButton;
     private ImageButton deleteTypeMassButton;
     private ImageButton backTypeMassButton;
-    private ImageButton enterButton;
 
-    private String disableColor = "#B7C0C1";
+    private ImageButton enterButton_type_1;
+    private ImageButton enterButton_type_2;
+    private ImageButton enterButton_type_3;
+    private ImageButton enterButton_type_4;
+
+    private TextInputLayout textLayout_typeMass_1;
+
+    private final String disableColor = "#B7C0C1";
+    private final String enableColor = "#000000";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,13 +92,40 @@ public class RawMaterialTypeMassCreationActivity extends AppCompatActivity {
                     String data = typeMassCountTextBox.getText().toString();
                     if(data.equals("")){
 
-                        ElementStateChangeHelper.disableCurrentElements(getApplicationContext(), typeMassCountCL, typeMassTypeCV, typeMassTypeTextBox, R.drawable.cardview_red_background);
-                        ElementStateChangeHelper.setDisableButton(getApplicationContext(), EditButtonEnums.DELETE_BUTTON_DISABLED, deleteTypeMassButton);
+                        ElementStateChangeHelper.visibleCardViewElement(typeMassCountCV);
+                        ElementStateChangeHelper.inVisibleCardViewElement(typeMassTypeCV);
+
+                        ElementStateChangeHelper.setNotReadyStateElements(getApplicationContext(), typeMassCountCL, R.drawable.cardview_red_background, typeMassCountTextBox, enableColor);
+                        ElementStateChangeHelper.clearNextCardView(getApplicationContext(), typeMassTypeCL, R.drawable.cardview_red_background ,typeMassTypeTextBox, R.color.black);
+
+                        ElementStateChangeHelper.disableButton(getApplicationContext(), EditButtonEnums.ENTER_BUTTON_DISABLED, enterButton_type_1); // enter button lezárása
+                        ElementStateChangeHelper.disableButton(getApplicationContext(), EditButtonEnums.DELETE_BUTTON_DISABLED, deleteTypeMassButton);
+                        ElementStateChangeHelper.disableButton(getApplicationContext(), EditButtonEnums.ADD_BUTTON_DISABLED, addRawMatTypeMassButton);
                     }
                     else {
-                        ElementStateChangeHelper.setReadyStateElements(getApplicationContext(), typeMassCountCL, typeMassCountTextBox, disableColor, R.drawable.cardview_green_background);
-                        ElementStateChangeHelper.setEnableButton(getApplicationContext(), EditButtonEnums.DELETE_BUTTON_ENABLED, deleteTypeMassButton);
-                        ElementStateChangeHelper.enableNextElements(typeMassTypeCV, typeMassTypeTextBox);
+                        ElementStateChangeHelper.enableButton(getApplicationContext(), EditButtonEnums.ENTER_BUTTON_ENABLED, enterButton_type_1);
+
+                        enterButton_type_1.setOnClickListener(view -> {
+                            ElementStateChangeHelper.setReadyStateElements(getApplicationContext(), typeMassCountCL, R.drawable.cardview_green_background, typeMassCountTextBox, disableColor); // jelenlegi elemek késszé tétele
+
+                            ElementStateChangeHelper.visibleCardViewElement(typeMassTypeCV);
+                            ElementStateChangeHelper.setNotReadyStateElements(getApplicationContext(), typeMassTypeCL, R.drawable.cardview_red_background, typeMassTypeTextBox, enableColor); // következő elemek láthatóvá tétele
+
+                            ElementStateChangeHelper.disableButton(getApplicationContext(), EditButtonEnums.ENTER_BUTTON_DISABLED, enterButton_type_1); // enter button lezárása
+                            ElementStateChangeHelper.enableButton(getApplicationContext(), EditButtonEnums.DELETE_BUTTON_ENABLED, deleteTypeMassButton);
+                            hideNavigationBar();
+                        });
+
+                        typeMassCountTextBox.setOnKeyListener((view, l, keyEvent) -> {
+                            if(l == 66){
+                                if(enterButton_type_1 != null){
+                                    if(enterButton_type_1.isEnabled()){
+                                        enterButton_type_1.callOnClick();
+                                    }
+                                }
+                            }
+                            return false;
+                        });
                     }
                 }
 
@@ -108,13 +143,39 @@ public class RawMaterialTypeMassCreationActivity extends AppCompatActivity {
                     String data = typeMassTypeTextBox.getText().toString();
                     if(data.equals("")){
 
-                        ElementStateChangeHelper.disableCurrentElements(getApplicationContext(), typeMassTypeCL, storageBoxIdentifierCV, storageBoxIdentifierTextBox, R.drawable.cardview_red_background);
-                        ElementStateChangeHelper.setDisableButton(getApplicationContext(), EditButtonEnums.DELETE_BUTTON_DISABLED, deleteTypeMassButton);
+                        ElementStateChangeHelper.inVisibleCardViewElement(storageBoxIdentifierCV);
+
+                        ElementStateChangeHelper.setNotReadyStateElements(getApplicationContext(), typeMassTypeCL, R.drawable.cardview_red_background, typeMassTypeTextBox, enableColor);
+                        ElementStateChangeHelper.clearNextCardView(getApplicationContext(), storageBoxIdentifierCL, R.drawable.cardview_red_background ,storageBoxIdentifierTextBox, R.color.black);
+
+                        ElementStateChangeHelper.disableButton(getApplicationContext(), EditButtonEnums.ENTER_BUTTON_DISABLED, enterButton_type_2); // enter button lezárása
+                        hideNavigationBar();
                     }
                     else {
-                        ElementStateChangeHelper.setReadyStateElements(getApplicationContext(), typeMassTypeCL, typeMassTypeTextBox, disableColor, R.drawable.cardview_green_background);
-                        ElementStateChangeHelper.setEnableButton(getApplicationContext(), EditButtonEnums.DELETE_BUTTON_ENABLED, deleteTypeMassButton);
-                        ElementStateChangeHelper.enableNextElements(storageBoxIdentifierCV, storageBoxIdentifierTextBox);
+                        ElementStateChangeHelper.enableButton(getApplicationContext(), EditButtonEnums.ENTER_BUTTON_ENABLED, enterButton_type_2);
+
+                        enterButton_type_2.setOnClickListener(view -> {
+                            ElementStateChangeHelper.setReadyStateElements(getApplicationContext(), typeMassTypeCL, R.drawable.cardview_green_background, typeMassTypeTextBox, disableColor); // jelenlegi elemek késszé tétele
+
+                            ElementStateChangeHelper.visibleCardViewElement(storageBoxIdentifierCV);
+                            ElementStateChangeHelper.setNotReadyStateElements(getApplicationContext(), storageBoxIdentifierCL, R.drawable.cardview_red_background, storageBoxIdentifierTextBox, enableColor); // következő elemek láthatóvá tétele
+
+                            ElementStateChangeHelper.disableButton(getApplicationContext(), EditButtonEnums.ENTER_BUTTON_DISABLED, enterButton_type_2); // enter button lezárása
+                            hideNavigationBar();
+                        });
+
+                        typeMassTypeTextBox.setOnKeyListener((view, l, keyEvent) -> {
+                            if(l == 66){
+                                if(enterButton_type_2 != null){
+                                    if(enterButton_type_2.isEnabled()){
+                                        enterButton_type_2.callOnClick();
+                                    }
+                                }
+                            }
+                            return false;
+                        });
+
+                        hideNavigationBar();
                     }
                 }
 
@@ -132,13 +193,39 @@ public class RawMaterialTypeMassCreationActivity extends AppCompatActivity {
                     String data = storageBoxIdentifierTextBox.getText().toString();
                     if(data.equals("")){
 
-                        ElementStateChangeHelper.disableCurrentElements(getApplicationContext(), storageBoxIdentifierCL, massDataCV, massDataTextBox, R.drawable.cardview_red_background);
-                        ElementStateChangeHelper.setDisableButton(getApplicationContext(), EditButtonEnums.DELETE_BUTTON_DISABLED, deleteTypeMassButton);
+                        ElementStateChangeHelper.inVisibleCardViewElement(massDataCV);
+
+                        ElementStateChangeHelper.setNotReadyStateElements(getApplicationContext(), storageBoxIdentifierCL, R.drawable.cardview_red_background, storageBoxIdentifierTextBox, enableColor);
+                        ElementStateChangeHelper.clearNextCardView(getApplicationContext(), massDataCL, R.drawable.cardview_red_background ,massDataTextBox, R.color.black);
+
+                        ElementStateChangeHelper.disableButton(getApplicationContext(), EditButtonEnums.ENTER_BUTTON_DISABLED, enterButton_type_3); // enter button lezárása
+                        hideNavigationBar();
                     }
                     else {
-                        ElementStateChangeHelper.setReadyStateElements(getApplicationContext(), storageBoxIdentifierCL, storageBoxIdentifierTextBox, disableColor, R.drawable.cardview_green_background);
-                        ElementStateChangeHelper.setEnableButton(getApplicationContext(), EditButtonEnums.DELETE_BUTTON_ENABLED, deleteTypeMassButton);
-                        ElementStateChangeHelper.enableNextElements(massDataCV, massDataTextBox);
+                        ElementStateChangeHelper.enableButton(getApplicationContext(), EditButtonEnums.ENTER_BUTTON_ENABLED, enterButton_type_3);
+
+                        enterButton_type_3.setOnClickListener(view -> {
+                            ElementStateChangeHelper.setReadyStateElements(getApplicationContext(), storageBoxIdentifierCL, R.drawable.cardview_green_background, storageBoxIdentifierTextBox, disableColor); // jelenlegi elemek késszé tétele
+
+                            ElementStateChangeHelper.visibleCardViewElement(massDataCV);
+                            ElementStateChangeHelper.setNotReadyStateElements(getApplicationContext(), massDataCL, R.drawable.cardview_red_background, massDataTextBox, enableColor); // következő elemek láthatóvá tétele
+
+                            ElementStateChangeHelper.disableButton(getApplicationContext(), EditButtonEnums.ENTER_BUTTON_DISABLED, enterButton_type_3); // enter button lezárása
+                            hideNavigationBar();
+                        });
+
+                        storageBoxIdentifierTextBox.setOnKeyListener((view, l, keyEvent) -> {
+                            if(l == 66){
+                                if(enterButton_type_3 != null){
+                                    if(enterButton_type_3.isEnabled()){
+                                        enterButton_type_3.callOnClick();
+                                    }
+                                }
+                            }
+                            return false;
+                        });
+
+                        hideNavigationBar();
                     }
                 }
 
@@ -156,22 +243,33 @@ public class RawMaterialTypeMassCreationActivity extends AppCompatActivity {
                     String data = massDataTextBox.getText().toString();
                     if(data.equals("")){
 
-                        massDataCL.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.cardview_red_background));
-                        massDataTextBox.setTextColor(Color.parseColor("#000000"));
-                        ElementStateChangeHelper.setDisableButton(getApplicationContext(), EditButtonEnums.ADD_BUTTON_DISABLED, addRawMatTypeMassButton);
-                        ElementStateChangeHelper.setDisableButton(getApplicationContext(), EditButtonEnums.ENTER_BUTTON_DISABLED, enterButton);
+                        ElementStateChangeHelper.inVisibleCardViewElement(massDataCV);
+                        ElementStateChangeHelper.setNotReadyStateElements(getApplicationContext(), massDataCL, R.drawable.cardview_red_background, massDataTextBox, enableColor);
+                        ElementStateChangeHelper.disableButton(getApplicationContext(), EditButtonEnums.ENTER_BUTTON_DISABLED, enterButton_type_4); // enter button lezárása
                     }
                     else{
-                        ElementStateChangeHelper.setEnableButton(getApplicationContext(), EditButtonEnums.ENTER_BUTTON_ENABLED, enterButton);
+                        ElementStateChangeHelper.enableButton(getApplicationContext(), EditButtonEnums.ENTER_BUTTON_ENABLED, enterButton_type_4);
 
-                        enterButton.setOnClickListener(view -> {
-                            ElementStateChangeHelper.setReadyStateElements(getApplicationContext(), massDataCL, massDataTextBox, disableColor, R.drawable.cardview_green_background);
-                            ElementStateChangeHelper.setEnableButton(getApplicationContext(), EditButtonEnums.ADD_BUTTON_ENABLED, addRawMatTypeMassButton);
-                            ElementStateChangeHelper.setDisableButton(getApplicationContext(), EditButtonEnums.ENTER_BUTTON_DISABLED, enterButton);
-                            addRawMatTypeMassButton.setEnabled(true);
+                        enterButton_type_4.setOnClickListener(view -> {
+                            ElementStateChangeHelper.setReadyStateElements(getApplicationContext(), massDataCL, R.drawable.cardview_green_background, massDataTextBox, disableColor); // jelenlegi elemek késszé tétele
+                            ElementStateChangeHelper.disableButton(getApplicationContext(), EditButtonEnums.ENTER_BUTTON_DISABLED, enterButton_type_4); // enter button lezárása
 
+                            ElementStateChangeHelper.enableButton(getApplicationContext(), EditButtonEnums.ADD_BUTTON_ENABLED, addRawMatTypeMassButton);
                             hideNavigationBar();
                         });
+
+                        massDataTextBox.setOnKeyListener((view, l, keyEvent) -> {
+                            if(l == 66){
+                                if(enterButton_type_4 != null){
+                                    if(enterButton_type_4.isEnabled()){
+                                        enterButton_type_4.callOnClick();
+                                    }
+                                }
+                            }
+                            return false;
+                        });
+
+                        hideNavigationBar();
                     }
                 }
 
@@ -197,23 +295,14 @@ public class RawMaterialTypeMassCreationActivity extends AppCompatActivity {
 
         deleteTypeMassButton.setOnClickListener(view -> {
             if(typeMassCountCV != null){
-                typeMassCountTextBox.setEnabled(true);
-                typeMassCountTextBox.requestFocus();
                 typeMassCountTextBox.setText("");
-
-                storageBoxIdentifierCV.setVisibility(View.INVISIBLE);
-                storageBoxIdentifierTextBox.setText("");
-
-                if(massDataScrollView != null) massDataScrollView.fullScroll(ScrollView.FOCUS_UP);
-
+                textLayout_typeMass_1.requestFocus();
                 hideNavigationBar();
             }
         });
     }
 
     public void initView(){
-
-        massDataScrollView = findViewById(R.id.massDataScrollView);
 
         typeMassCountCV = findViewById(R.id.typeMassCountCV);
         typeMassTypeCV = findViewById(R.id.typeMassTypeCV);
@@ -237,7 +326,13 @@ public class RawMaterialTypeMassCreationActivity extends AppCompatActivity {
         addRawMatTypeMassButton = findViewById(R.id.addRawMatTypeMassButton);
         deleteTypeMassButton = findViewById(R.id.deleteTypeMassButton);
         backTypeMassButton = findViewById(R.id.backTypeMassButton);
-        enterButton = findViewById(R.id.enterButton);
+
+        enterButton_type_1 = findViewById(R.id.enterButton_type_1);
+        enterButton_type_2 = findViewById(R.id.enterButton_type_2);
+        enterButton_type_3 = findViewById(R.id.enterButton_type_3);
+        enterButton_type_4 = findViewById(R.id.enterButton_type_4);
+
+        textLayout_typeMass_1 = findViewById(R.id.textLayout_typeMass_1);
 
         hideNavigationBar();
     }
