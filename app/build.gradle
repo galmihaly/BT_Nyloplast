@@ -38,4 +38,6 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
 
     implementation 'com.microsoft.design:fluent-system-icons:1.1.195@aar'
+
+    implementation "androidx.security:security-crypto:1.0.0"
 }

@@ -10,8 +10,6 @@ import androidx.cardview.widget.CardView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
 
-import com.google.android.material.textfield.TextInputEditText;
-
 import hu.logcontrol.wasteprogram.R;
 import hu.logcontrol.wasteprogram.enums.EditButtonEnums;
 
@@ -110,19 +108,19 @@ public class ElementStateChangeHelper {
         }
     }
 
-    public static void enableSavePathEditor(TextInputEditText inputEditText, String enableColor){
-        if(inputEditText == null) return;
-
-        inputEditText.setEnabled(true);
-        inputEditText.setTextColor(Color.parseColor(enableColor));
-        inputEditText.requestFocus();
-    }
-
-    public static void disableSavePathEditor(TextInputEditText inputEditText, String disableColor){
-        if(inputEditText == null) return;
-
-        inputEditText.setEnabled(false);
-        inputEditText.setTextColor(Color.parseColor(disableColor));
-        inputEditText.clearFocus();
-    }
+//    public static void enableSavePathEditor(TextInputEditText inputEditText, String enableColor){
+//        if(inputEditText == null) return;
+//
+//        inputEditText.setEnabled(true);
+//        inputEditText.setTextColor(Color.parseColor(enableColor));
+//        inputEditText.requestFocus();
+//    }
+//
+//    public static void disableSavePathEditor(TextInputEditText inputEditText, String disableColor){
+//        if(inputEditText == null) return;
+//
+//        inputEditText.setEnabled(false);
+//        inputEditText.setTextColor(Color.parseColor(disableColor));
+//        inputEditText.clearFocus();
+//    }
 }

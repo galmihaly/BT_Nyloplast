@@ -47,42 +47,87 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/titleSettingsCL">
 
-            <TextView
-                android:id="@+id/settingsTV"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="20dp"
-                android:layout_marginTop="30dp"
-                android:text="Mentési útvonal megadása:"
-                android:textSize="20sp"
-                android:textStyle="bold"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/textLayout_settings"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/constraintLayout5"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_margin="10dp"
                 android:layout_marginTop="30dp"
-                android:hint="Mentési útvonal"
-                android:visibility="visible"
-                app:boxStrokeColor="@color/black"
-                app:boxStrokeWidthFocused="1dp"
-                app:hintTextColor="@color/black"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/constraintLayout4">
+
+                <TextView
+                    android:id="@+id/settingsLocalPathTV"
+                    android:layout_width="205dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="15dp"
+                    android:text="Mentési lokális helrye:"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <CheckBox
+                    android:id="@+id/localSavePathCheckbox"
+                    style="@style/checkboxStyle"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    app:centerIfNoTextEnabled="true"
+                    app:checkedState="unchecked"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/settingsLocalPathTV"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:useMaterialThemeColors="false" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/constraintLayout4"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/settingsTV">
 
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/settingSavePathTB"
-                    android:layout_width="match_parent"
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/textLayout_settings"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:singleLine="true"
-                    app:textInputLayoutFocusedRectEnabled="true" />
+                    android:layout_margin="10dp"
+                    android:hint="Globális mentési útvonal"
+                    android:visibility="visible"
+                    app:boxStrokeColor="@color/black"
+                    app:boxStrokeWidthFocused="1dp"
+                    app:hintTextColor="@color/black"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
 
-            </com.google.android.material.textfield.TextInputLayout>
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/settingsGlobalSavePathTB"
+                        android:layout_width="match_parent"
+                        android:layout_height="70dp"
+                        android:singleLine="true"
+                        app:textInputLayoutFocusedRectEnabled="true" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <TextView
+                android:id="@+id/settingsTV"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="15dp"
+                android:layout_marginTop="30dp"
+                android:text="Globális mentési útvonal:"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/settingsButtonsCL"
@@ -119,18 +164,52 @@
                     app:srcCompat="@drawable/ic_fluent_save_28_selector" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/editSettingsButton"
-                android:layout_width="wrap_content"
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/localSavePathCL"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:insetTop="0dp"
-                android:insetBottom="0dp"
-                android:text="Szerkeszt"
-                app:backgroundTint="#79FF9E"
+                android:layout_marginTop="30dp"
+                android:visibility="invisible"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textLayout_settings" />
+                app:layout_constraintTop_toBottomOf="@+id/constraintLayout5">
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/textLayout_local_settings"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:hint="Lokális mentési útvonal"
+                    android:visibility="visible"
+                    app:boxStrokeColor="@color/black"
+                    app:boxStrokeWidthFocused="1dp"
+                    app:hintTextColor="@color/black"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/settingsLocalSavePathTB"
+                        android:layout_width="210dp"
+                        android:layout_height="70dp"
+                        android:singleLine="true"
+                        app:textInputLayoutFocusedRectEnabled="true" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <ImageButton
+                    android:id="@+id/folderPickerButton"
+                    android:layout_width="70dp"
+                    android:layout_height="70dp"
+                    android:background="@drawable/add_button_background"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/textLayout_local_settings"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/ic_fluent_folder_28_regular" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

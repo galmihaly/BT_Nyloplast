@@ -106,9 +106,11 @@ public class RawMaterialCreationActivity extends AppCompatActivity {
 
                         rawMatCountTextBox.setOnKeyListener((view, l, keyEvent) -> {
                             if(l == 66){
+                                Log.e("", String.valueOf(l));
                                 if(enterButton_base_1 != null){
                                     if(enterButton_base_1.isEnabled()){
                                         enterButton_base_1.callOnClick();
+                                        rawMatTypeTextBox.requestFocus();
                                     }
                                 }
                             }

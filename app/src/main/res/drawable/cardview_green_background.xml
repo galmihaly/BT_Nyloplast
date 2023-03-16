@@ -4,7 +4,7 @@
         <rotate android:pivotX="50%"
             android:pivotY="50%">
             <shape>
-                <solid android:color="#CFF6AB"/>
+                <solid android:color="#98FB98"/>
             </shape>
         </rotate>
     </item>

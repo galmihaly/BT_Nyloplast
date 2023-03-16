@@ -17,4 +17,9 @@
         <!-- Customize your theme here. -->
     </style>
 
+    <style name="checkboxStyle" parent="Widget.Material3.CompoundButton.CheckBox">
+        <item name="android:background" >@drawable/checkbox</item>
+        <item name="buttonTint">#00000000</item>
+    </style>
+
 </resources>

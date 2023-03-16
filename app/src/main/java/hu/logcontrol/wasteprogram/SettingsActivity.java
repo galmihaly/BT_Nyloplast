@@ -1,50 +1,87 @@
 package hu.logcontrol.wasteprogram;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
+import androidx.security.crypto.EncryptedSharedPreferences;
+import androidx.security.crypto.MasterKeys;
 
+import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
+import android.widget.CheckBox;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
-import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
 
-import java.util.Objects;
+import java.io.File;
 
 import hu.logcontrol.wasteprogram.enums.ActivityEnums;
 import hu.logcontrol.wasteprogram.enums.EditButtonEnums;
-import hu.logcontrol.wasteprogram.helpers.ElementStateChangeHelper;
 import hu.logcontrol.wasteprogram.helpers.Helper;
 import hu.logcontrol.wasteprogram.interfaces.ISettingsView;
+import hu.logcontrol.wasteprogram.models.LocalEncryptedPreferences;
 import hu.logcontrol.wasteprogram.presenters.ProgramPresenter;
 
 public class SettingsActivity extends AppCompatActivity implements ISettingsView {
 
-    private TextInputEditText settingSavePathTB;
-    private MaterialButton editSettingsButton;
+    private TextInputEditText settingsLocalSavePathTB;
+    private TextInputEditText settingsGlobalSavePathTB;
     private ImageButton settingsSaveButton;
     private ImageButton settingsBackButton;
+    private ImageButton folderPickerButton;
 
-    private String currentSavePath;
-    private String newSavePath;
+    private CheckBox localSavePathCheckbox;
 
-    private final String disableColor = "#B7C0C1";
-    private final String enableColor = "#000000";
+    private ConstraintLayout localSavePathCL;
 
     private ProgramPresenter programPresenter;
+
+    @SuppressLint("SetTextI18n")
+    private final ActivityResultLauncher<Intent> activityResultLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            result -> {
+                if(result.getResultCode() == Activity.RESULT_OK){
+                    Intent intent = result.getData();
+                    if(intent == null) return;
+
+                    settingsLocalSavePathTB.setText(File.separator + "sdcard" + File.separator + intent.getData().getPath().split(":")[1]);
+
+                    programPresenter.createFileFromRawMaterialList(intent.getData());
+                    hideNavigationBar();
+                }
+            }
+    );
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
+
+        LocalEncryptedPreferences preferences = LocalEncryptedPreferences.getInstance(
+                "values",
+                MasterKeys.AES256_GCM_SPEC,
+                this,
+                EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
+                EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
+        );
+
+        preferences.putInt("values3", 3);
+
+        Log.e("", String.valueOf(preferences.getIntValueByKey("values1")));
+        Log.e("", String.valueOf(preferences.getIntValueByKey("values2")));
+        Log.e("", String.valueOf(preferences.getIntValueByKey("values3")));
+
+
 
         initView();
         programPresenter = new ProgramPresenter(this, getApplicationContext());
@@ -54,20 +91,18 @@ public class SettingsActivity extends AppCompatActivity implements ISettingsView
     protected void onResume() {
         super.onResume();
 
-        // az elmentet útvonalat be kell tölteni a sharedpref fájlból
 
-        if(settingSavePathTB != null){
-            currentSavePath = Objects.requireNonNull(settingSavePathTB.getText()).toString();
-        }
-
-        if(editSettingsButton != null && settingSavePathTB != null){
-            editSettingsButton.setOnClickListener(v -> {
-                if(settingSavePathTB.isEnabled()){
-                    ElementStateChangeHelper.disableSavePathEditor(settingSavePathTB, disableColor);
+        if(localSavePathCheckbox != null){
+            localSavePathCheckbox.setOnClickListener(v -> {
+                if(localSavePathCheckbox.isChecked()){
+                    Log.e("", "checked");
+                    localSavePathCL.setVisibility(View.VISIBLE);
+                    localSavePathCheckbox.setChecked(true);
                 }
-                else{
-                    ElementStateChangeHelper.enableSavePathEditor(settingSavePathTB, enableColor);
-                    newSavePath = settingSavePathTB.getText().toString();
+                if(!localSavePathCheckbox.isChecked()){
+                    Log.e("", "unchecked");
+                    localSavePathCL.setVisibility(View.INVISIBLE);
+                    localSavePathCheckbox.setChecked(false);
                 }
             });
         }
@@ -76,44 +111,37 @@ public class SettingsActivity extends AppCompatActivity implements ISettingsView
             programPresenter.openActivityByEnum(ActivityEnums.MAIN_ACTIVITY);
         });
 
-        if(settingSavePathTB != null){
-            settingSavePathTB.addTextChangedListener(new TextWatcher() {
-                @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
-
-                @Override
-                public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-                    if(settingsSaveButton != null){
-                        settingSaveButton(EditButtonEnums.SAVE_BUTTON_ENABLED);
-
-                        settingsSaveButton.setOnClickListener(v -> {
-
-                            //TODO -> itt kell majd elmenteni az útvonalat
-                            programPresenter.openActivityByEnum(ActivityEnums.MAIN_ACTIVITY);
-                        });
-                    }
-                }
-
-                @Override public void afterTextChanged(Editable s) {}
+        if(folderPickerButton != null){
+            folderPickerButton.setOnClickListener(v -> {
+                programPresenter.openActivityByEnum(ActivityEnums.FOLDERPICKER_ACTIVITY);
             });
         }
     }
 
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+
+        hideNavigationBar();
+    }
+
     private void initView(){
-        settingSavePathTB = findViewById(R.id.settingSavePathTB);
-        editSettingsButton = findViewById(R.id.editSettingsButton);
+        settingsLocalSavePathTB = findViewById(R.id.settingsLocalSavePathTB);
+        settingsGlobalSavePathTB = findViewById(R.id.settingsGlobalSavePathTB);
         settingsSaveButton = findViewById(R.id.settingsSaveButton);
         settingsBackButton = findViewById(R.id.settingsBackButton);
+        folderPickerButton = findViewById(R.id.folderPickerButton);
 
-        if(settingSavePathTB != null) ElementStateChangeHelper.disableSavePathEditor(settingSavePathTB, disableColor);
-        if(settingsSaveButton != null) settingSaveButton(EditButtonEnums.SAVE_BUTTON_DISABLED);
+        localSavePathCheckbox = findViewById(R.id.localSavePathCheckbox);
+
+        localSavePathCL = findViewById(R.id.localSavePathCL);
 
         hideNavigationBar();
     }
 
     @Override
     public void openActivityByIntent(Intent intent) {
-        startActivity(intent);
+        activityResultLauncher.launch(intent);
     }
 
     @Override
