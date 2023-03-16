@@ -12,12 +12,15 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.security.crypto.EncryptedSharedPreferences;
+import androidx.security.crypto.MasterKeys;
 
 import java.lang.ref.WeakReference;
 import java.util.List;
 
 import hu.logcontrol.wasteprogram.enums.EditButtonEnums;
 import hu.logcontrol.wasteprogram.interfaces.IModesOneView;
+import hu.logcontrol.wasteprogram.models.LocalEncryptedPreferences;
 import hu.logcontrol.wasteprogram.models.RawMaterial;
 import hu.logcontrol.wasteprogram.R;
 
@@ -26,6 +29,7 @@ public class RawMaterialAdapter extends RecyclerView.Adapter<RawMaterialAdapter.
     private Context context;
     private List<RawMaterial> rawMaterialList;
     private WeakReference<IModesOneView> modesOneWeakReference;
+    private LocalEncryptedPreferences preferences;
 
     public RawMaterialAdapter(Context context, List<RawMaterial> rawMaterialList, IModesOneView modesOneWeakReference) {
         this.context = context.getApplicationContext();
@@ -43,11 +47,27 @@ public class RawMaterialAdapter extends RecyclerView.Adapter<RawMaterialAdapter.
     @SuppressLint({"SetTextI18n", "NotifyDataSetChanged"})
     @Override
     public void onBindViewHolder(@NonNull RawMaterialItemViewHolder holder, int position) {
+
+        preferences = LocalEncryptedPreferences.getInstance(
+                "values",
+                MasterKeys.AES256_GCM_SPEC,
+                context,
+                EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
+                EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
+        );
+
         if(rawMaterialList != null){
             if(rawMaterialList.size() != 0){
                 holder.getNumberOfItem().setText(position + 1 + ".");
                 holder.getRawMaterialTypeInput().setText(rawMaterialList.get(position).getMaterialType());
                 holder.getRawMaterialCountInput().setText(rawMaterialList.get(position).getDoseNumber());
+
+                if(rawMaterialList.size() == preferences.getIntValueByKey("values3")){
+                    modesOneWeakReference.get().settingButton(EditButtonEnums.ADD_BUTTON_DISABLED);
+                }
+                else {
+                    modesOneWeakReference.get().settingButton(EditButtonEnums.ADD_BUTTON_ENABLED);
+                }
             }
 
             holder.getDeleteItemButton().setOnClickListener(view -> {
@@ -55,7 +75,7 @@ public class RawMaterialAdapter extends RecyclerView.Adapter<RawMaterialAdapter.
                 notifyDataSetChanged();
 
                 if(rawMaterialList.size() == 0){
-                    modesOneWeakReference.get().settingSaveButton(EditButtonEnums.SAVE_BUTTON_DISABLED);
+                    modesOneWeakReference.get().settingButton(EditButtonEnums.SAVE_BUTTON_DISABLED);
                 }
             });
         }

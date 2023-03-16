@@ -2,22 +2,17 @@ package hu.logcontrol.wasteprogram;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-import android.util.Log;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
@@ -102,7 +97,7 @@ public class ModesOne extends AppCompatActivity implements IModesOneView {
 
         if(saveButton != null && rawMaterialList != null){
             if(rawMaterialList.size() > 0){
-                settingSaveButton(EditButtonEnums.SAVE_BUTTON_ENABLED);
+                settingButton(EditButtonEnums.SAVE_BUTTON_ENABLED);
 
                 saveButton.setOnClickListener(view -> {
                     programPresenter.openActivityByEnum(ActivityEnums.FOLDERPICKER_ACTIVITY);
@@ -138,7 +133,7 @@ public class ModesOne extends AppCompatActivity implements IModesOneView {
         backButton = findViewById(R.id.backButton);
 
         saveButton = findViewById(R.id.saveButton);
-        settingSaveButton(EditButtonEnums.SAVE_BUTTON_DISABLED);
+        settingButton(EditButtonEnums.SAVE_BUTTON_DISABLED);
 
         recycleViewModesOneRV = findViewById(R.id.recycleViewModesOneRV);
         recycleViewModesOneRV.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
@@ -149,7 +144,7 @@ public class ModesOne extends AppCompatActivity implements IModesOneView {
     }
 
     @Override
-    public void settingSaveButton(EditButtonEnums editButtonEnum) {
+    public void settingButton(EditButtonEnums editButtonEnum) {
         if(saveButton == null) return;
 
         switch (editButtonEnum){
@@ -164,6 +159,20 @@ public class ModesOne extends AppCompatActivity implements IModesOneView {
 
                 saveButton.setEnabled(false);
                 saveButton.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.disable_button_background_circle));
+
+                break;
+            }
+            case ADD_BUTTON_ENABLED:{
+
+                addButton.setEnabled(true);
+                addButton.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.add_button_background));
+
+                break;
+            }
+            case ADD_BUTTON_DISABLED:{
+
+                addButton.setEnabled(false);
+                addButton.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.disable_button_background_circle));
 
                 break;
             }

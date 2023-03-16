@@ -18,17 +18,13 @@ import android.widget.Toast;
 
 import java.util.List;
 
-import hu.logcontrol.wasteprogram.adapters.RawMaterialTypeMassAdapter;
 import hu.logcontrol.wasteprogram.adapters.RecycledMaterialAdapter;
 import hu.logcontrol.wasteprogram.enums.ActivityEnums;
 import hu.logcontrol.wasteprogram.enums.EditButtonEnums;
 import hu.logcontrol.wasteprogram.helpers.Helper;
 import hu.logcontrol.wasteprogram.interfaces.IModesThreeView;
-import hu.logcontrol.wasteprogram.interfaces.IModesTwoView;
 import hu.logcontrol.wasteprogram.logger.ApplicationLogger;
-import hu.logcontrol.wasteprogram.models.LocalRawMaterialTypeMassesStorage;
 import hu.logcontrol.wasteprogram.models.LocalRecycLedMaterialsStorage;
-import hu.logcontrol.wasteprogram.models.RawMaterialTypeMass;
 import hu.logcontrol.wasteprogram.models.RecycledMaterial;
 import hu.logcontrol.wasteprogram.presenters.ProgramPresenter;
 
@@ -98,7 +94,7 @@ public class ModesThree extends AppCompatActivity implements IModesThreeView {
 
         if(saveButton_3 != null && recycledMaterialList != null){
             if(recycledMaterialList.size() > 0){
-                settingSaveButton(EditButtonEnums.SAVE_BUTTON_ENABLED);
+                settingButton(EditButtonEnums.SAVE_BUTTON_ENABLED);
 
                 saveButton_3.setOnClickListener(view -> {
                     programPresenter.openActivityByEnum(ActivityEnums.FOLDERPICKER_ACTIVITY);
@@ -119,7 +115,7 @@ public class ModesThree extends AppCompatActivity implements IModesThreeView {
             }
         }
 
-        RecycledMaterialAdapter recycledMaterialAdapter = new RecycledMaterialAdapter(recycledMaterialList, this);
+        RecycledMaterialAdapter recycledMaterialAdapter = new RecycledMaterialAdapter(getApplicationContext(), recycledMaterialList, this);
         recycleViewModesThreeRV.setAdapter(recycledMaterialAdapter);
     }
 
@@ -129,7 +125,7 @@ public class ModesThree extends AppCompatActivity implements IModesThreeView {
     }
 
     @Override
-    public void settingSaveButton(EditButtonEnums editButtonEnum) {
+    public void settingButton(EditButtonEnums editButtonEnum) {
         if(saveButton_3 == null) return;
 
         switch (editButtonEnum){
@@ -147,6 +143,20 @@ public class ModesThree extends AppCompatActivity implements IModesThreeView {
 
                 break;
             }
+            case ADD_BUTTON_ENABLED:{
+
+                addButton_3.setEnabled(true);
+                addButton_3.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.add_button_background));
+
+                break;
+            }
+            case ADD_BUTTON_DISABLED:{
+
+                addButton_3.setEnabled(false);
+                addButton_3.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.disable_button_background_circle));
+
+                break;
+            }
         }
     }
 
@@ -161,7 +171,7 @@ public class ModesThree extends AppCompatActivity implements IModesThreeView {
         backButton_3 = findViewById(R.id.backButton_3);
 
         saveButton_3 = findViewById(R.id.saveButton_3);
-        settingSaveButton(EditButtonEnums.SAVE_BUTTON_DISABLED);
+        settingButton(EditButtonEnums.SAVE_BUTTON_DISABLED);
 
         recycleViewModesThreeRV = findViewById(R.id.recycleViewModesThreeRV);
         recycleViewModesThreeRV.setLayoutManager(new LinearLayoutManager(getApplicationContext()));

@@ -45,6 +45,7 @@ public class SettingsActivity extends AppCompatActivity implements ISettingsView
     private ConstraintLayout localSavePathCL;
 
     private ProgramPresenter programPresenter;
+    private LocalEncryptedPreferences preferences;
 
     @SuppressLint("SetTextI18n")
     private final ActivityResultLauncher<Intent> activityResultLauncher = registerForActivityResult(
@@ -54,7 +55,8 @@ public class SettingsActivity extends AppCompatActivity implements ISettingsView
                     Intent intent = result.getData();
                     if(intent == null) return;
 
-                    settingsLocalSavePathTB.setText(File.separator + "sdcard" + File.separator + intent.getData().getPath().split(":")[1]);
+                    String path = File.separator + "sdcard" + File.separator + intent.getData().getPath().split(":")[1];
+                    settingsLocalSavePathTB.setText(path);
 
                     programPresenter.createFileFromRawMaterialList(intent.getData());
                     hideNavigationBar();
@@ -67,40 +69,41 @@ public class SettingsActivity extends AppCompatActivity implements ISettingsView
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
 
-        LocalEncryptedPreferences preferences = LocalEncryptedPreferences.getInstance(
+        preferences = LocalEncryptedPreferences.getInstance(
                 "values",
                 MasterKeys.AES256_GCM_SPEC,
                 this,
                 EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
                 EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
         );
-
-        preferences.putInt("values3", 3);
-
-        Log.e("", String.valueOf(preferences.getIntValueByKey("values1")));
-        Log.e("", String.valueOf(preferences.getIntValueByKey("values2")));
         Log.e("", String.valueOf(preferences.getIntValueByKey("values3")));
-
-
 
         initView();
         programPresenter = new ProgramPresenter(this, getApplicationContext());
+        programPresenter.initTaskManager();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
 
-
         if(localSavePathCheckbox != null){
             localSavePathCheckbox.setOnClickListener(v -> {
                 if(localSavePathCheckbox.isChecked()){
-                    Log.e("", "checked");
+
                     localSavePathCL.setVisibility(View.VISIBLE);
                     localSavePathCheckbox.setChecked(true);
+
+                    if(localSavePathCheckbox.isChecked()){
+                        if(folderPickerButton != null){
+                            folderPickerButton.setOnClickListener(view -> {
+                                programPresenter.openActivityByEnum(ActivityEnums.FOLDERPICKER_ACTIVITY);
+                            });
+                        }
+                    }
                 }
                 if(!localSavePathCheckbox.isChecked()){
-                    Log.e("", "unchecked");
+
                     localSavePathCL.setVisibility(View.INVISIBLE);
                     localSavePathCheckbox.setChecked(false);
                 }
@@ -110,12 +113,6 @@ public class SettingsActivity extends AppCompatActivity implements ISettingsView
         settingsBackButton.setOnClickListener(v -> {
             programPresenter.openActivityByEnum(ActivityEnums.MAIN_ACTIVITY);
         });
-
-        if(folderPickerButton != null){
-            folderPickerButton.setOnClickListener(v -> {
-                programPresenter.openActivityByEnum(ActivityEnums.FOLDERPICKER_ACTIVITY);
-            });
-        }
     }
 
     @Override

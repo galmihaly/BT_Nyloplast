@@ -1,6 +1,8 @@
 package hu.logcontrol.wasteprogram.adapters;
 
+import android.content.Context;
 import android.graphics.Color;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,6 +11,8 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.security.crypto.EncryptedSharedPreferences;
+import androidx.security.crypto.MasterKeys;
 
 import java.lang.ref.WeakReference;
 import java.util.List;
@@ -16,16 +20,18 @@ import java.util.List;
 import hu.logcontrol.wasteprogram.R;
 import hu.logcontrol.wasteprogram.enums.EditButtonEnums;
 import hu.logcontrol.wasteprogram.interfaces.IModesThreeView;
-import hu.logcontrol.wasteprogram.interfaces.IModesTwoView;
-import hu.logcontrol.wasteprogram.models.RawMaterialTypeMass;
+import hu.logcontrol.wasteprogram.models.LocalEncryptedPreferences;
 import hu.logcontrol.wasteprogram.models.RecycledMaterial;
 
 public class RecycledMaterialAdapter extends RecyclerView.Adapter<RecycledMaterialAdapter.RecycledMaterialViewHolder> {
 
+    private Context context;
     private final List<RecycledMaterial> recycledMaterialList;
     private final WeakReference<IModesThreeView> modesThreeWeakReference;
+    private LocalEncryptedPreferences preferences;
 
-    public RecycledMaterialAdapter(List<RecycledMaterial> recycledMaterialList, IModesThreeView modesThreeWeakReference) {
+    public RecycledMaterialAdapter(Context context, List<RecycledMaterial> recycledMaterialList, IModesThreeView modesThreeWeakReference) {
+        this.context = context;
         this.recycledMaterialList = recycledMaterialList;
         this.modesThreeWeakReference = new WeakReference<>(modesThreeWeakReference);
     }
@@ -39,6 +45,15 @@ public class RecycledMaterialAdapter extends RecyclerView.Adapter<RecycledMateri
 
     @Override
     public void onBindViewHolder(@NonNull RecycledMaterialViewHolder holder, int position) {
+
+        preferences = LocalEncryptedPreferences.getInstance(
+                "values",
+                MasterKeys.AES256_GCM_SPEC,
+                context,
+                EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
+                EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
+        );
+
         if(recycledMaterialList != null){
             if(recycledMaterialList.size() != 0){
 
@@ -46,6 +61,13 @@ public class RecycledMaterialAdapter extends RecyclerView.Adapter<RecycledMateri
                 holder.getRawMaterialTypeInput_3().setText(recycledMaterialList.get(position).getMaterialType());
                 holder.getStorageBoxIdentifierInput_3().setText(recycledMaterialList.get(position).getStorageBoxIdentifier());
                 holder.getMassDataInput_3().setText(recycledMaterialList.get(position).getMassData());
+
+                if(recycledMaterialList.size() == preferences.getIntValueByKey("values3")){
+                    modesThreeWeakReference.get().settingButton(EditButtonEnums.ADD_BUTTON_DISABLED);
+                }
+                else {
+                    modesThreeWeakReference.get().settingButton(EditButtonEnums.ADD_BUTTON_ENABLED);
+                }
             }
 
             holder.getDeleteItemButton_3().setOnClickListener(view -> {
@@ -53,7 +75,7 @@ public class RecycledMaterialAdapter extends RecyclerView.Adapter<RecycledMateri
                 notifyDataSetChanged();
 
                 if(recycledMaterialList.size() == 0){
-                    modesThreeWeakReference.get().settingSaveButton(EditButtonEnums.SAVE_BUTTON_DISABLED);
+                    modesThreeWeakReference.get().settingButton(EditButtonEnums.SAVE_BUTTON_DISABLED);
                 }
             });
         }

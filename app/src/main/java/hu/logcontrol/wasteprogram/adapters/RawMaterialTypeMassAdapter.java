@@ -3,7 +3,6 @@ package hu.logcontrol.wasteprogram.adapters;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Color;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,15 +11,16 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.security.crypto.EncryptedSharedPreferences;
+import androidx.security.crypto.MasterKeys;
 
 import java.lang.ref.WeakReference;
 import java.util.List;
 
 import hu.logcontrol.wasteprogram.R;
 import hu.logcontrol.wasteprogram.enums.EditButtonEnums;
-import hu.logcontrol.wasteprogram.interfaces.IModesOneView;
 import hu.logcontrol.wasteprogram.interfaces.IModesTwoView;
-import hu.logcontrol.wasteprogram.models.RawMaterial;
+import hu.logcontrol.wasteprogram.models.LocalEncryptedPreferences;
 import hu.logcontrol.wasteprogram.models.RawMaterialTypeMass;
 
 public class RawMaterialTypeMassAdapter extends RecyclerView.Adapter<RawMaterialTypeMassAdapter.RawMaterialTypeMassViewHolder> {
@@ -28,6 +28,7 @@ public class RawMaterialTypeMassAdapter extends RecyclerView.Adapter<RawMaterial
     private Context context;
     private final List<RawMaterialTypeMass> rawMaterialTypeMassList;
     private final WeakReference<IModesTwoView> modesTwoWeakReference;
+    private LocalEncryptedPreferences preferences;
 
     public RawMaterialTypeMassAdapter(Context context, List<RawMaterialTypeMass> rawMaterialTypeMassList, IModesTwoView modesTwoWeakReference) {
         this.context = context.getApplicationContext();
@@ -45,6 +46,15 @@ public class RawMaterialTypeMassAdapter extends RecyclerView.Adapter<RawMaterial
     @SuppressLint({"SetTextI18n", "NotifyDataSetChanged"})
     @Override
     public void onBindViewHolder(@NonNull RawMaterialTypeMassViewHolder holder, int position) {
+
+        preferences = LocalEncryptedPreferences.getInstance(
+                "values",
+                MasterKeys.AES256_GCM_SPEC,
+                context,
+                EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
+                EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
+        );
+
         if(rawMaterialTypeMassList != null){
             if(rawMaterialTypeMassList.size() != 0){
 
@@ -53,6 +63,13 @@ public class RawMaterialTypeMassAdapter extends RecyclerView.Adapter<RawMaterial
                 holder.getRawMaterialTypeInput_2().setText(rawMaterialTypeMassList.get(position).getMaterialType());
                 holder.getStorageBoxIdentifierInput().setText(rawMaterialTypeMassList.get(position).getStorageBoxIdentifier());
                 holder.getMassDataInput().setText(rawMaterialTypeMassList.get(position).getMassData());
+
+                if(rawMaterialTypeMassList.size() == preferences.getIntValueByKey("values3")){
+                    modesTwoWeakReference.get().settingButton(EditButtonEnums.ADD_BUTTON_DISABLED);
+                }
+                else {
+                    modesTwoWeakReference.get().settingButton(EditButtonEnums.ADD_BUTTON_ENABLED);
+                }
             }
 
             holder.getDeleteItemButton_2().setOnClickListener(view -> {
@@ -60,7 +77,7 @@ public class RawMaterialTypeMassAdapter extends RecyclerView.Adapter<RawMaterial
                 notifyDataSetChanged();
 
                 if(rawMaterialTypeMassList.size() == 0){
-                    modesTwoWeakReference.get().settingSaveButton(EditButtonEnums.SAVE_BUTTON_DISABLED);
+                    modesTwoWeakReference.get().settingButton(EditButtonEnums.SAVE_BUTTON_DISABLED);
                 }
             });
         }

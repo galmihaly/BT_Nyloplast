@@ -10,6 +10,6 @@ import hu.logcontrol.wasteprogram.models.RawMaterial;
 
 public interface IModesOneView {
     void openActivityByIntent(Intent intent);
-    void settingSaveButton(EditButtonEnums editButtonEnum);
+    void settingButton(EditButtonEnums editButtonEnum);
     void getMessageFromPresenter(String message);
 }

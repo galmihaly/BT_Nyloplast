@@ -256,9 +256,9 @@ public class ProgramPresenter implements IProgramPresenter, PresenterThreadCallb
     @Override
     public void setSaveButtonState(EditButtonEnums editButtonEnum) {
         if(editButtonEnum == null) return;
-        if(iModesOneView != null) iModesOneView.settingSaveButton(editButtonEnum);
-        if(iModesTwoView != null) iModesTwoView.settingSaveButton(editButtonEnum);
-        if(iModesThreeView != null) iModesThreeView.settingSaveButton(editButtonEnum);
+        if(iModesOneView != null) iModesOneView.settingButton(editButtonEnum);
+        if(iModesTwoView != null) iModesTwoView.settingButton(editButtonEnum);
+        if(iModesThreeView != null) iModesThreeView.settingButton(editButtonEnum);
     }
 
     @Override

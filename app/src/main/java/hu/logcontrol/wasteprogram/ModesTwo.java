@@ -13,7 +13,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-import android.util.Log;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
@@ -96,7 +95,7 @@ public class ModesTwo extends AppCompatActivity implements IModesTwoView {
 
         if(saveButton_2 != null && rawMaterialTypeMassList != null){
             if(rawMaterialTypeMassList.size() > 0){
-                settingSaveButton(EditButtonEnums.SAVE_BUTTON_ENABLED);
+                settingButton(EditButtonEnums.SAVE_BUTTON_ENABLED);
 
                 saveButton_2.setOnClickListener(view -> {
                     programPresenter.openActivityByEnum(ActivityEnums.FOLDERPICKER_ACTIVITY);
@@ -127,7 +126,7 @@ public class ModesTwo extends AppCompatActivity implements IModesTwoView {
     }
 
     @Override
-    public void settingSaveButton(EditButtonEnums editButtonEnum) {
+    public void settingButton(EditButtonEnums editButtonEnum) {
         if(saveButton_2 == null) return;
 
         switch (editButtonEnum){
@@ -145,6 +144,20 @@ public class ModesTwo extends AppCompatActivity implements IModesTwoView {
 
                 break;
             }
+            case ADD_BUTTON_ENABLED:{
+
+                addButton_2.setEnabled(true);
+                addButton_2.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.add_button_background));
+
+                break;
+            }
+            case ADD_BUTTON_DISABLED:{
+
+                addButton_2.setEnabled(false);
+                addButton_2.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.disable_button_background_circle));
+
+                break;
+            }
         }
     }
 
@@ -159,7 +172,7 @@ public class ModesTwo extends AppCompatActivity implements IModesTwoView {
         backButton_2 = findViewById(R.id.backButton_2);
 
         saveButton_2 = findViewById(R.id.saveButton_2);
-        settingSaveButton(EditButtonEnums.SAVE_BUTTON_DISABLED);
+        settingButton(EditButtonEnums.SAVE_BUTTON_DISABLED);
 
         recycleViewModesTwoRV = findViewById(R.id.recycleViewModesTwoRV);
         recycleViewModesTwoRV.setLayoutManager(new LinearLayoutManager(getApplicationContext()));

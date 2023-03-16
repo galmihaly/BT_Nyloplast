@@ -6,6 +6,6 @@ import hu.logcontrol.wasteprogram.enums.EditButtonEnums;
 
 public interface IModesTwoView {
     void openActivityByIntent(Intent intent);
-    void settingSaveButton(EditButtonEnums editButtonEnum);
+    void settingButton(EditButtonEnums editButtonEnum);
     void getMessageFromPresenter(String message);
 }
