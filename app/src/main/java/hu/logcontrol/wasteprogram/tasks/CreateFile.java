@@ -82,6 +82,7 @@ public class CreateFile implements Callable {
                     if(documentFile != null) documentFile.createFile(fileExtension, fileName);
 
                     fos = new FileOutputStream(getPathFromUri() + File.separator + fileName);
+                    Log.e("rawMAt","");
 
                     if(rawMaterialList != null) {
 
