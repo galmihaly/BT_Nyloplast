@@ -2,12 +2,10 @@ package hu.logcontrol.wasteprogram.helpers;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.os.Build;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
 
-import androidx.annotation.RequiresApi;
 import androidx.cardview.widget.CardView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
@@ -47,7 +45,6 @@ public class ElementStateChangeHelper {
         editText.setEnabled(false);
         editText.setTextColor(Color.parseColor(disableColor));
         editText.clearFocus();
-        constraintLayout.clearFocus();
     }
 
     // piros színre vált a kártya, a textbox nyitva marad, a szöveg fekete színű lesz
@@ -70,7 +67,6 @@ public class ElementStateChangeHelper {
 
                 button.setEnabled(true);
                 button.setBackground(ContextCompat.getDrawable(context, R.drawable.add_button_background));
-                button.setFocusable(false);
 
                 break;
             }
@@ -83,7 +79,7 @@ public class ElementStateChangeHelper {
             }
             case ENTER_BUTTON_ENABLED:{
 
-                button.setEnabled(true);
+                //button.setEnabled(true);
                 button.setBackground(ContextCompat.getDrawable(context, R.drawable.enter_button_background));
 
                 break;
@@ -104,7 +100,7 @@ public class ElementStateChangeHelper {
             }
             case ENTER_BUTTON_DISABLED:{
 
-                button.setEnabled(false);
+                //button.setEnabled(false);
                 button.setBackground(ContextCompat.getDrawable(context, R.drawable.disable_button_background_rectangle));
                 break;
             }

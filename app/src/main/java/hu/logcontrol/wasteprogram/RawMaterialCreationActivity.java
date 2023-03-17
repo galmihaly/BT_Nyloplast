@@ -52,6 +52,20 @@ public class RawMaterialCreationActivity extends AppCompatActivity {
         initView();
      }
 
+     public void setState(boolean isState){
+
+         ElementStateChangeHelper.visibleCardViewElement(rawMaterialTypeCV);
+         ElementStateChangeHelper.setNotReadyStateElements(getApplicationContext(), rawMatTypeCL, R.drawable.cardview_red_background, rawMatTypeTextBox, enableColor); // következő elemek láthatóvá tétele
+
+         ElementStateChangeHelper.disableButton(getApplicationContext(), EditButtonEnums.ENTER_BUTTON_DISABLED, enterButton_base_1); // enter button lezárása
+         ElementStateChangeHelper.enableButton(getApplicationContext(), EditButtonEnums.DELETE_BUTTON_ENABLED, deleteRawButton);
+
+         ElementStateChangeHelper.setReadyStateElements(getApplicationContext(), rawMatCountCL, R.drawable.cardview_green_background, rawMatCountTextBox, disableColor); // jelenlegi elemek késszé tétele
+         hideNavigationBar();
+
+        rawMatCountTextBox.setNextFocusDownId(rawMatTypeTextBox.getId());
+     }
+
     @Override
     protected void onResume() {
         super.onResume();
@@ -97,26 +111,19 @@ public class RawMaterialCreationActivity extends AppCompatActivity {
 
                         enterButton_base_1.setOnClickListener(view -> {
 
-                            rawMatCountTextBox.setNextFocusForwardId(rawMatTypeTextBox.getId());
+                            //rawMatCountTextBox.setNextFocusForwardId(rawMatTypeTextBox.getId());
 
-                            ElementStateChangeHelper.setReadyStateElements(getApplicationContext(), rawMatCountCL, R.drawable.cardview_green_background, rawMatCountTextBox, disableColor); // jelenlegi elemek késszé tétele
-
-                            ElementStateChangeHelper.visibleCardViewElement(rawMaterialTypeCV);
-                            ElementStateChangeHelper.setNotReadyStateElements(getApplicationContext(), rawMatTypeCL, R.drawable.cardview_red_background, rawMatTypeTextBox, enableColor); // következő elemek láthatóvá tétele
-
-                            ElementStateChangeHelper.disableButton(getApplicationContext(), EditButtonEnums.ENTER_BUTTON_DISABLED, enterButton_base_1); // enter button lezárása
-                            ElementStateChangeHelper.enableButton(getApplicationContext(), EditButtonEnums.DELETE_BUTTON_ENABLED, deleteRawButton);
-                            hideNavigationBar();
+                            setState(true);
                         });
 
                         rawMatCountTextBox.setOnKeyListener((view, l, keyEvent) -> {
 
-                            if(l == 66){
+                            if(l == KeyEvent.KEYCODE_ENTER){
                                 if(keyEvent.getAction() == KeyEvent.ACTION_DOWN){
                                     Log.e("keycodasdsadasdqae", String.valueOf(KeyEvent.ACTION_DOWN));
                                     if(enterButton_base_1 != null){
                                         if(enterButton_base_1.isEnabled()){
-                                            enterButton_base_1.callOnClick();
+                                            setState(false);
                                         }
                                     }
                                 }
@@ -241,7 +248,7 @@ public class RawMaterialCreationActivity extends AppCompatActivity {
         if(enterButton_base_2 != null){
             if(enterButton_base_2.isEnabled()) {
                 enterButton_base_2.setOnClickListener(view -> {
-                    ElementStateChangeHelper.setReadyStateElements(getApplicationContext(), rawMatTypeCL, R.drawable.cardview_green_background, rawMatTypeTextBox, disableColor); // jelenlegi elemek késszé tétele
+                    //ElementStateChangeHelper.setReadyStateElements(getApplicationContext(), rawMatTypeCL, R.drawable.cardview_green_background, rawMatTypeTextBox, disableColor); // jelenlegi elemek késszé tétele
                     ElementStateChangeHelper.disableButton(getApplicationContext(), EditButtonEnums.ENTER_BUTTON_DISABLED, enterButton_base_2); // enter button lezárása
 
                     ElementStateChangeHelper.enableButton(getApplicationContext(), EditButtonEnums.ADD_BUTTON_ENABLED, addRawMatButton);
