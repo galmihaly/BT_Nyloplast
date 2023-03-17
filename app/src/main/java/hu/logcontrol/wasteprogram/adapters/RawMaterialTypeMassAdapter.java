@@ -64,7 +64,7 @@ public class RawMaterialTypeMassAdapter extends RecyclerView.Adapter<RawMaterial
                 holder.getStorageBoxIdentifierInput().setText(rawMaterialTypeMassList.get(position).getStorageBoxIdentifier());
                 holder.getMassDataInput().setText(rawMaterialTypeMassList.get(position).getMassData());
 
-                if(rawMaterialTypeMassList.size() == preferences.getIntValueByKey("values3")){
+                if(rawMaterialTypeMassList.size() == preferences.getIntValueByKey("listvalue")){
                     modesTwoWeakReference.get().settingButton(EditButtonEnums.ADD_BUTTON_DISABLED);
                 }
                 else {

@@ -118,7 +118,18 @@ public class SettingsActivity extends AppCompatActivity implements ISettingsView
     @Override
     protected void onRestart() {
         super.onRestart();
+        hideNavigationBar();
+    }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        hideNavigationBar();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
         hideNavigationBar();
     }
 

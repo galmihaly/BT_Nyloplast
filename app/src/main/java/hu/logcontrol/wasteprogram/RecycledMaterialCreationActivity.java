@@ -253,6 +253,18 @@ public class RecycledMaterialCreationActivity extends AppCompatActivity {
         });
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        hideNavigationBar();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        hideNavigationBar();
+    }
+
     public void initView(){
 
         typeRecMatCV = findViewById(R.id.typeRecMatCV);

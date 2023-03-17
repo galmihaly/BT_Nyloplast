@@ -62,7 +62,7 @@ public class RecycledMaterialAdapter extends RecyclerView.Adapter<RecycledMateri
                 holder.getStorageBoxIdentifierInput_3().setText(recycledMaterialList.get(position).getStorageBoxIdentifier());
                 holder.getMassDataInput_3().setText(recycledMaterialList.get(position).getMassData());
 
-                if(recycledMaterialList.size() == preferences.getIntValueByKey("values3")){
+                if(recycledMaterialList.size() == preferences.getIntValueByKey("listvalue")){
                     modesThreeWeakReference.get().settingButton(EditButtonEnums.ADD_BUTTON_DISABLED);
                 }
                 else {

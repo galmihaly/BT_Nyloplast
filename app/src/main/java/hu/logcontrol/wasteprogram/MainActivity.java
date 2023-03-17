@@ -71,6 +71,18 @@ public class MainActivity extends AppCompatActivity implements IMainView {
         }
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        hideNavigationBar();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        hideNavigationBar();
+    }
+
     public void startWrite() {
         if(ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
             Log.e("", "Jelenleg rendelkezik írási joggal!");
@@ -104,7 +116,7 @@ public class MainActivity extends AppCompatActivity implements IMainView {
         exitButton = findViewById(R.id.exitButton);
         settingsButton = findViewById(R.id.settingsButton);
 
-        Helper.hideNavigationBar(this);
+        hideNavigationBar();
     }
 
     @Override
@@ -123,5 +135,9 @@ public class MainActivity extends AppCompatActivity implements IMainView {
         finishAndRemoveTask();
         System.exit(0);
         super.onDestroy();
+    }
+
+    private void hideNavigationBar(){
+        Helper.hideNavigationBar(this);
     }
 }

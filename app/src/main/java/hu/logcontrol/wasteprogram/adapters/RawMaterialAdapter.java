@@ -62,10 +62,12 @@ public class RawMaterialAdapter extends RecyclerView.Adapter<RawMaterialAdapter.
                 holder.getRawMaterialTypeInput().setText(rawMaterialList.get(position).getMaterialType());
                 holder.getRawMaterialCountInput().setText(rawMaterialList.get(position).getDoseNumber());
 
-                if(rawMaterialList.size() == preferences.getIntValueByKey("values3")){
+                if(rawMaterialList.size() == preferences.getIntValueByKey("listvalue")){
+                    Log.e("adapter", "beléptem");
                     modesOneWeakReference.get().settingButton(EditButtonEnums.ADD_BUTTON_DISABLED);
                 }
                 else {
+                    Log.e("adapter", "nem beléptem");
                     modesOneWeakReference.get().settingButton(EditButtonEnums.ADD_BUTTON_ENABLED);
                 }
             }

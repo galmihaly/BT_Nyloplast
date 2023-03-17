@@ -302,6 +302,18 @@ public class RawMaterialTypeMassCreationActivity extends AppCompatActivity {
         });
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        hideNavigationBar();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        hideNavigationBar();
+    }
+
     public void initView(){
 
         typeMassCountCV = findViewById(R.id.typeMassCountCV);

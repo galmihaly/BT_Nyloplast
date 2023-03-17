@@ -2,10 +2,12 @@ package hu.logcontrol.wasteprogram.helpers;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.os.Build;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
 
+import androidx.annotation.RequiresApi;
 import androidx.cardview.widget.CardView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
@@ -68,6 +70,7 @@ public class ElementStateChangeHelper {
 
                 button.setEnabled(true);
                 button.setBackground(ContextCompat.getDrawable(context, R.drawable.add_button_background));
+                button.setFocusable(false);
 
                 break;
             }

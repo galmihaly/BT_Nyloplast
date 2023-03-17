@@ -11,8 +11,10 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.TextView;
 
 import com.google.android.material.textfield.TextInputLayout;
 
@@ -94,6 +96,9 @@ public class RawMaterialCreationActivity extends AppCompatActivity {
                         ElementStateChangeHelper.enableButton(getApplicationContext(), EditButtonEnums.ENTER_BUTTON_ENABLED, enterButton_base_1);
 
                         enterButton_base_1.setOnClickListener(view -> {
+
+                            rawMatCountTextBox.setNextFocusForwardId(rawMatTypeTextBox.getId());
+
                             ElementStateChangeHelper.setReadyStateElements(getApplicationContext(), rawMatCountCL, R.drawable.cardview_green_background, rawMatCountTextBox, disableColor); // jelenlegi elemek késszé tétele
 
                             ElementStateChangeHelper.visibleCardViewElement(rawMaterialTypeCV);
@@ -105,14 +110,25 @@ public class RawMaterialCreationActivity extends AppCompatActivity {
                         });
 
                         rawMatCountTextBox.setOnKeyListener((view, l, keyEvent) -> {
+
                             if(l == 66){
-                                Log.e("", String.valueOf(l));
-                                if(enterButton_base_1 != null){
-                                    if(enterButton_base_1.isEnabled()){
-                                        enterButton_base_1.callOnClick();
-                                        rawMatTypeTextBox.requestFocus();
+                                if(keyEvent.getAction() == KeyEvent.ACTION_DOWN){
+                                    Log.e("keycodasdsadasdqae", String.valueOf(KeyEvent.ACTION_DOWN));
+                                    if(enterButton_base_1 != null){
+                                        if(enterButton_base_1.isEnabled()){
+                                            enterButton_base_1.callOnClick();
+                                        }
                                     }
                                 }
+
+//                                if(keyEvent.getAction() == KeyEvent.ACTION_UP){
+//                                    if(enterButton_base_1 != null){
+//                                        Log.e("keycode", String.valueOf(KeyEvent.ACTION_UP));
+//                                        if(enterButton_base_1.isEnabled()){
+//                                            enterButton_base_1.callOnClick();
+//                                        }
+//                                    }
+//                                }
                             }
                             return false;
                         });
@@ -202,12 +218,21 @@ public class RawMaterialCreationActivity extends AppCompatActivity {
     }
 
     @Override
-    public boolean onKeyUp(int keyCode, KeyEvent event) {
-        if(keyCode == 66){
-            Log.e("", String.valueOf(keyCode));
-        }
+    protected void onStart() {
+        super.onStart();
+        hideNavigationBar();
+    }
 
-        return super.onKeyDown(keyCode, event);
+    @Override
+    protected void onPause() {
+        super.onPause();
+        hideNavigationBar();
+    }
+
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        super.onWindowFocusChanged(hasFocus);
+        Log.e("megváltozott", String.valueOf(hasFocus));
     }
 
     public void startEnterButton(){

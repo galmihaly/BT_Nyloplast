@@ -120,6 +120,18 @@ public class ModesThree extends AppCompatActivity implements IModesThreeView {
     }
 
     @Override
+    protected void onStart() {
+        super.onStart();
+        hideNavigationBar();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        hideNavigationBar();
+    }
+
+    @Override
     public void openActivityByIntent(Intent intent) {
         activityResultLauncher.launch(intent);
     }
