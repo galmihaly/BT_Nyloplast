@@ -79,7 +79,7 @@ public class ElementStateChangeHelper {
             }
             case ENTER_BUTTON_ENABLED:{
 
-                //button.setEnabled(true);
+                button.setEnabled(true);
                 button.setBackground(ContextCompat.getDrawable(context, R.drawable.enter_button_background));
 
                 break;
@@ -100,7 +100,7 @@ public class ElementStateChangeHelper {
             }
             case ENTER_BUTTON_DISABLED:{
 
-                //button.setEnabled(false);
+                button.setEnabled(false);
                 button.setBackground(ContextCompat.getDrawable(context, R.drawable.disable_button_background_rectangle));
                 break;
             }

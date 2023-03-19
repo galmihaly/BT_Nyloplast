@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    android:id="@+id/mainCL"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -7,6 +9,7 @@
     tools:context=".RawMaterialCreationActivity">
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constraintLayout6"
         android:layout_width="match_parent"
         android:layout_height="100dp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -53,56 +56,50 @@
             app:srcCompat="@drawable/ic_fluent_arrow_hook_down_left_28_filled" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <androidx.cardview.widget.CardView
-        android:id="@+id/rawMaterialTypeCV"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/rawMatTypeCL"
         android:layout_width="0dp"
-        android:layout_height="100dp"
-        android:layout_marginTop="5dp"
-        app:cardCornerRadius="0dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/cardview_red_background"
+        android:visibility="invisible"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/rawMaterialCountCV">
+        app:layout_constraintTop_toBottomOf="@+id/rawMatCountCL">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/rawMatTypeCL"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@drawable/cardview_red_background">
+        <ImageButton
+            android:id="@+id/enterButton_base_2"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:background="@drawable/disable_button_background_rectangle"
+            android:visibility="visible"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/textLayout_base_2"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_fluent_arrow_enter_left_20_regular" />
 
-            <ImageButton
-                android:id="@+id/enterButton_base_2"
-                android:layout_width="45dp"
-                android:layout_height="45dp"
-                android:background="@drawable/disable_button_background_rectangle"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/textLayout_base_2"
-                app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/ic_fluent_arrow_enter_left_20_regular" />
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/textLayout_base_2"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="230dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:hint="Alapanyag típusa:"
+            app:boxStrokeColor="@color/black"
+            app:boxStrokeWidthFocused="1dp"
+            app:hintTextColor="@color/black"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/textLayout_base_2"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                android:layout_width="230dp"
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/rawMatTypeTextBox"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="10dp"
-                android:hint="Alapanyag típusa:"
-                app:boxStrokeColor="@color/black"
-                app:boxStrokeWidthFocused="1dp"
-                app:hintTextColor="@color/black"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
+                android:singleLine="true" />
 
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/rawMatTypeTextBox"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:singleLine="true" />
-
-            </com.google.android.material.textfield.TextInputLayout>
-        </androidx.constraintlayout.widget.ConstraintLayout>
-    </androidx.cardview.widget.CardView>
+        </com.google.android.material.textfield.TextInputLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/titleRawMaterialCreationCL"
@@ -127,54 +124,48 @@
             app:layout_constraintTop_toTopOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <androidx.cardview.widget.CardView
-        android:id="@+id/rawMaterialCountCV"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/rawMatCountCL"
         android:layout_width="0dp"
-        android:layout_height="100dp"
-        app:cardCornerRadius="0dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/cardview_red_background"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/titleRawMaterialCreationCL">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/rawMatCountCL"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@drawable/cardview_red_background">
+        <ImageButton
+            android:id="@+id/enterButton_base_1"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:background="@drawable/disable_button_background_rectangle"
+            android:visibility="visible"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/textLayout_base_1"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_fluent_arrow_enter_left_20_regular" />
 
-            <ImageButton
-                android:id="@+id/enterButton_base_1"
-                android:layout_width="45dp"
-                android:layout_height="45dp"
-                android:background="@drawable/disable_button_background_rectangle"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/textLayout_base_1"
-                app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/ic_fluent_arrow_enter_left_20_regular" />
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/textLayout_base_1"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="230dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:hint="Alapanyag adagszáma:"
+            app:boxStrokeColor="@color/black"
+            app:boxStrokeWidthFocused="1dp"
+            app:hintTextColor="@color/black"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/textLayout_base_1"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                android:layout_width="230dp"
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/rawMatCountTextBox"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="10dp"
-                android:hint="Alapanyag adagszáma:"
-                app:boxStrokeColor="@color/black"
-                app:boxStrokeWidthFocused="1dp"
-                app:hintTextColor="@color/black"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
+                android:singleLine="true" />
 
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/rawMatCountTextBox"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:singleLine="true" />
-
-            </com.google.android.material.textfield.TextInputLayout>
-        </androidx.constraintlayout.widget.ConstraintLayout>
-    </androidx.cardview.widget.CardView>
+        </com.google.android.material.textfield.TextInputLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
