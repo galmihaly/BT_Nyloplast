@@ -8,6 +8,7 @@ import java.util.List;
 import hu.logcontrol.wasteprogram.adapters.RawMaterialAdapter;
 import hu.logcontrol.wasteprogram.enums.ActivityEnums;
 import hu.logcontrol.wasteprogram.enums.EditButtonEnums;
+import hu.logcontrol.wasteprogram.enums.ViewButtons;
 import hu.logcontrol.wasteprogram.models.RawMaterial;
 import hu.logcontrol.wasteprogram.models.RawMaterialTypeMass;
 import hu.logcontrol.wasteprogram.models.RecycledMaterial;
@@ -26,4 +27,8 @@ public interface IProgramPresenter {
 
     void setSaveButtonState(EditButtonEnums editButtonEnum);
     void sendMessageToView(String message);
+
+//    void settingActivityTextBoxes();
+//    void settingActivityConstraints();
+    void settignActivityButtons(EditButtonEnums editButtonEnum, ViewButtons viewButton);
 }

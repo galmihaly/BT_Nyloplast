@@ -16,11 +16,12 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
 
-import com.google.android.material.textfield.TextInputLayout;
-
+import hu.logcontrol.wasteprogram.enums.ViewButtons;
 import hu.logcontrol.wasteprogram.helpers.Helper;
+import hu.logcontrol.wasteprogram.interfaces.IRawMaterialCreationView;
+import hu.logcontrol.wasteprogram.presenters.ProgramPresenter;
 
-public class RawMaterialCreationActivity extends AppCompatActivity {
+public class RawMaterialCreationView extends AppCompatActivity implements IRawMaterialCreationView {
 
     private ConstraintLayout rawMatCountCL;
     private ConstraintLayout rawMatTypeCL;
@@ -35,8 +36,6 @@ public class RawMaterialCreationActivity extends AppCompatActivity {
     private ImageButton enterButton_base_1;
     private ImageButton enterButton_base_2;
 
-    private TextInputLayout textLayout_base_1;
-
     private final String disableColor = "#B7C0C1";
     private final String enableColor = "#000000";
 
@@ -44,15 +43,19 @@ public class RawMaterialCreationActivity extends AppCompatActivity {
     private boolean isSeged_2 = false;
 
     private boolean isFocus_1 = false;
-    private boolean isFocus_2 = false;
+
+    private boolean isEnabledAddButton = false;
+
+    private ProgramPresenter programPresenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_raw_material_creation);
         initView();
-     }
 
+        programPresenter = new ProgramPresenter(this, getApplicationContext());
+     }
 
     @Override
     protected void onResume() {
@@ -108,34 +111,34 @@ public class RawMaterialCreationActivity extends AppCompatActivity {
 
                         rawMatCountTextBox.setOnFocusChangeListener((v, hasFocus) -> {
                             if(isSeged_1){
-                                Log.e("setOnFocusChangeListener", "beléptem ide");
+
                                 rawMatCountTextBox.setEnabled(false);
                                 enterButton_base_1.setEnabled(false);
-
-                                enterButton_base_2.setEnabled(true);
-                                rawMatTypeTextBox.setEnabled(true);
+                                isSeged_2 = false;
                             }
                         });
 
                         rawMatCountTextBox.setOnKeyListener((v, keyCode, event) -> {
 
                             if(keyCode == KeyEvent.KEYCODE_ENTER){
-                                if(rawMatTypeTextBox != null){
+                                if(event.getAction() == KeyEvent.ACTION_DOWN){
+                                    if(rawMatTypeTextBox != null){
 
-                                    rawMatTypeCL.setVisibility(View.VISIBLE);
-                                    rawMatCountCL.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.cardview_green_background));
-                                    enterButton_base_1.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.disable_button_background_rectangle));
+                                        rawMatTypeCL.setVisibility(View.VISIBLE);
+                                        rawMatCountCL.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.cardview_green_background));
+                                        enterButton_base_1.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.disable_button_background_rectangle));
 
-                                    rawMatCountTextBox.setTextColor(Color.parseColor(disableColor));
+                                        rawMatCountTextBox.setTextColor(Color.parseColor(disableColor));
 
-                                    isSeged_1 = true;
+                                        isSeged_1 = true;
+                                        isFocus_1 = false;
+                                        rawMatTypeTextBox.setText("");
+                                    }
                                 }
                             }
 
                             return false;
                         });
-
-
                     }
                 }
 
@@ -156,15 +159,12 @@ public class RawMaterialCreationActivity extends AppCompatActivity {
 
                     if(watchedText.equals("")){
 
-                        enterButton_base_2.setEnabled(false);
-                        rawMatTypeTextBox.setEnabled(true);
-
-                        rawMatTypeTextBox.setTextColor(Color.parseColor(enableColor));
                         enterButton_base_2.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.disable_button_background_rectangle));
                         rawMatTypeCL.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.cardview_red_background));
-                        addRawMatButton.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.disable_button_background_circle));
 
-                        if(isFocus_1) rawMatTypeTextBox.requestFocus();
+                        if(isFocus_1){ rawMatTypeTextBox.requestFocus(); }
+                        rawMatTypeTextBox.setEnabled(true);
+                        rawMatTypeTextBox.setTextColor(Color.parseColor(enableColor));
                     }
                     else {
                         enterButton_base_2.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.enter_button_background));
@@ -181,6 +181,7 @@ public class RawMaterialCreationActivity extends AppCompatActivity {
                                 addRawMatButton.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.add_button_background));
 
                                 isSeged_2 = true;
+                                isEnabledAddButton = true;
                                 enterButton_base_2.setEnabled(false);
                                 rawMatTypeTextBox.setEnabled(false);
                             }
@@ -190,20 +191,24 @@ public class RawMaterialCreationActivity extends AppCompatActivity {
                             if(isSeged_2){
                                 rawMatTypeTextBox.setEnabled(false);
                                 enterButton_base_2.setEnabled(false);
+                                Log.e("ide is beléptem", "ok");
                             }
                         });
 
                         rawMatTypeTextBox.setOnKeyListener((v, keyCode, event) -> {
 
                             if(keyCode == KeyEvent.KEYCODE_ENTER){
-                                if(rawMatTypeTextBox != null){
-                                    rawMatTypeCL.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.cardview_green_background));
-                                    enterButton_base_2.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.disable_button_background_rectangle));
-                                    rawMatTypeTextBox.setTextColor(Color.parseColor(disableColor));
-                                    isSeged_2 = true;
-                                    addRawMatButton.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.add_button_background));
+                                if(event.getAction() == KeyEvent.ACTION_DOWN){
+                                    if(rawMatTypeTextBox != null){
+                                        rawMatTypeCL.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.cardview_green_background));
+                                        enterButton_base_2.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.disable_button_background_rectangle));
+                                        rawMatTypeTextBox.setTextColor(Color.parseColor(disableColor));
+                                        isSeged_2 = true;
+                                        addRawMatButton.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.add_button_background));
 
-                                    addRawMatButton.requestFocus();
+                                        isEnabledAddButton = true;
+                                        addRawMatButton.requestFocus();
+                                    }
                                 }
                             }
 
@@ -211,14 +216,16 @@ public class RawMaterialCreationActivity extends AppCompatActivity {
                         });
 
                         addRawMatButton.setOnClickListener(v -> {
-                            Intent intent = new Intent();
+                            if(isEnabledAddButton){
+                                Intent intent = new Intent();
 
-                            intent.putExtra("rawMatCountTextBox", rawMatCountTextBox.getText().toString());
-                            intent.putExtra("rawMatTypeTextBox", rawMatTypeTextBox.getText().toString());
+                                intent.putExtra("rawMatCountTextBox", rawMatCountTextBox.getText().toString());
+                                intent.putExtra("rawMatTypeTextBox", rawMatTypeTextBox.getText().toString());
 
-                            setResult(1, intent);
+                                setResult(1, intent);
 
-                            RawMaterialCreationActivity.super.onBackPressed();
+                                RawMaterialCreationView.super.onBackPressed();
+                            }
                         });
                     }
                 }
@@ -229,19 +236,10 @@ public class RawMaterialCreationActivity extends AppCompatActivity {
 
         if(deleteRawButton != null){
             deleteRawButton.setOnClickListener(v -> {
-//                if(!rawMatTypeTextBox.getText().toString().equals("")){
-//                    rawMatTypeTextBox.setText("");
-//                }
-//
-//                if(!rawMatTypeTextBox.getText().toString().equals("")){
-//                    rawMatCountTextBox.setText("");
-//                }
-
-                enterButton_base_2.setEnabled(false);
-                rawMatTypeTextBox.setText("");
-
-                enterButton_base_1.setEnabled(false);
+                isSeged_1 = false;
                 rawMatCountTextBox.setText("");
+                isFocus_1 = false;
+                isEnabledAddButton = false;
             });
         }
 
@@ -267,7 +265,10 @@ public class RawMaterialCreationActivity extends AppCompatActivity {
 
     private void initView() {
         rawMatCountTextBox = findViewById(R.id.rawMatCountTextBox);
+        //if(rawMatCountTextBox != null){ rawMatCountTextBox.setShowSoftInputOnFocus(false); }
+
         rawMatTypeTextBox = findViewById(R.id.rawMatTypeTextBox);
+        //if(rawMatTypeTextBox != null){ rawMatTypeTextBox.setShowSoftInputOnFocus(false); }
 
         rawMatCountTextBox.requestFocus();
 
@@ -281,12 +282,42 @@ public class RawMaterialCreationActivity extends AppCompatActivity {
         enterButton_base_1 = findViewById(R.id.enterButton_base_1);
         enterButton_base_2 = findViewById(R.id.enterButton_base_2);
 
-        textLayout_base_1 = findViewById(R.id.textLayout_base_1);
-
         hideNavigationBar();
     }
 
     private void hideNavigationBar(){
         Helper.hideNavigationBar(this);
+    }
+
+    @Override
+    public void settingLayoutsButtons(ViewButtons viewButton, boolean buttonState, int buttonBackground) {
+
+        switch (viewButton){
+            case ADD_BUTTON:{
+                addRawMatButton.setEnabled(buttonState);
+                addRawMatButton.setBackground(ContextCompat.getDrawable(getApplicationContext(), buttonBackground));
+                break;
+            }
+            case DELETE_BUTTON:{
+                deleteRawButton.setEnabled(buttonState);
+                deleteRawButton.setBackground(ContextCompat.getDrawable(getApplicationContext(), buttonBackground));
+                break;
+            }
+            case BACK_BUTTON:{
+                backRawButton.setEnabled(buttonState);
+                backRawButton.setBackground(ContextCompat.getDrawable(getApplicationContext(), buttonBackground));
+                break;
+            }
+            case ENTER_BUTTON_1:{
+                enterButton_base_1.setEnabled(buttonState);
+                enterButton_base_1.setBackground(ContextCompat.getDrawable(getApplicationContext(), buttonBackground));
+                break;
+            }
+            case ENTER_BUTTON_2:{
+                enterButton_base_2.setEnabled(buttonState);
+                enterButton_base_2.setBackground(ContextCompat.getDrawable(getApplicationContext(), buttonBackground));
+                break;
+            }
+        }
     }
 }

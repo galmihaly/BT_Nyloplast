@@ -15,18 +15,21 @@ import hu.logcontrol.wasteprogram.MainActivity;
 import hu.logcontrol.wasteprogram.ModesOne;
 import hu.logcontrol.wasteprogram.ModesThree;
 import hu.logcontrol.wasteprogram.ModesTwo;
-import hu.logcontrol.wasteprogram.RawMaterialCreationActivity;
+import hu.logcontrol.wasteprogram.R;
+import hu.logcontrol.wasteprogram.RawMaterialCreationView;
 import hu.logcontrol.wasteprogram.RawMaterialTypeMassCreationActivity;
 import hu.logcontrol.wasteprogram.RecycledMaterialCreationActivity;
 import hu.logcontrol.wasteprogram.SettingsActivity;
 import hu.logcontrol.wasteprogram.enums.ActivityEnums;
 import hu.logcontrol.wasteprogram.enums.EditButtonEnums;
 import hu.logcontrol.wasteprogram.enums.HandlerMessageIdentifiers;
+import hu.logcontrol.wasteprogram.enums.ViewButtons;
 import hu.logcontrol.wasteprogram.interfaces.IModesOneView;
 import hu.logcontrol.wasteprogram.interfaces.IModesThreeView;
 import hu.logcontrol.wasteprogram.interfaces.IModesTwoView;
 import hu.logcontrol.wasteprogram.interfaces.IProgramPresenter;
 import hu.logcontrol.wasteprogram.interfaces.IMainView;
+import hu.logcontrol.wasteprogram.interfaces.IRawMaterialCreationView;
 import hu.logcontrol.wasteprogram.interfaces.ISettingsView;
 import hu.logcontrol.wasteprogram.logger.ApplicationLogger;
 import hu.logcontrol.wasteprogram.logger.LogLevel;
@@ -45,6 +48,7 @@ public class ProgramPresenter implements IProgramPresenter, PresenterThreadCallb
     private IModesTwoView iModesTwoView;
     private IModesThreeView iModesThreeView;
     private ISettingsView iSettingsView;
+    private IRawMaterialCreationView iRawMaterialCreationView;
 
     private Context context;
     private CustomThreadPoolManager mCustomThreadPoolManager;
@@ -73,6 +77,11 @@ public class ProgramPresenter implements IProgramPresenter, PresenterThreadCallb
     public ProgramPresenter(ISettingsView iSettingsView, Context context) {
         this.iSettingsView = iSettingsView;
         this.context = context.getApplicationContext();
+    }
+
+    public ProgramPresenter(IRawMaterialCreationView iRawMaterialCreationView, Context context) {
+        this.iRawMaterialCreationView = iRawMaterialCreationView;
+        this.context = context;
     }
 
     @Override
@@ -116,7 +125,7 @@ public class ProgramPresenter implements IProgramPresenter, PresenterThreadCallb
                 break;
             }
             case RAW_MATERIAL_CREATION_ACTIVITY:{
-                intent = new Intent(context, RawMaterialCreationActivity.class);
+                intent = new Intent(context, RawMaterialCreationView.class);
                 break;
             }
             case RAW_MATERIAL_TYPEMASS_CREATION_ACTIVITY:{
@@ -154,7 +163,7 @@ public class ProgramPresenter implements IProgramPresenter, PresenterThreadCallb
     public void addRawMaterialToAdapterList(RawMaterial rawMaterial) {
 
         try {
-            ApplicationLogger.logging(LogLevel.INFORMATION, "A RawMaterial objetum hozzáadása az Adapter listájához elkezdődött.");
+            ApplicationLogger.logging(LogLevel.INFORMATION, "A RawMaterial objetum hozzáadása a RawMaterialAdapter listájához elkezdődött.");
 
             AddElementToList callable = new AddElementToList(AddElementToList.RunModes.ADD_RAWMATERIAL, rawMaterial);
             callable.setCustomThreadPoolManager(mCustomThreadPoolManager);
@@ -171,7 +180,7 @@ public class ProgramPresenter implements IProgramPresenter, PresenterThreadCallb
     @Override
     public void addRawMaterialTypeMassToAdapterList(RawMaterialTypeMass rawMaterialTypeMass) {
         try {
-            ApplicationLogger.logging(LogLevel.INFORMATION, "A RawMaterialTypeMass objetum hozzáadása az Adapter listájához elkezdődött.");
+            ApplicationLogger.logging(LogLevel.INFORMATION, "A RawMaterialTypeMass objetum hozzáadása a RawMaterialTypeMassAdapter listájához elkezdődött.");
 
             AddElementToList callable = new AddElementToList(AddElementToList.RunModes.ADD_RAWMATERIALTYPEMASS, rawMaterialTypeMass);
             callable.setCustomThreadPoolManager(mCustomThreadPoolManager);
@@ -188,7 +197,7 @@ public class ProgramPresenter implements IProgramPresenter, PresenterThreadCallb
     @Override
     public void addRecycledMaterialToAdapterList(RecycledMaterial recycledMaterial) {
         try {
-            ApplicationLogger.logging(LogLevel.INFORMATION, "A RecycledMaterial objetum hozzáadása az Adapter listájához elkezdődött.");
+            ApplicationLogger.logging(LogLevel.INFORMATION, "A RecycledMaterial objetum hozzáadása a RecycledMaterialAdapter listájához elkezdődött.");
 
             AddElementToList callable = new AddElementToList(AddElementToList.RunModes.ADD_RECYCLEDMATERIAL, recycledMaterial);
             callable.setCustomThreadPoolManager(mCustomThreadPoolManager);
@@ -268,6 +277,105 @@ public class ProgramPresenter implements IProgramPresenter, PresenterThreadCallb
         if(iModesOneView != null) iModesOneView.getMessageFromPresenter(message);
         if(iModesTwoView != null) iModesTwoView.getMessageFromPresenter(message);
         if(iModesThreeView != null) iModesThreeView.getMessageFromPresenter(message);
+    }
+
+    @Override
+    public void settignActivityButtons(EditButtonEnums editButtonEnum, ViewButtons viewButton) {
+        if(editButtonEnum == null) return;
+        if(iRawMaterialCreationView == null) return;
+
+        boolean buttonEnable = false;
+        int buttonBackground = -1;
+
+        switch (editButtonEnum){
+            case ADD_BUTTON_ENABLED:{
+
+                buttonEnable = true;
+                buttonBackground = R.drawable.add_button_background;
+                iRawMaterialCreationView.settingLayoutsButtons(ViewButtons.ADD_BUTTON, buttonEnable, buttonBackground);
+
+                break;
+            }
+            case ADD_BUTTON_DISABLED:{
+
+                buttonBackground = R.drawable.disable_button_background_circle;
+                iRawMaterialCreationView.settingLayoutsButtons(ViewButtons.ADD_BUTTON, buttonEnable, buttonBackground);
+
+                break;
+            }
+            case DELETE_BUTTON_ENABLED:{
+
+                buttonEnable = true;
+                buttonBackground = R.drawable.delete_button_background;
+                iRawMaterialCreationView.settingLayoutsButtons(ViewButtons.DELETE_BUTTON, buttonEnable, buttonBackground);
+
+                break;
+            }
+            case DELETE_BUTTON_DISABLED:{
+
+                buttonBackground = R.drawable.disable_button_background_circle;
+                iRawMaterialCreationView.settingLayoutsButtons(ViewButtons.DELETE_BUTTON, buttonEnable, buttonBackground);
+
+                break;
+            }
+            case BACK_BUTTON_ENABLED:{
+
+                buttonEnable = true;
+                buttonBackground = R.drawable.delete_button_background;
+                iRawMaterialCreationView.settingLayoutsButtons(ViewButtons.BACK_BUTTON, buttonEnable, buttonBackground);
+
+                break;
+            }
+            case BACK_BUTTON_DISABLED:{
+
+                buttonBackground = R.drawable.disable_button_background_circle;
+                iRawMaterialCreationView.settingLayoutsButtons(ViewButtons.BACK_BUTTON, buttonEnable, buttonBackground);
+
+                break;
+            }
+            case SAVE_BUTTON_ENABLED:{
+
+                buttonEnable = true;
+                buttonBackground = R.drawable.save_button_background;
+                iRawMaterialCreationView.settingLayoutsButtons(ViewButtons.SAVE_BUTTON, buttonEnable, buttonBackground);
+
+                break;
+            }
+            case SAVE_BUTTON_DISABLED:{
+
+                buttonBackground = R.drawable.disable_button_background_circle;
+                iRawMaterialCreationView.settingLayoutsButtons(ViewButtons.SAVE_BUTTON, buttonEnable, buttonBackground);
+
+                break;
+            }
+            case ENTER_BUTTON_ENABLED:{
+
+                buttonEnable = true;
+                buttonBackground = R.drawable.enter_button_background;
+
+                if(viewButton == ViewButtons.ENTER_BUTTON_1){
+                    iRawMaterialCreationView.settingLayoutsButtons(ViewButtons.ENTER_BUTTON_1, buttonEnable, buttonBackground);
+                }
+                else if(viewButton == ViewButtons.ENTER_BUTTON_2){
+                    iRawMaterialCreationView.settingLayoutsButtons(ViewButtons.ENTER_BUTTON_2, buttonEnable, buttonBackground);
+                }
+
+                break;
+            }
+            case ENTER_BUTTON_DISABLED:{
+
+                buttonBackground = R.drawable.disable_button_background_rectangle;
+
+                if(viewButton == ViewButtons.ENTER_BUTTON_1){
+                    iRawMaterialCreationView.settingLayoutsButtons(ViewButtons.ENTER_BUTTON_1, buttonEnable, buttonBackground);
+                }
+                else if(viewButton == ViewButtons.ENTER_BUTTON_2){
+                    iRawMaterialCreationView.settingLayoutsButtons(ViewButtons.ENTER_BUTTON_2, buttonEnable, buttonBackground);
+                }
+
+                break;
+            }
+        }
     }
 
     @Override
