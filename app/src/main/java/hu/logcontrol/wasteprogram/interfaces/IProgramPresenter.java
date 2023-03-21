@@ -27,8 +27,4 @@ public interface IProgramPresenter {
 
     void setSaveButtonState(EditButtonEnums editButtonEnum);
     void sendMessageToView(String message);
-
-//    void settingActivityTextBoxes();
-//    void settingActivityConstraints();
-    void settignActivityButtons(EditButtonEnums editButtonEnum, ViewButtons viewButton);
 }

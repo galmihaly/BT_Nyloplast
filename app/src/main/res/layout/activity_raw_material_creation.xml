@@ -17,7 +17,7 @@
         app:layout_constraintStart_toStartOf="parent">
 
         <ImageButton
-            android:id="@+id/addRawMatButton"
+            android:id="@+id/addRMCBut"
             android:layout_width="70dp"
             android:layout_height="70dp"
             android:layout_marginStart="30dp"
@@ -30,20 +30,20 @@
             app:srcCompat="@drawable/ic_fluent_add_28_filled" />
 
         <ImageButton
-            android:id="@+id/deleteRawButton"
+            android:id="@+id/deleteRMCBut"
             android:layout_width="70dp"
             android:layout_height="70dp"
             android:layout_marginTop="10dp"
             android:layout_marginBottom="10dp"
             android:background="@drawable/disable_button_background_circle"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/backRawButton"
-            app:layout_constraintStart_toEndOf="@+id/addRawMatButton"
+            app:layout_constraintEnd_toStartOf="@+id/backRMCBut"
+            app:layout_constraintStart_toEndOf="@+id/addRMCBut"
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/ic_delete_icon" />
 
         <ImageButton
-            android:id="@+id/backRawButton"
+            android:id="@+id/backRMCBut"
             android:layout_width="70dp"
             android:layout_height="70dp"
             android:layout_marginTop="10dp"
@@ -57,44 +57,49 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/rawMatTypeCL"
+        android:id="@+id/typeRMC_CL"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:background="@drawable/cardview_red_background"
         android:visibility="invisible"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/rawMatCountCL">
+        app:layout_constraintTop_toBottomOf="@+id/countRMC_CL">
 
         <ImageButton
-            android:id="@+id/enterButton_base_2"
+            android:id="@+id/enterTypeRMC_BUT"
             android:layout_width="45dp"
             android:layout_height="45dp"
             android:background="@drawable/disable_button_background_rectangle"
             android:visibility="visible"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/textLayout_base_2"
+            app:layout_constraintStart_toEndOf="@+id/typeRMC_TL"
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/ic_fluent_arrow_enter_left_20_regular" />
 
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/textLayout_base_2"
+            android:id="@+id/typeRMC_TL"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="230dp"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
             android:hint="Alapanyag típusa:"
+            android:textColorHint="@color/black"
             app:boxStrokeColor="@color/black"
+            app:boxStrokeWidth="2dp"
             app:boxStrokeWidthFocused="1dp"
+            app:counterEnabled="true"
+            app:counterMaxLength="15"
+            app:counterTextColor="@color/black"
             app:hintTextColor="@color/black"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/rawMatTypeTextBox"
-                android:layout_width="match_parent"
+                android:id="@+id/typeRMC_TB"
+                android:layout_width="230dp"
                 android:layout_height="wrap_content"
                 android:singleLine="true" />
 
@@ -102,7 +107,7 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/titleRawMaterialCreationCL"
+        android:id="@+id/titleRMC_CL"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:background="#038727"
@@ -111,7 +116,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <TextView
-            android:id="@+id/titleRawMaterialCreation"
+            android:id="@+id/titleRMC"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Új alapanyag felvétele"
@@ -125,47 +130,52 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/rawMatCountCL"
+        android:id="@+id/countRMC_CL"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:background="@drawable/cardview_red_background"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/titleRawMaterialCreationCL">
+        app:layout_constraintTop_toBottomOf="@+id/titleRMC_CL">
 
         <ImageButton
-            android:id="@+id/enterButton_base_1"
+            android:id="@+id/enterCountRMC_BUT"
             android:layout_width="45dp"
             android:layout_height="45dp"
             android:background="@drawable/disable_button_background_rectangle"
             android:visibility="visible"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/textLayout_base_1"
+            app:layout_constraintStart_toEndOf="@+id/countRMC_TL"
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/ic_fluent_arrow_enter_left_20_regular" />
 
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/textLayout_base_1"
+            android:id="@+id/countRMC_TL"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="230dp"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
             android:hint="Alapanyag adagszáma:"
+            android:textColorHint="@color/black"
             app:boxStrokeColor="@color/black"
+            app:boxStrokeWidth="2dp"
             app:boxStrokeWidthFocused="1dp"
+            app:counterEnabled="true"
+            app:counterMaxLength="15"
+            app:counterTextColor="@color/black"
             app:hintTextColor="@color/black"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/rawMatCountTextBox"
-                android:layout_width="match_parent"
+            <EditText
+                android:id="@+id/countRMC_TB"
+                android:layout_width="230dp"
                 android:layout_height="wrap_content"
                 android:singleLine="true" />
 
-        </com.google.android.material.textfield.TextInputLayout>
+        </com.google.android.material.textfield.TextInputLayout>>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

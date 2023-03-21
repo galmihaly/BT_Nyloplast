@@ -21,230 +21,210 @@ import hu.logcontrol.wasteprogram.helpers.Helper;
 import hu.logcontrol.wasteprogram.interfaces.IRawMaterialCreationView;
 import hu.logcontrol.wasteprogram.presenters.ProgramPresenter;
 
-public class RawMaterialCreationView extends AppCompatActivity implements IRawMaterialCreationView {
+public class RawMaterialCreationView extends AppCompatActivity {
 
-    private ConstraintLayout rawMatCountCL;
-    private ConstraintLayout rawMatTypeCL;
+    private ConstraintLayout constraint_1;
+    private ConstraintLayout constraint_2;
 
-    private EditText rawMatCountTextBox;
-    private EditText rawMatTypeTextBox;
+    private EditText textBox_1;
+    private EditText textBox_2;
 
-    private ImageButton addRawMatButton;
-    private ImageButton deleteRawButton;
-    private ImageButton backRawButton;
+    private ImageButton addBut;
+    private ImageButton deleteBut;
+    private ImageButton backBut;
 
-    private ImageButton enterButton_base_1;
-    private ImageButton enterButton_base_2;
+    private ImageButton enterBut_1;
+    private ImageButton enterBut_2;
 
     private final String disableColor = "#B7C0C1";
     private final String enableColor = "#000000";
 
-    private boolean isSeged_1 = false;
     private boolean isSeged_2 = false;
-
-    private boolean isFocus_1 = false;
-
-    private boolean isEnabledAddButton = false;
-
-    private ProgramPresenter programPresenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_raw_material_creation);
         initView();
-
-        programPresenter = new ProgramPresenter(this, getApplicationContext());
      }
 
     @Override
     protected void onResume() {
         super.onResume();
 
-        if(rawMatCountCL != null && rawMatCountTextBox != null && enterButton_base_1 != null && deleteRawButton != null){
+        if(constraint_1 != null && textBox_1 != null && enterBut_1 != null && deleteBut != null){
 
-            rawMatCountTextBox.addTextChangedListener(new TextWatcher() {
+            textBox_1.addTextChangedListener(new TextWatcher() {
 
                 @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
 
                 @SuppressLint("ClickableViewAccessibility")
                 @Override
                 public void onTextChanged(CharSequence s, int start, int before, int count) {
-                    String watchedText = rawMatCountTextBox.getText().toString();
+                    String watchedText = textBox_1.getText().toString();
 
                     if(watchedText.equals("")){
 
-                        enterButton_base_1.setEnabled(false);
-                        enterButton_base_1.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.disable_button_background_rectangle));
+                        enterBut_1.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.disable_button_background_rectangle));
+                        textBox_1.setTextColor(Color.parseColor(enableColor));
+                        constraint_1.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.cardview_red_background));
+                        textBox_2.setTextColor(Color.parseColor(enableColor));
+                        constraint_2.setVisibility(View.INVISIBLE);
+                        addBut.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.disable_button_background_circle));
+                        deleteBut.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.disable_button_background_circle));
 
-                        rawMatCountTextBox.requestFocus();
-                        rawMatCountTextBox.setEnabled(true);
-                        rawMatCountTextBox.setTextColor(Color.parseColor(enableColor));
-                        rawMatTypeTextBox.setTextColor(Color.parseColor(enableColor));
-
-                        rawMatTypeCL.setVisibility(View.INVISIBLE);
-                        rawMatCountCL.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.cardview_red_background));
-
-                        addRawMatButton.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.disable_button_background_circle));
-                        deleteRawButton.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.disable_button_background_circle));
+                        if(enterBut_1.isEnabled()) enterBut_1.setEnabled(false);
+                        if(!textBox_1.isEnabled()) textBox_1.setEnabled(true);
+                        if(!textBox_1.isFocused()) textBox_1.requestFocus();
                     }
                     else {
-                        enterButton_base_1.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.enter_button_background));
-                        enterButton_base_1.setEnabled(true);
-                        deleteRawButton.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.delete_button_background));
-                        deleteRawButton.setEnabled(true);
+                        enterBut_1.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.enter_button_background));
+                        deleteBut.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.delete_button_background));
 
-                        enterButton_base_1.setOnClickListener(v -> {
-                            if(rawMatTypeTextBox != null){
-
-                                rawMatTypeCL.setVisibility(View.VISIBLE);
-                                rawMatCountCL.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.cardview_green_background));
-                                enterButton_base_1.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.disable_button_background_rectangle));
-
-                                rawMatCountTextBox.setTextColor(Color.parseColor(disableColor));
-
-                                isSeged_1 = true;
-                                isFocus_1 = true;
-                                rawMatTypeTextBox.setText("");
-                            }
-                        });
-
-                        rawMatCountTextBox.setOnFocusChangeListener((v, hasFocus) -> {
-                            if(isSeged_1){
-
-                                rawMatCountTextBox.setEnabled(false);
-                                enterButton_base_1.setEnabled(false);
-                                isSeged_2 = false;
-                            }
-                        });
-
-                        rawMatCountTextBox.setOnKeyListener((v, keyCode, event) -> {
-
-                            if(keyCode == KeyEvent.KEYCODE_ENTER){
-                                if(event.getAction() == KeyEvent.ACTION_DOWN){
-                                    if(rawMatTypeTextBox != null){
-
-                                        rawMatTypeCL.setVisibility(View.VISIBLE);
-                                        rawMatCountCL.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.cardview_green_background));
-                                        enterButton_base_1.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.disable_button_background_rectangle));
-
-                                        rawMatCountTextBox.setTextColor(Color.parseColor(disableColor));
-
-                                        isSeged_1 = true;
-                                        isFocus_1 = false;
-                                        rawMatTypeTextBox.setText("");
-                                    }
-                                }
-                            }
-
-                            return false;
-                        });
+                        if(!enterBut_1.isEnabled())enterBut_1.setEnabled(true);
+                        if(!deleteBut.isEnabled())deleteBut.setEnabled(true);
                     }
+
+                    enterBut_1.setOnClickListener(v -> {
+
+                        constraint_2.setVisibility(View.VISIBLE);
+                        constraint_1.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.cardview_green_background));
+
+                        textBox_1.setTextColor(Color.parseColor(disableColor));
+
+                        enterBut_1.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.disable_button_background_rectangle));
+
+                        textBox_2.setText("");
+                    });
+
+                    textBox_1.setOnFocusChangeListener((v, hasFocus) -> {
+
+                        textBox_1.setEnabled(false);
+                        enterBut_1.setEnabled(false);
+
+                        isSeged_2 = false;
+                    });
+
+                    textBox_1.setOnKeyListener((v, keyCode, event) -> {
+
+                        if(keyCode == KeyEvent.KEYCODE_ENTER){
+                            if(event.getAction() == KeyEvent.ACTION_UP){
+
+                                constraint_2.setVisibility(View.VISIBLE);
+                                constraint_1.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.cardview_green_background));
+
+                                textBox_1.setTextColor(Color.parseColor(disableColor));
+
+                                enterBut_1.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.disable_button_background_rectangle));
+
+                                textBox_2.setText("");
+                            }
+                        }
+
+                        return false;
+                    });
                 }
 
-                @Override public void afterTextChanged(Editable s) {}
+                @Override public void afterTextChanged(Editable s) {
+                }
             });
         }
 
-        if(rawMatTypeCL != null && rawMatTypeTextBox != null && enterButton_base_2 != null && addRawMatButton != null && deleteRawButton != null){
+        if(constraint_2 != null && textBox_2 != null && enterBut_2 != null && addBut != null && deleteBut != null){
 
-            rawMatTypeTextBox.addTextChangedListener(new TextWatcher() {
+            textBox_2.addTextChangedListener(new TextWatcher() {
 
                 @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
 
                 @SuppressLint("ClickableViewAccessibility")
                 @Override
                 public void onTextChanged(CharSequence s, int start, int before, int count) {
-                    String watchedText = rawMatTypeTextBox.getText().toString();
+                    String watchedText = textBox_2.getText().toString();
 
                     if(watchedText.equals("")){
 
-                        enterButton_base_2.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.disable_button_background_rectangle));
-                        rawMatTypeCL.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.cardview_red_background));
+                        enterBut_2.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.disable_button_background_rectangle));
+                        constraint_2.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.cardview_red_background));
+                        textBox_2.setTextColor(Color.parseColor(enableColor));
 
-                        if(isFocus_1){ rawMatTypeTextBox.requestFocus(); }
-                        rawMatTypeTextBox.setEnabled(true);
-                        rawMatTypeTextBox.setTextColor(Color.parseColor(enableColor));
+                        if(enterBut_2.isEnabled()) enterBut_2.setEnabled(false);
+                        if(!textBox_2.isEnabled())textBox_2.setEnabled(true);
+                        if(!textBox_2.isFocused()) textBox_2.requestFocus();
                     }
                     else {
-                        enterButton_base_2.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.enter_button_background));
-                        enterButton_base_2.setEnabled(true);
-                        deleteRawButton.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.delete_button_background));
+                        enterBut_2.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.enter_button_background));
+                        if(!enterBut_2.isEnabled()) enterBut_2.setEnabled(true);
 
+                        enterBut_2.setOnClickListener(v -> {
+                            constraint_2.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.cardview_green_background));
+                            enterBut_2.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.disable_button_background_rectangle));
+                            textBox_2.setTextColor(Color.parseColor(disableColor));
 
-                        enterButton_base_2.setOnClickListener(v -> {
-                            if(rawMatTypeTextBox != null){
-                                rawMatTypeCL.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.cardview_green_background));
-                                enterButton_base_2.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.disable_button_background_rectangle));
-                                rawMatTypeTextBox.setTextColor(Color.parseColor(disableColor));
+                            addBut.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.add_button_background));
 
-                                addRawMatButton.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.add_button_background));
-
-                                isSeged_2 = true;
-                                isEnabledAddButton = true;
-                                enterButton_base_2.setEnabled(false);
-                                rawMatTypeTextBox.setEnabled(false);
-                            }
+                            isSeged_2 = true;
+                            if(!addBut.isEnabled()) addBut.setEnabled(true);
+                            if(textBox_2.isFocused()) textBox_2.clearFocus();
+                            if(addBut.isFocused()) addBut.requestFocus();
                         });
 
-                        rawMatTypeTextBox.setOnFocusChangeListener((v, hasFocus) -> {
+                        textBox_2.setOnFocusChangeListener((v, hasFocus) -> {
                             if(isSeged_2){
-                                rawMatTypeTextBox.setEnabled(false);
-                                enterButton_base_2.setEnabled(false);
-                                Log.e("ide is beléptem", "ok");
+                                if(textBox_2.isEnabled()) textBox_2.setEnabled(false);
+                                if(enterBut_2.isEnabled()) enterBut_2.setEnabled(false);
                             }
                         });
 
-                        rawMatTypeTextBox.setOnKeyListener((v, keyCode, event) -> {
-
+                        textBox_2.setOnKeyListener((v, keyCode, event) -> {
                             if(keyCode == KeyEvent.KEYCODE_ENTER){
-                                if(event.getAction() == KeyEvent.ACTION_DOWN){
-                                    if(rawMatTypeTextBox != null){
-                                        rawMatTypeCL.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.cardview_green_background));
-                                        enterButton_base_2.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.disable_button_background_rectangle));
-                                        rawMatTypeTextBox.setTextColor(Color.parseColor(disableColor));
-                                        isSeged_2 = true;
-                                        addRawMatButton.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.add_button_background));
+                                if(event.getAction() == KeyEvent.ACTION_UP){
 
-                                        isEnabledAddButton = true;
-                                        addRawMatButton.requestFocus();
-                                    }
+                                    constraint_2.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.cardview_green_background));
+                                    enterBut_2.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.disable_button_background_rectangle));
+                                    textBox_2.setTextColor(Color.parseColor(disableColor));
+
+                                    addBut.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.add_button_background));
+
+                                    isSeged_2 = true;
+                                    if(!addBut.isEnabled()) addBut.setEnabled(true);
+                                    if(textBox_2.isFocused()) textBox_2.clearFocus();
                                 }
                             }
 
                             return false;
                         });
 
-                        addRawMatButton.setOnClickListener(v -> {
-                            if(isEnabledAddButton){
-                                Intent intent = new Intent();
+                        addBut.setOnClickListener(v -> {
+                            Intent intent = new Intent();
 
-                                intent.putExtra("rawMatCountTextBox", rawMatCountTextBox.getText().toString());
-                                intent.putExtra("rawMatTypeTextBox", rawMatTypeTextBox.getText().toString());
+                            intent.putExtra("rawMatCountTextBox", textBox_1.getText().toString());
+                            intent.putExtra("rawMatTypeTextBox", textBox_2.getText().toString());
 
-                                setResult(1, intent);
+                            setResult(1, intent);
 
-                                RawMaterialCreationView.super.onBackPressed();
-                            }
+                            RawMaterialCreationView.super.onBackPressed();
                         });
                     }
                 }
 
-                @Override public void afterTextChanged(Editable s) {}
+                @Override public void afterTextChanged(Editable s) {
+                }
             });
         }
 
-        if(deleteRawButton != null){
-            deleteRawButton.setOnClickListener(v -> {
-                isSeged_1 = false;
-                rawMatCountTextBox.setText("");
-                isFocus_1 = false;
-                isEnabledAddButton = false;
+        if(deleteBut != null){
+            deleteBut.setOnClickListener(v -> {
+                textBox_1.setText("");
+                isSeged_2 = false;
+                if(!textBox_1.isEnabled()) textBox_1.setEnabled(true);
+                if(!textBox_1.isFocused()) textBox_1.requestFocus();
+                if(addBut.isEnabled()) addBut.setEnabled(false);
+                if(deleteBut.isEnabled()) deleteBut.setEnabled(false);
             });
         }
 
-        if(backRawButton != null){
-            backRawButton.setOnClickListener(view -> {
+        if(backBut != null){
+            backBut.setOnClickListener(view -> {
                 Intent intent = new Intent(getApplicationContext(), ModesOne.class);
                 startActivity(intent);
             });
@@ -264,60 +244,32 @@ public class RawMaterialCreationView extends AppCompatActivity implements IRawMa
     }
 
     private void initView() {
-        rawMatCountTextBox = findViewById(R.id.rawMatCountTextBox);
-        //if(rawMatCountTextBox != null){ rawMatCountTextBox.setShowSoftInputOnFocus(false); }
+        textBox_1 = findViewById(R.id.countRMC_TB);
+        if(textBox_1 != null){ textBox_1.setShowSoftInputOnFocus(false); }
 
-        rawMatTypeTextBox = findViewById(R.id.rawMatTypeTextBox);
-        //if(rawMatTypeTextBox != null){ rawMatTypeTextBox.setShowSoftInputOnFocus(false); }
+        textBox_2 = findViewById(R.id.typeRMC_TB);
+        if(textBox_2 != null){ textBox_2.setShowSoftInputOnFocus(false); }
 
-        rawMatCountTextBox.requestFocus();
+        textBox_1.requestFocus();
 
-        rawMatCountCL = findViewById(R.id.rawMatCountCL);
-        rawMatTypeCL = findViewById(R.id.rawMatTypeCL);
+        constraint_1 = findViewById(R.id.countRMC_CL);
+        constraint_2 = findViewById(R.id.typeRMC_CL);
 
-        addRawMatButton = findViewById(R.id.addRawMatButton);
-        deleteRawButton = findViewById(R.id.deleteRawButton);
-        backRawButton = findViewById(R.id.backRawButton);
+        addBut = findViewById(R.id.addRMCBut);
+        addBut.setEnabled(false);
 
-        enterButton_base_1 = findViewById(R.id.enterButton_base_1);
-        enterButton_base_2 = findViewById(R.id.enterButton_base_2);
+        deleteBut = findViewById(R.id.deleteRMCBut);
+        deleteBut.setEnabled(false);
+
+        backBut = findViewById(R.id.backRMCBut);
+
+        enterBut_1 = findViewById(R.id.enterCountRMC_BUT);
+        enterBut_2 = findViewById(R.id.enterTypeRMC_BUT);
 
         hideNavigationBar();
     }
 
     private void hideNavigationBar(){
         Helper.hideNavigationBar(this);
-    }
-
-    @Override
-    public void settingLayoutsButtons(ViewButtons viewButton, boolean buttonState, int buttonBackground) {
-
-        switch (viewButton){
-            case ADD_BUTTON:{
-                addRawMatButton.setEnabled(buttonState);
-                addRawMatButton.setBackground(ContextCompat.getDrawable(getApplicationContext(), buttonBackground));
-                break;
-            }
-            case DELETE_BUTTON:{
-                deleteRawButton.setEnabled(buttonState);
-                deleteRawButton.setBackground(ContextCompat.getDrawable(getApplicationContext(), buttonBackground));
-                break;
-            }
-            case BACK_BUTTON:{
-                backRawButton.setEnabled(buttonState);
-                backRawButton.setBackground(ContextCompat.getDrawable(getApplicationContext(), buttonBackground));
-                break;
-            }
-            case ENTER_BUTTON_1:{
-                enterButton_base_1.setEnabled(buttonState);
-                enterButton_base_1.setBackground(ContextCompat.getDrawable(getApplicationContext(), buttonBackground));
-                break;
-            }
-            case ENTER_BUTTON_2:{
-                enterButton_base_2.setEnabled(buttonState);
-                enterButton_base_2.setBackground(ContextCompat.getDrawable(getApplicationContext(), buttonBackground));
-                break;
-            }
-        }
     }
 }
