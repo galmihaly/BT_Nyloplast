@@ -106,6 +106,8 @@ public class RawMaterialCreationView extends AppCompatActivity {
 
                     textBox_1.setOnKeyListener((v, keyCode, event) -> {
 
+                        Log.e("keyCode", String.valueOf(keyCode));
+
                         if(keyCode == KeyEvent.KEYCODE_ENTER){
                             if(event.getAction() == KeyEvent.ACTION_UP){
 
