@@ -4,7 +4,199 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".RawMaterialTypeMassCreationActivity">
+    tools:context=".RawMaterialTypeMassCreationView">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/massDataCL"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/cardview_red_background"
+        android:visibility="invisible"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/storageBoxIdentifierCL">
+
+        <ImageButton
+            android:id="@+id/enterButton_type_4"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:background="@drawable/disable_button_background_rectangle"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/textLayout_typeMass_4"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_fluent_arrow_enter_left_20_regular" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/textLayout_typeMass_4"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="230dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:hint="Tömegadat:"
+            android:textColorHint="@color/black"
+            app:boxStrokeColor="@color/black"
+            app:boxStrokeWidth="2dp"
+            app:boxStrokeWidthFocused="1dp"
+            app:counterTextColor="@color/black"
+            app:hintTextColor="@color/black"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/massDataTextBox"
+                android:layout_width="230dp"
+                android:layout_height="wrap_content"
+                android:singleLine="true" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/storageBoxIdentifierCL"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/cardview_red_background"
+        android:visibility="invisible"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/typeMassTypeCL">
+
+        <ImageButton
+            android:id="@+id/enterButton_type_3"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:background="@drawable/disable_button_background_rectangle"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/textLayout_typeMass_3"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_fluent_arrow_enter_left_20_regular" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/textLayout_typeMass_3"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="230dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:hint="Tárolóláda azonosító:"
+            android:textColorHint="@color/black"
+            app:boxStrokeColor="@color/black"
+            app:boxStrokeWidth="2dp"
+            app:boxStrokeWidthFocused="1dp"
+            app:counterTextColor="@color/black"
+            app:hintTextColor="@color/black"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/storageBoxIdentifierTextBox"
+                android:layout_width="230dp"
+                android:layout_height="wrap_content"
+                android:singleLine="true" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/typeMassTypeCL"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/cardview_red_background"
+        android:visibility="invisible"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/typeMassCountCL">
+
+        <ImageButton
+            android:id="@+id/enterButton_type_2"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:background="@drawable/disable_button_background_rectangle"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/textLayout_typeMass_2"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_fluent_arrow_enter_left_20_regular" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/textLayout_typeMass_2"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="230dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:hint="Alapanyag típusa:"
+            android:textColorHint="@color/black"
+            app:boxStrokeColor="@color/black"
+            app:boxStrokeWidth="2dp"
+            app:boxStrokeWidthFocused="1dp"
+            app:counterTextColor="@color/black"
+            app:hintTextColor="@color/black"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/typeMassTypeTextBox"
+                android:layout_width="230dp"
+                android:layout_height="wrap_content"
+                android:singleLine="true"/>
+
+        </com.google.android.material.textfield.TextInputLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/typeMassCountCL"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/cardview_red_background"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/titleTypeMassCreationCL">
+
+        <ImageButton
+            android:id="@+id/enterButton_type_1"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:background="@drawable/disable_button_background_rectangle"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/textLayout_typeMass_1"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_fluent_arrow_enter_left_20_regular" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/textLayout_typeMass_1"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="230dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:hint="Hulladék kódszáma:"
+            android:textColorHint="@color/black"
+            app:boxStrokeColor="@color/black"
+            app:boxStrokeWidth="2dp"
+            app:boxStrokeWidthFocused="1dp"
+            app:counterTextColor="@color/black"
+            app:hintTextColor="@color/black"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/typeMassCountTextBox"
+                android:layout_width="230dp"
+                android:layout_height="wrap_content"
+                android:singleLine="true" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/titleTypeMassCreationCL"
@@ -16,7 +208,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <TextView
-            android:id="@+id/titleTypeMassCreation"
+            android:id="@+id/titleTMC"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Új tömegadatok felvétele"
@@ -38,7 +230,7 @@
         app:layout_constraintStart_toStartOf="parent">
 
         <ImageButton
-            android:id="@+id/addRawMatTypeMassButton"
+            android:id="@+id/addRMTMC_BUT"
             android:layout_width="70dp"
             android:layout_height="70dp"
             android:layout_marginStart="30dp"
@@ -51,20 +243,20 @@
             app:srcCompat="@drawable/ic_fluent_add_28_filled" />
 
         <ImageButton
-            android:id="@+id/deleteTypeMassButton"
+            android:id="@+id/deleteRMTMC_BUT"
             android:layout_width="70dp"
             android:layout_height="70dp"
             android:layout_marginTop="10dp"
             android:layout_marginBottom="10dp"
             android:background="@drawable/disable_button_background_circle"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/backTypeMassButton"
-            app:layout_constraintStart_toEndOf="@+id/addRawMatTypeMassButton"
+            app:layout_constraintEnd_toStartOf="@+id/backRMTMC_BUT"
+            app:layout_constraintStart_toEndOf="@+id/addRMTMC_BUT"
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/ic_delete_icon" />
 
         <ImageButton
-            android:id="@+id/backTypeMassButton"
+            android:id="@+id/backRMTMC_BUT"
             android:layout_width="70dp"
             android:layout_height="70dp"
             android:layout_marginTop="10dp"
@@ -76,206 +268,5 @@
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/ic_fluent_arrow_hook_down_left_28_filled" />
     </androidx.constraintlayout.widget.ConstraintLayout>
-
-    <androidx.cardview.widget.CardView
-        android:id="@+id/typeMassCountCV"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:cardCornerRadius="0dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/titleTypeMassCreationCL">
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/typeMassCountCL"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@drawable/cardview_red_background">
-
-            <ImageButton
-                android:id="@+id/enterButton_type_1"
-                android:layout_width="45dp"
-                android:layout_height="45dp"
-                android:background="@drawable/disable_button_background_rectangle"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/textLayout_typeMass_1"
-                app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/ic_fluent_arrow_enter_left_20_regular" />
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/textLayout_typeMass_1"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                android:layout_width="230dp"
-                android:layout_height="wrap_content"
-                android:layout_margin="10dp"
-                android:hint="Hulladék kódszáma:"
-                app:boxStrokeColor="@color/black"
-                app:boxStrokeWidthFocused="1dp"
-                app:hintTextColor="@color/black"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/typeMassCountTextBox"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:singleLine="true" />
-
-            </com.google.android.material.textfield.TextInputLayout>
-
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-    </androidx.cardview.widget.CardView>
-
-    <androidx.cardview.widget.CardView
-        android:id="@+id/typeMassTypeCV"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:cardCornerRadius="0dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/typeMassCountCV">
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/typeMassTypeCL"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@drawable/cardview_red_background">
-
-            <ImageButton
-                android:id="@+id/enterButton_type_2"
-                android:layout_width="45dp"
-                android:layout_height="45dp"
-                android:background="@drawable/disable_button_background_rectangle"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/textLayout_typeMass_2"
-                app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/ic_fluent_arrow_enter_left_20_regular" />
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/textLayout_typeMass_2"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                android:layout_width="230dp"
-                android:layout_height="wrap_content"
-                android:layout_margin="10dp"
-                android:hint="Alapanyag típusa:"
-                app:boxStrokeColor="@color/black"
-                app:boxStrokeWidthFocused="1dp"
-                app:hintTextColor="@color/black"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/typeMassTypeTextBox"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
-
-            </com.google.android.material.textfield.TextInputLayout>
-        </androidx.constraintlayout.widget.ConstraintLayout>
-    </androidx.cardview.widget.CardView>
-
-    <androidx.cardview.widget.CardView
-        android:id="@+id/storageBoxIdentifierCV"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:cardCornerRadius="0dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/typeMassTypeCV">
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/storageBoxIdentifierCL"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@drawable/cardview_red_background">
-
-            <ImageButton
-                android:id="@+id/enterButton_type_3"
-                android:layout_width="45dp"
-                android:layout_height="45dp"
-                android:background="@drawable/disable_button_background_rectangle"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/textLayout_typeMass_3"
-                app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/ic_fluent_arrow_enter_left_20_regular" />
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/textLayout_typeMass_3"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                android:layout_width="230dp"
-                android:layout_height="wrap_content"
-                android:layout_margin="10dp"
-                android:hint="Tárolóláda azonosító:"
-                app:boxStrokeColor="@color/black"
-                app:boxStrokeWidthFocused="1dp"
-                app:hintTextColor="@color/black"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/storageBoxIdentifierTextBox"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:singleLine="true" />
-
-            </com.google.android.material.textfield.TextInputLayout>
-        </androidx.constraintlayout.widget.ConstraintLayout>
-    </androidx.cardview.widget.CardView>
-
-    <androidx.cardview.widget.CardView
-        android:id="@+id/massDataCV"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:cardCornerRadius="0dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/storageBoxIdentifierCV">
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/massDataCL"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@drawable/cardview_red_background">
-
-            <ImageButton
-                android:id="@+id/enterButton_type_4"
-                android:layout_width="45dp"
-                android:layout_height="45dp"
-                android:background="@drawable/disable_button_background_rectangle"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/textLayout_typeMass_4"
-                app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/ic_fluent_arrow_enter_left_20_regular" />
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/textLayout_typeMass_4"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                android:layout_width="230dp"
-                android:layout_height="wrap_content"
-                android:layout_margin="10dp"
-                android:hint="Tömegadat:"
-                app:boxStrokeColor="@color/black"
-                app:boxStrokeWidthFocused="1dp"
-                app:hintTextColor="@color/black"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/massDataTextBox"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:singleLine="true" />
-
-            </com.google.android.material.textfield.TextInputLayout>
-        </androidx.constraintlayout.widget.ConstraintLayout>
-    </androidx.cardview.widget.CardView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -16,15 +16,21 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
 
+import com.google.android.material.textfield.TextInputLayout;
+
+import hu.logcontrol.wasteprogram.enums.EditButtonEnums;
+import hu.logcontrol.wasteprogram.helpers.ElementStateChangeHelper;
 import hu.logcontrol.wasteprogram.helpers.Helper;
 
-public class RawMaterialCreationView extends AppCompatActivity {
+public class RecycledMaterialCreationView extends AppCompatActivity {
 
     private ConstraintLayout constraint_1;
     private ConstraintLayout constraint_2;
+    private ConstraintLayout constraint_3;
 
     private EditText textBox_1;
     private EditText textBox_2;
+    private EditText textBox_3;
 
     private ImageButton addBut;
     private ImageButton deleteBut;
@@ -32,18 +38,20 @@ public class RawMaterialCreationView extends AppCompatActivity {
 
     private ImageButton enterBut_1;
     private ImageButton enterBut_2;
-
-    private final String disableColor = "#B7C0C1";
-    private final String enableColor = "#000000";
+    private ImageButton enterBut_3;
 
     private boolean isSeged_2 = false;
+    private boolean isSeged_3 = false;
+
+    private String disableColor = "#B7C0C1";
+    private String enableColor = "#000000";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_raw_material_creation);
+        setContentView(R.layout.activity_recycled_material_creation);
         initView();
-     }
+    }
 
     @Override
     protected void onResume() {
@@ -65,15 +73,19 @@ public class RawMaterialCreationView extends AppCompatActivity {
                         enterBut_1.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.disable_button_background_rectangle));
                         textBox_1.setTextColor(Color.parseColor(enableColor));
                         constraint_1.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.cardview_red_background));
+
                         textBox_2.setTextColor(Color.parseColor(enableColor));
                         constraint_2.setVisibility(View.INVISIBLE);
+
+                        textBox_3.setTextColor(Color.parseColor(enableColor));
+                        constraint_3.setVisibility(View.INVISIBLE);
+
                         addBut.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.disable_button_background_circle));
                         deleteBut.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.disable_button_background_circle));
 
                         if(enterBut_1.isEnabled()) enterBut_1.setEnabled(false);
                         if(!textBox_1.isEnabled()) textBox_1.setEnabled(true);
                         if(!textBox_1.isFocused()) textBox_1.requestFocus();
-                        Log.e("vvv", "bbb");
                     }
                     else {
                         enterBut_1.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.enter_button_background));
@@ -131,7 +143,7 @@ public class RawMaterialCreationView extends AppCompatActivity {
             });
         }
 
-        if(constraint_2 != null && textBox_2 != null && enterBut_2 != null && addBut != null && deleteBut != null){
+        if(constraint_2 != null && textBox_2 != null && enterBut_2 != null && deleteBut != null){
 
             textBox_2.addTextChangedListener(new TextWatcher() {
 
@@ -145,53 +157,132 @@ public class RawMaterialCreationView extends AppCompatActivity {
                     if(watchedText.equals("")){
 
                         enterBut_2.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.disable_button_background_rectangle));
-                        constraint_2.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.cardview_red_background));
                         textBox_2.setTextColor(Color.parseColor(enableColor));
+                        constraint_2.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.cardview_red_background));
 
                         if(enterBut_2.isEnabled()) enterBut_2.setEnabled(false);
-                        if(!textBox_2.isEnabled())textBox_2.setEnabled(true);
+                        if(!textBox_2.isEnabled()) textBox_2.setEnabled(true);
                         if(!textBox_2.isFocused()) textBox_2.requestFocus();
+                        Log.e("vvv", "bbb");
                     }
                     else {
                         enterBut_2.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.enter_button_background));
-                        if(!enterBut_2.isEnabled()) enterBut_2.setEnabled(true);
+                        deleteBut.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.delete_button_background));
 
-                        enterBut_2.setOnClickListener(v -> {
-                            constraint_2.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.cardview_green_background));
-                            enterBut_2.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.disable_button_background_rectangle));
-                            textBox_2.setTextColor(Color.parseColor(disableColor));
+                        if(!enterBut_2.isEnabled())enterBut_2.setEnabled(true);
+                        if(!deleteBut.isEnabled())deleteBut.setEnabled(true);
+                    }
+
+                    enterBut_2.setOnClickListener(v -> {
+
+                        constraint_3.setVisibility(View.VISIBLE);
+                        constraint_2.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.cardview_green_background));
+
+                        textBox_2.setTextColor(Color.parseColor(disableColor));
+
+                        enterBut_2.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.disable_button_background_rectangle));
+
+                        textBox_3.setText("");
+                    });
+
+                    textBox_2.setOnFocusChangeListener((v, hasFocus) -> {
+                        if(!textBox_2.getText().toString().equals("")){
+                            textBox_2.setEnabled(false);
+                            enterBut_2.setEnabled(false);
+
+                            isSeged_3 = false;
+                        }
+                    });
+
+                    textBox_2.setOnKeyListener((v, keyCode, event) -> {
+
+                        if(keyCode == KeyEvent.KEYCODE_ENTER){
+                            if(event.getAction() == KeyEvent.ACTION_UP){
+
+                                if(!textBox_2.getText().toString().equals("")){
+                                    constraint_3.setVisibility(View.VISIBLE);
+                                    constraint_2.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.cardview_green_background));
+
+                                    textBox_2.setTextColor(Color.parseColor(disableColor));
+
+                                    enterBut_2.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.disable_button_background_rectangle));
+
+                                    textBox_3.setText("");
+                                }
+                            }
+                        }
+
+                        return false;
+                    });
+                }
+
+                @Override public void afterTextChanged(Editable s) {
+                }
+            });
+        }
+
+        if(constraint_3 != null && textBox_3 != null && enterBut_3 != null && addBut != null && deleteBut != null){
+
+            textBox_3.addTextChangedListener(new TextWatcher() {
+
+                @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+                @SuppressLint("ClickableViewAccessibility")
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+                    String watchedText = textBox_3.getText().toString();
+
+                    if(watchedText.equals("")){
+
+                        enterBut_3.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.disable_button_background_rectangle));
+                        constraint_3.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.cardview_red_background));
+                        textBox_3.setTextColor(Color.parseColor(enableColor));
+
+                        if(enterBut_3.isEnabled()) enterBut_3.setEnabled(false);
+                        if(!textBox_3.isEnabled())textBox_3.setEnabled(true);
+                        if(!textBox_3.isFocused()) textBox_3.requestFocus();
+                    }
+                    else {
+                        enterBut_3.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.enter_button_background));
+                        if(!enterBut_3.isEnabled()) enterBut_3.setEnabled(true);
+
+                        enterBut_3.setOnClickListener(v -> {
+                            constraint_3.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.cardview_green_background));
+                            enterBut_3.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.disable_button_background_rectangle));
+                            textBox_3.setTextColor(Color.parseColor(disableColor));
 
                             addBut.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.add_button_background));
 
-                            isSeged_2 = true;
+                            isSeged_3 = true;
                             if(!addBut.isEnabled()) addBut.setEnabled(true);
-                            if(textBox_2.isFocused()) textBox_2.clearFocus();
-                            if(addBut.isFocused()) addBut.requestFocus();
+                            if(textBox_3.isFocused()) textBox_3.clearFocus();
+                            if(!addBut.isFocused()) addBut.requestFocus();
                         });
 
-                        textBox_2.setOnFocusChangeListener((v, hasFocus) -> {
-                            if(!textBox_2.getText().toString().equals("")){
-                                if(isSeged_2){
-                                    if(textBox_2.isEnabled()) textBox_2.setEnabled(false);
-                                    if(enterBut_2.isEnabled()) enterBut_2.setEnabled(false);
+                        textBox_3.setOnFocusChangeListener((v, hasFocus) -> {
+                            if(!textBox_3.getText().toString().equals("")){
+                                if(isSeged_3){
+                                    if(textBox_3.isEnabled()) textBox_3.setEnabled(false);
+                                    if(enterBut_3.isEnabled()) enterBut_3.setEnabled(false);
                                 }
                             }
                         });
 
-                        textBox_2.setOnKeyListener((v, keyCode, event) -> {
+                        textBox_3.setOnKeyListener((v, keyCode, event) -> {
                             if(keyCode == KeyEvent.KEYCODE_ENTER){
                                 if(event.getAction() == KeyEvent.ACTION_UP){
 
-                                    if(!textBox_2.getText().toString().equals("")){
-                                        constraint_2.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.cardview_green_background));
-                                        enterBut_2.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.disable_button_background_rectangle));
-                                        textBox_2.setTextColor(Color.parseColor(disableColor));
+                                    if(!textBox_3.getText().toString().equals("")){
+                                        constraint_3.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.cardview_green_background));
+                                        enterBut_3.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.disable_button_background_rectangle));
+                                        textBox_3.setTextColor(Color.parseColor(disableColor));
 
                                         addBut.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.add_button_background));
 
-                                        isSeged_2 = true;
+                                        isSeged_3 = true;
                                         if(!addBut.isEnabled()) addBut.setEnabled(true);
-                                        if(textBox_2.isFocused()) textBox_2.clearFocus();
+                                        if(textBox_3.isFocused()) textBox_3.clearFocus();
+                                        if(!addBut.isFocused()) addBut.requestFocus();
                                     }
                                 }
                             }
@@ -202,12 +293,13 @@ public class RawMaterialCreationView extends AppCompatActivity {
                         addBut.setOnClickListener(v -> {
                             Intent intent = new Intent();
 
-                            intent.putExtra("rawMatCountTextBox", textBox_1.getText().toString());
-                            intent.putExtra("rawMatTypeTextBox", textBox_2.getText().toString());
+                            intent.putExtra("typeRecMatTextBox", textBox_1.getText().toString());
+                            intent.putExtra("storageBoxIdentifierTextBox2", textBox_2.getText().toString());
+                            intent.putExtra("massDataTextBox2", textBox_3.getText().toString());
 
                             setResult(1, intent);
 
-                            RawMaterialCreationView.super.onBackPressed();
+                            RecycledMaterialCreationView.super.onBackPressed();
                         });
                     }
                 }
@@ -248,28 +340,27 @@ public class RawMaterialCreationView extends AppCompatActivity {
         hideNavigationBar();
     }
 
-    private void initView() {
-        textBox_1 = findViewById(R.id.countRMC_TB);
+    public void initView(){
+
+        constraint_1 = findViewById(R.id.typeRecMatCL);
+        constraint_2 = findViewById(R.id.storageBoxIdentifierCL2);
+        constraint_3 = findViewById(R.id.massDataCL2);
+
+        textBox_1 = findViewById(R.id.typeRecMatTextBox);
+        textBox_2 = findViewById(R.id.storageBoxIdentifierTextBox2);
+        textBox_3 = findViewById(R.id.massDataTextBox2);
+
         if(textBox_1 != null){ textBox_1.setShowSoftInputOnFocus(false); }
-
-        textBox_2 = findViewById(R.id.typeRMC_TB);
         if(textBox_2 != null){ textBox_2.setShowSoftInputOnFocus(false); }
+        if(textBox_3 != null){ textBox_3.setShowSoftInputOnFocus(false); }
 
-        textBox_1.requestFocus();
+        addBut = findViewById(R.id.addRecMatButton);
+        deleteBut = findViewById(R.id.deleteRecMatButton);
+        backBut = findViewById(R.id.backRecMatButton);
 
-        constraint_1 = findViewById(R.id.countRMC_CL);
-        constraint_2 = findViewById(R.id.typeRMC_CL);
-
-        addBut = findViewById(R.id.addRMCBut);
-        addBut.setEnabled(false);
-
-        deleteBut = findViewById(R.id.deleteRMCBut);
-        deleteBut.setEnabled(false);
-
-        backBut = findViewById(R.id.backRMCBut);
-
-        enterBut_1 = findViewById(R.id.enterCountRMC_BUT);
-        enterBut_2 = findViewById(R.id.enterTypeRMC_BUT);
+        enterBut_1 = findViewById(R.id.enterButton_rec_1);
+        enterBut_2 = findViewById(R.id.enterButton_rec_2);
+        enterBut_3 = findViewById(R.id.enterButton_rec_3);
 
         hideNavigationBar();
     }

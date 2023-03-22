@@ -15,21 +15,18 @@ import hu.logcontrol.wasteprogram.MainActivity;
 import hu.logcontrol.wasteprogram.ModesOne;
 import hu.logcontrol.wasteprogram.ModesThree;
 import hu.logcontrol.wasteprogram.ModesTwo;
-import hu.logcontrol.wasteprogram.R;
 import hu.logcontrol.wasteprogram.RawMaterialCreationView;
-import hu.logcontrol.wasteprogram.RawMaterialTypeMassCreationActivity;
-import hu.logcontrol.wasteprogram.RecycledMaterialCreationActivity;
+import hu.logcontrol.wasteprogram.RawMaterialTypeMassCreationView;
+import hu.logcontrol.wasteprogram.RecycledMaterialCreationView;
 import hu.logcontrol.wasteprogram.SettingsActivity;
 import hu.logcontrol.wasteprogram.enums.ActivityEnums;
 import hu.logcontrol.wasteprogram.enums.EditButtonEnums;
 import hu.logcontrol.wasteprogram.enums.HandlerMessageIdentifiers;
-import hu.logcontrol.wasteprogram.enums.ViewButtons;
 import hu.logcontrol.wasteprogram.interfaces.IModesOneView;
 import hu.logcontrol.wasteprogram.interfaces.IModesThreeView;
 import hu.logcontrol.wasteprogram.interfaces.IModesTwoView;
 import hu.logcontrol.wasteprogram.interfaces.IProgramPresenter;
 import hu.logcontrol.wasteprogram.interfaces.IMainView;
-import hu.logcontrol.wasteprogram.interfaces.IRawMaterialCreationView;
 import hu.logcontrol.wasteprogram.interfaces.ISettingsView;
 import hu.logcontrol.wasteprogram.logger.ApplicationLogger;
 import hu.logcontrol.wasteprogram.logger.LogLevel;
@@ -123,11 +120,11 @@ public class ProgramPresenter implements IProgramPresenter, PresenterThreadCallb
                 break;
             }
             case RAW_MATERIAL_TYPEMASS_CREATION_ACTIVITY:{
-                intent = new Intent(context, RawMaterialTypeMassCreationActivity.class);
+                intent = new Intent(context, RawMaterialTypeMassCreationView.class);
                 break;
             }
             case RECYCLED_MATERIAL_TYPEMASS_CREATION_ACTIVITY:{
-                intent = new Intent(context, RecycledMaterialCreationActivity.class);
+                intent = new Intent(context, RecycledMaterialCreationView.class);
                 break;
             }
             case SETTINGS_ACTIVITY:{
