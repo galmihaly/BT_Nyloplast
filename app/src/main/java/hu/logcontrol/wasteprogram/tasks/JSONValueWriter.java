@@ -4,20 +4,25 @@ import android.content.Context;
 import android.os.Message;
 import android.util.Log;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.lang.ref.WeakReference;
 import java.nio.charset.StandardCharsets;
 import java.util.concurrent.Callable;
 
 import hu.logcontrol.wasteprogram.enums.HandlerMessageIdentifiers;
 import hu.logcontrol.wasteprogram.helpers.Helper;
+import hu.logcontrol.wasteprogram.helpers.JSONFileReaderHelper;
 import hu.logcontrol.wasteprogram.taskmanager.CustomThreadPoolManager;
 
 public class JSONValueWriter implements Callable {
@@ -62,31 +67,37 @@ public class JSONValueWriter implements Callable {
 
         try {
             if (Thread.interrupted()) throw new InterruptedException();
-
-            JSONObject jsonObject = getJSONObjectFromJSONFile(context, DEFAULT_FILE_NAME);
-            jsonObject.remove(jsonIdValue);
-
-            switch (mode){
-                case WRITE_STRING:{
-                    jsonObject.put(jsonIdValue, valueString);
-                    break;
-                }
-                case WRITE_BOOLEAN:{
-                    jsonObject.put(jsonIdValue, valueBoolean);
-                    break;
-                }
-            }
-
             file = new File(context.getFilesDir() + File.separator + FILE_NAME);
 
             if(!file.exists()){
-                file.createNewFile();
+                boolean isCreated = file.createNewFile();
+
+                if(!isCreated) sendMessageToPresenterHandler(JSONWriterEnums.FILECREATE_FAILED);
             }
 
             if(file.exists()){
-                fileWriter = new FileWriter(file);
-                bufferedWriter = new BufferedWriter(fileWriter);
-                bufferedWriter.write(formatJSONObjectString(jsonObject.toString()));
+
+                JSONObject jsonObject = getJSONObjectFromJSONFile(context, FILE_NAME);
+
+                if(jsonObject != null) {
+
+                    jsonObject.remove(jsonIdValue);
+
+                    switch (mode) {
+                        case WRITE_STRING: {
+                            jsonObject.put(jsonIdValue, valueString);
+                            break;
+                        }
+                        case WRITE_BOOLEAN: {
+                            jsonObject.put(jsonIdValue, valueBoolean);
+                            break;
+                        }
+                    }
+
+                    fileWriter = new FileWriter(file);
+                    bufferedWriter = new BufferedWriter(fileWriter);
+                    bufferedWriter.write(JSONFileReaderHelper.formatJSONObjectString(jsonObject.toString()));
+                }
             }
         }
         catch (InterruptedException e) {
@@ -109,35 +120,30 @@ public class JSONValueWriter implements Callable {
 
     public static JSONObject getJSONObjectFromJSONFile(Context context, String fileName){
 
-        JSONObject jsonObject = null;
-        String seged = null;
+        JSONObject result = null;
+        String s;
+        FileInputStream fileInputStream;
 
-        try{
-            InputStream file = context.getApplicationContext().getAssets().open(fileName);
-            byte[] fromArray = new byte[file.available()];
-            file.read(fromArray);
-            seged = new String(fromArray, StandardCharsets.UTF_8);
-            file.close();
+        try {
 
-            jsonObject = new JSONObject(seged);
+            File file = new File(context.getApplicationContext().getFilesDir() + File.separator + fileName);
+            if(file.exists()){
+                fileInputStream = new FileInputStream(file);
+                InputStreamReader isr = new InputStreamReader(fileInputStream);
+                BufferedReader br = new BufferedReader(isr);
+                StringBuilder sb = new StringBuilder();
+
+                while((s = br.readLine()) != null) sb.append(s);
+
+                result = new JSONObject(sb.toString());
+            }
+
+        } catch (IOException | JSONException ex) {
+            ex.printStackTrace();
+            return null;
         }
-        catch (Exception e){
-            e.printStackTrace();
 
-        }
-
-        if(jsonObject == null) return null;
-
-        return jsonObject;
-    }
-
-    private String formatJSONObjectString(String jsonObjectString){
-        return jsonObjectString
-                .replace("{", "{\n\t")
-                .replace("}", "\n}")
-                .replace(",", ",\n\t")
-                .replace(":", ": ")
-                .replace("\\", "");
+        return result;
     }
 
     private void sendMessageToPresenterHandler(JSONWriterEnums jsonWriterEnum){
@@ -159,6 +165,10 @@ public class JSONValueWriter implements Callable {
                 message = Helper.createMessage(HandlerMessageIdentifiers.READ_VAULES_FAILED, "A " + FILE_NAME  + " fájl olvasása közben hiba lépett fel!");
                 break;
             }
+            case FILECREATE_FAILED:{
+                message = Helper.createMessage(HandlerMessageIdentifiers.FILECREATE_FAILED, "A " + FILE_NAME  + " fájl a '" + context.getFilesDir() + "' mappaútvonalon nem jött létre!");
+                break;
+            }
         }
 
         if(customThreadPoolManagerWeakReference != null && customThreadPoolManagerWeakReference.get() != null) {
@@ -175,6 +185,7 @@ public class JSONValueWriter implements Callable {
         THREAD_INTERRUPTED,
         IOEXCEPTION,
         WRITE_SUCCES,
-        READ_FAILED
+        READ_FAILED,
+        FILECREATE_FAILED,
     }
 }

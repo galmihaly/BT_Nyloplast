@@ -6,8 +6,10 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -47,5 +49,14 @@ public class JSONFileReaderHelper {
 
     public static boolean existJSONFile(Context context, String fileName){
         return new File(context.getFilesDir() + File.separator + fileName).exists();
+    }
+
+    public static String formatJSONObjectString(String jsonObjectString){
+        return jsonObjectString
+                .replace("{", "{\n\t")
+                .replace("}", "\n}")
+                .replace(",", ",\n\t")
+                .replace(":", ": ")
+                .replace("\\", "");
     }
 }

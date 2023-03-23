@@ -346,6 +346,8 @@ public class RecycledMaterialCreationView extends AppCompatActivity {
         textBox_2 = findViewById(R.id.storageBoxIdentifierTextBox2);
         textBox_3 = findViewById(R.id.massDataTextBox2);
 
+        textBox_1.requestFocus();
+
         if(textBox_1 != null){ textBox_1.setShowSoftInputOnFocus(false); }
         if(textBox_2 != null){ textBox_2.setShowSoftInputOnFocus(false); }
         if(textBox_3 != null){ textBox_3.setShowSoftInputOnFocus(false); }

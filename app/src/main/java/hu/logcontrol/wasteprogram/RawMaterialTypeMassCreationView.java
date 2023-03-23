@@ -437,6 +437,8 @@ public class RawMaterialTypeMassCreationView extends AppCompatActivity {
         textBox_3 = findViewById(R.id.storageBoxIdentifierTextBox);
         textBox_4 = findViewById(R.id.massDataTextBox);
 
+        textBox_1.requestFocus();
+
         if(textBox_1 != null){ textBox_1.setShowSoftInputOnFocus(false); }
         if(textBox_2 != null){ textBox_2.setShowSoftInputOnFocus(false); }
         if(textBox_3 != null){ textBox_3.setShowSoftInputOnFocus(false); }

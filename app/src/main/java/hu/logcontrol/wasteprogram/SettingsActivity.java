@@ -22,7 +22,11 @@ import android.widget.Toast;
 
 import com.google.android.material.textfield.TextInputEditText;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.File;
+import java.util.List;
 
 import hu.logcontrol.wasteprogram.enums.ActivityEnums;
 import hu.logcontrol.wasteprogram.enums.EditButtonEnums;
@@ -48,6 +52,8 @@ public class SettingsActivity extends AppCompatActivity implements ISettingsView
     private ProgramPresenter programPresenter;
     private LocalEncryptedPreferences preferences;
 
+    private String result;
+
     @SuppressLint("SetTextI18n")
     private final ActivityResultLauncher<Intent> activityResultLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
@@ -55,6 +61,14 @@ public class SettingsActivity extends AppCompatActivity implements ISettingsView
                 if(result.getResultCode() == Activity.RESULT_OK){
                     Intent intent = result.getData();
                     if(intent == null) return;
+
+                    Log.e("getPath", intent.getData().getPath());
+                    Log.e("getEncodedPath", intent.getData().getEncodedPath());
+                    List<String> a = intent.getData().getPathSegments();
+
+                    for (int i = 0; i < a.size(); i++) {
+                        Log.e("getPathSegments", a.get(i));
+                    }
 
                     String path = File.separator + "sdcard" + File.separator + intent.getData().getPath().split(":")[1];
                     programPresenter.saveStringValueToJSONFile("LocalSavePath", path);
@@ -88,13 +102,20 @@ public class SettingsActivity extends AppCompatActivity implements ISettingsView
     protected void onResume() {
         super.onResume();
 
-        if(settingsLocalSavePathTB != null){
+        if(settingsGlobalSavePathTB != null && settingsLocalSavePathTB != null && settingBarcodeNextCheckBox != null && localSavePathCheckbox != null){
+
             boolean isExist = JSONFileReaderHelper.existJSONFile(getApplicationContext(), "values.json");
             if(isExist) {
 
-                String result = JSONFileReaderHelper.getStringFromJSONFile(getApplicationContext(), "values.json", "LocalSavePath");
+                result = JSONFileReaderHelper.getStringFromJSONFile(getApplicationContext(), "values.json", "GlobalSavePath");
+                if(result != null) settingsGlobalSavePathTB.setText(result);
+
+                result = JSONFileReaderHelper.getStringFromJSONFile(getApplicationContext(), "values.json", "LocalSavePath");
                 if(result != null) settingsLocalSavePathTB.setText(result);
             }
+        }
+
+        if(settingsLocalSavePathTB != null){
         }
 
         if(localSavePathCheckbox != null){
@@ -118,6 +139,23 @@ public class SettingsActivity extends AppCompatActivity implements ISettingsView
                     localSavePathCheckbox.setChecked(false);
 
                     programPresenter.saveBooleanValueToJSONFile("IsEnableSaveLocalStorage", false);
+                }
+            });
+        }
+
+        if(settingBarcodeNextCheckBox != null){
+            settingBarcodeNextCheckBox.setOnClickListener(v -> {
+                if(settingBarcodeNextCheckBox.isChecked()){
+
+                    settingBarcodeNextCheckBox.setChecked(true);
+                    programPresenter.saveBooleanValueToJSONFile("IsEnableBarcodeReaderMode", true);
+
+                }
+                if(!settingBarcodeNextCheckBox.isChecked()){
+
+
+                    localSavePathCheckbox.setChecked(false);
+                    programPresenter.saveBooleanValueToJSONFile("IsEnableBarcodeReaderMode", false);
                 }
             });
         }

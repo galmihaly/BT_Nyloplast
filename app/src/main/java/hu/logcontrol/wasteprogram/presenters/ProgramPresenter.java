@@ -202,23 +202,6 @@ public class ProgramPresenter implements IProgramPresenter, PresenterThreadCallb
         }
     }
 
-//    @Override
-//    public void createFileFromRawMaterialList(Uri uri) {
-//        try {
-//            ApplicationLogger.logging(LogLevel.INFORMATION, "A RawMaterial lista átmásolása csv fájlba elkezdődött.");
-//
-//            CreateFile callable = new CreateFile(context, CreateFile.RunModes.CREATE_RAWMATERIAL_CSV, uri, RawMaterial.getCSVHeader(), "csv");
-//            callable.setCustomThreadPoolManager(mCustomThreadPoolManager);
-//            mCustomThreadPoolManager.addCallableMethod(callable);
-//
-//            ApplicationLogger.logging(LogLevel.INFORMATION, "A RawMaterial lista átmásolása csv fájlba befejeződött.");
-//        }
-//        catch (Exception e){
-//            e.printStackTrace();
-//            ApplicationLogger.logging(LogLevel.FATAL, e.getMessage());
-//        }
-//    }
-
     @Override
     public void createFileFromRawMaterialList() {
         try {
@@ -238,36 +221,36 @@ public class ProgramPresenter implements IProgramPresenter, PresenterThreadCallb
 
     @Override
     public void createFileFromRawMaterialTypeMassList(Uri uri) {
-//        try {
-//            ApplicationLogger.logging(LogLevel.INFORMATION, "A RawMaterial lista átmásolása csv fájlba elkezdődött.");
-//
-//            CreateFile callable = new CreateFile(context, CreateFile.RunModes.CREATE_RAWMATERIALTYPEMASS_CSV, uri, RawMaterialTypeMass.getCSVHeader(), "csv");
-//            callable.setCustomThreadPoolManager(mCustomThreadPoolManager);
-//            mCustomThreadPoolManager.addCallableMethod(callable);
-//
-//            ApplicationLogger.logging(LogLevel.INFORMATION, "A RawMaterial lista átmásolása txt fájlba befejeződött.");
-//        }
-//        catch (Exception e){
-//            e.printStackTrace();
-//            ApplicationLogger.logging(LogLevel.FATAL, e.getMessage());
-//        }
+        try {
+            ApplicationLogger.logging(LogLevel.INFORMATION, "A RawMaterial lista átmásolása csv fájlba elkezdődött.");
+
+            CreateFile callable = new CreateFile(context, CreateFile.RunModes.CREATE_RAWMATERIALTYPEMASS, RawMaterialTypeMass.getCSVHeader(), "csv");
+            callable.setCustomThreadPoolManager(mCustomThreadPoolManager);
+            mCustomThreadPoolManager.addCallableMethod(callable);
+
+            ApplicationLogger.logging(LogLevel.INFORMATION, "A RawMaterial lista átmásolása txt fájlba befejeződött.");
+        }
+        catch (Exception e){
+            e.printStackTrace();
+            ApplicationLogger.logging(LogLevel.FATAL, e.getMessage());
+        }
     }
 
     @Override
     public void createFileFromRecycledMaterialTypeMassList(Uri uri) {
-//        try {
-//            ApplicationLogger.logging(LogLevel.INFORMATION, "A RecycledMaterial lista átmásolása csv fájlba elkezdődött.");
-//
-//            CreateFile callable = new CreateFile(context, CreateFile.RunModes.CREATE_RECYCLEDMATERIAL_CSV, uri, RecycledMaterial.getCSVHeader(), "csv");
-//            callable.setCustomThreadPoolManager(mCustomThreadPoolManager);
-//            mCustomThreadPoolManager.addCallableMethod(callable);
-//
-//            ApplicationLogger.logging(LogLevel.INFORMATION, "A RecycledMaterial lista átmásolása csv fájlba befejeződött.");
-//        }
-//        catch (Exception e){
-//            e.printStackTrace();
-//            ApplicationLogger.logging(LogLevel.FATAL, e.getMessage());
-//        }
+        try {
+            ApplicationLogger.logging(LogLevel.INFORMATION, "A RecycledMaterial lista átmásolása csv fájlba elkezdődött.");
+
+            CreateFile callable = new CreateFile(context, CreateFile.RunModes.CREATE_RECYCLEDMATERIAL, RecycledMaterial.getCSVHeader(), "csv");
+            callable.setCustomThreadPoolManager(mCustomThreadPoolManager);
+            mCustomThreadPoolManager.addCallableMethod(callable);
+
+            ApplicationLogger.logging(LogLevel.INFORMATION, "A RecycledMaterial lista átmásolása csv fájlba befejeződött.");
+        }
+        catch (Exception e){
+            e.printStackTrace();
+            ApplicationLogger.logging(LogLevel.FATAL, e.getMessage());
+        }
     }
 
     @Override
@@ -364,11 +347,16 @@ public class ProgramPresenter implements IProgramPresenter, PresenterThreadCallb
                     iProgramPresenterWeakReference.get().sendMessageToView("Beállítások mentése sikeres!");
                     break;
                 }
-
                 case HandlerMessageIdentifiers.READ_VAULES_FAILED:{
                     ApplicationLogger.logging(LogLevel.FATAL, getWeakReferenceNotification(msg));
 
                     iProgramPresenterWeakReference.get().sendMessageToView("Beállítások mentése sikertelen!");
+                    break;
+                }
+                case HandlerMessageIdentifiers.FILECREATE_FAILED:{
+                    ApplicationLogger.logging(LogLevel.FATAL, getWeakReferenceNotification(msg));
+
+                    iProgramPresenterWeakReference.get().sendMessageToView("A fájl nem jött létre a megadott útvonalon!");
                     break;
                 }
             }

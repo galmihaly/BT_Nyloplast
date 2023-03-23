@@ -10,4 +10,5 @@ public class HandlerMessageIdentifiers {
 
     public static final int WRITE_VAULE_SUCCES = 5;
     public static final int READ_VAULES_FAILED = 6;
+    public static final int FILECREATE_FAILED = 7;
 }
