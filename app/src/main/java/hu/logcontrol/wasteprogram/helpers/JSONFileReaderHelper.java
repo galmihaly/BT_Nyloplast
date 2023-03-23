@@ -47,6 +47,33 @@ public class JSONFileReaderHelper {
         return result;
     }
 
+    public static boolean getBooleanFromJSONFile(Context context, String fileName, String dataMember){
+        JSONObject jsonObject = null;
+        String s = null;
+        boolean result = false;
+        FileInputStream fileInputStream = null;
+        try {
+
+            File file = new File(context.getApplicationContext().getFilesDir() + File.separator + fileName);
+            if(file.exists()){
+                fileInputStream = new FileInputStream(file);
+                InputStreamReader isr = new InputStreamReader(fileInputStream);
+                BufferedReader br = new BufferedReader(isr);
+                StringBuilder sb = new StringBuilder();
+
+                while((s = br.readLine()) != null) sb.append(s);
+
+                jsonObject = new JSONObject(sb.toString());
+                result = jsonObject.getBoolean(dataMember);
+            }
+
+        } catch (IOException | JSONException ex) {
+            ex.printStackTrace();
+        }
+
+        return result;
+    }
+
     public static boolean existJSONFile(Context context, String fileName){
         return new File(context.getFilesDir() + File.separator + fileName).exists();
     }

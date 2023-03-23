@@ -22,9 +22,6 @@ import android.widget.Toast;
 
 import com.google.android.material.textfield.TextInputEditText;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.io.File;
 import java.util.List;
 
@@ -52,7 +49,8 @@ public class SettingsActivity extends AppCompatActivity implements ISettingsView
     private ProgramPresenter programPresenter;
     private LocalEncryptedPreferences preferences;
 
-    private String result;
+    private String resultString;
+    private boolean resultBoolean;
 
     @SuppressLint("SetTextI18n")
     private final ActivityResultLauncher<Intent> activityResultLauncher = registerForActivityResult(
@@ -107,11 +105,17 @@ public class SettingsActivity extends AppCompatActivity implements ISettingsView
             boolean isExist = JSONFileReaderHelper.existJSONFile(getApplicationContext(), "values.json");
             if(isExist) {
 
-                result = JSONFileReaderHelper.getStringFromJSONFile(getApplicationContext(), "values.json", "GlobalSavePath");
-                if(result != null) settingsGlobalSavePathTB.setText(result);
+                resultString = JSONFileReaderHelper.getStringFromJSONFile(getApplicationContext(), "values.json", "GlobalSavePath");
+                if(resultString != null) settingsGlobalSavePathTB.setText(resultString);
 
-                result = JSONFileReaderHelper.getStringFromJSONFile(getApplicationContext(), "values.json", "LocalSavePath");
-                if(result != null) settingsLocalSavePathTB.setText(result);
+                resultString = JSONFileReaderHelper.getStringFromJSONFile(getApplicationContext(), "values.json", "LocalSavePath");
+                if(resultString != null) settingsLocalSavePathTB.setText(resultString);
+
+                resultBoolean = JSONFileReaderHelper.getBooleanFromJSONFile(getApplicationContext(), "values.json", "IsEnableBarcodeReaderMode");
+                settingBarcodeNextCheckBox.setChecked(resultBoolean);
+
+                resultBoolean = JSONFileReaderHelper.getBooleanFromJSONFile(getApplicationContext(), "values.json", "IsEnableSaveLocalStorage");
+                localSavePathCheckbox.setChecked(resultBoolean);
             }
         }
 
@@ -152,7 +156,6 @@ public class SettingsActivity extends AppCompatActivity implements ISettingsView
 
                 }
                 if(!settingBarcodeNextCheckBox.isChecked()){
-
 
                     localSavePathCheckbox.setChecked(false);
                     programPresenter.saveBooleanValueToJSONFile("IsEnableBarcodeReaderMode", false);
