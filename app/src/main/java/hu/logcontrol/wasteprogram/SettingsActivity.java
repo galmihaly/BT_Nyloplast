@@ -116,6 +116,9 @@ public class SettingsActivity extends AppCompatActivity implements ISettingsView
 
                 resultBoolean = JSONFileReaderHelper.getBooleanFromJSONFile(getApplicationContext(), "values.json", "IsEnableSaveLocalStorage");
                 localSavePathCheckbox.setChecked(resultBoolean);
+
+                if(localSavePathCheckbox.isChecked()){ localSavePathCL.setVisibility(View.VISIBLE); }
+                else{ localSavePathCL.setVisibility(View.INVISIBLE); }
             }
         }
 
