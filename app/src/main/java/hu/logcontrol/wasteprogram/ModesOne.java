@@ -59,13 +59,13 @@ public class ModesOne extends AppCompatActivity implements IModesOneView {
                     hideNavigationBar();
                 }
 
-                if(result.getResultCode() == Activity.RESULT_OK){
-                    Intent intent = result.getData();
-                    if(intent == null) return;
-
-                    programPresenter.createFileFromRawMaterialList(intent.getData());
-                    hideNavigationBar();
-                }
+//                if(result.getResultCode() == Activity.RESULT_OK){
+//                    Intent intent = result.getData();
+//                    if(intent == null) return;
+//
+//                    programPresenter.createFileFromRawMaterialList(intent.getData());
+//                    hideNavigationBar();
+//                }
             }
     );
 
@@ -100,7 +100,8 @@ public class ModesOne extends AppCompatActivity implements IModesOneView {
                 settingButton(EditButtonEnums.SAVE_BUTTON_ENABLED);
 
                 saveButton.setOnClickListener(view -> {
-                    programPresenter.openActivityByEnum(ActivityEnums.FOLDERPICKER_ACTIVITY);
+                    //programPresenter.openActivityByEnum(ActivityEnums.FOLDERPICKER_ACTIVITY);
+                    programPresenter.createFileFromRawMaterialList();
                 });
             }
         }

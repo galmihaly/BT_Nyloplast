@@ -11,7 +11,6 @@ import androidx.security.crypto.MasterKeys;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -28,6 +27,7 @@ import java.io.File;
 import hu.logcontrol.wasteprogram.enums.ActivityEnums;
 import hu.logcontrol.wasteprogram.enums.EditButtonEnums;
 import hu.logcontrol.wasteprogram.helpers.Helper;
+import hu.logcontrol.wasteprogram.helpers.JSONFileReaderHelper;
 import hu.logcontrol.wasteprogram.interfaces.ISettingsView;
 import hu.logcontrol.wasteprogram.models.LocalEncryptedPreferences;
 import hu.logcontrol.wasteprogram.presenters.ProgramPresenter;
@@ -41,6 +41,7 @@ public class SettingsActivity extends AppCompatActivity implements ISettingsView
     private ImageButton folderPickerButton;
 
     private CheckBox localSavePathCheckbox;
+    private CheckBox settingBarcodeNextCheckBox;
 
     private ConstraintLayout localSavePathCL;
 
@@ -56,9 +57,7 @@ public class SettingsActivity extends AppCompatActivity implements ISettingsView
                     if(intent == null) return;
 
                     String path = File.separator + "sdcard" + File.separator + intent.getData().getPath().split(":")[1];
-                    settingsLocalSavePathTB.setText(path);
-
-                    programPresenter.createFileFromRawMaterialList(intent.getData());
+                    programPresenter.saveStringValueToJSONFile("LocalSavePath", path);
                     hideNavigationBar();
                 }
             }
@@ -76,16 +75,27 @@ public class SettingsActivity extends AppCompatActivity implements ISettingsView
                 EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
                 EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
         );
+
         Log.e("", String.valueOf(preferences.getIntValueByKey("values3")));
 
         initView();
         programPresenter = new ProgramPresenter(this, getApplicationContext());
         programPresenter.initTaskManager();
+
     }
 
     @Override
     protected void onResume() {
         super.onResume();
+
+        if(settingsLocalSavePathTB != null){
+            boolean isExist = JSONFileReaderHelper.existJSONFile(getApplicationContext(), "values.json");
+            if(isExist) {
+
+                String result = JSONFileReaderHelper.getStringFromJSONFile(getApplicationContext(), "values.json", "LocalSavePath");
+                if(result != null) settingsLocalSavePathTB.setText(result);
+            }
+        }
 
         if(localSavePathCheckbox != null){
             localSavePathCheckbox.setOnClickListener(v -> {
@@ -94,18 +104,20 @@ public class SettingsActivity extends AppCompatActivity implements ISettingsView
                     localSavePathCL.setVisibility(View.VISIBLE);
                     localSavePathCheckbox.setChecked(true);
 
-                    if(localSavePathCheckbox.isChecked()){
-                        if(folderPickerButton != null){
-                            folderPickerButton.setOnClickListener(view -> {
-                                programPresenter.openActivityByEnum(ActivityEnums.FOLDERPICKER_ACTIVITY);
-                            });
-                        }
+                    programPresenter.saveBooleanValueToJSONFile("IsEnableSaveLocalStorage", true);
+
+                    if(folderPickerButton != null){
+                        folderPickerButton.setOnClickListener(view -> {
+                            programPresenter.openActivityByEnum(ActivityEnums.FOLDERPICKER_ACTIVITY);
+                        });
                     }
                 }
                 if(!localSavePathCheckbox.isChecked()){
 
                     localSavePathCL.setVisibility(View.INVISIBLE);
                     localSavePathCheckbox.setChecked(false);
+
+                    programPresenter.saveBooleanValueToJSONFile("IsEnableSaveLocalStorage", false);
                 }
             });
         }
@@ -141,6 +153,7 @@ public class SettingsActivity extends AppCompatActivity implements ISettingsView
         folderPickerButton = findViewById(R.id.folderPickerButton);
 
         localSavePathCheckbox = findViewById(R.id.localSavePathCheckbox);
+        settingBarcodeNextCheckBox = findViewById(R.id.settingBarcodeNextCheckBox);
 
         localSavePathCL = findViewById(R.id.localSavePathCL);
 

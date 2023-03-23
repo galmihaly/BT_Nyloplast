@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
-import android.util.Log;
 
 import java.lang.ref.WeakReference;
 
@@ -37,6 +36,7 @@ import hu.logcontrol.wasteprogram.taskmanager.CustomThreadPoolManager;
 import hu.logcontrol.wasteprogram.taskmanager.PresenterThreadCallback;
 import hu.logcontrol.wasteprogram.tasks.AddElementToList;
 import hu.logcontrol.wasteprogram.tasks.CreateFile;
+import hu.logcontrol.wasteprogram.tasks.JSONValueWriter;
 
 public class ProgramPresenter implements IProgramPresenter, PresenterThreadCallback {
 
@@ -202,12 +202,29 @@ public class ProgramPresenter implements IProgramPresenter, PresenterThreadCallb
         }
     }
 
+//    @Override
+//    public void createFileFromRawMaterialList(Uri uri) {
+//        try {
+//            ApplicationLogger.logging(LogLevel.INFORMATION, "A RawMaterial lista átmásolása csv fájlba elkezdődött.");
+//
+//            CreateFile callable = new CreateFile(context, CreateFile.RunModes.CREATE_RAWMATERIAL_CSV, uri, RawMaterial.getCSVHeader(), "csv");
+//            callable.setCustomThreadPoolManager(mCustomThreadPoolManager);
+//            mCustomThreadPoolManager.addCallableMethod(callable);
+//
+//            ApplicationLogger.logging(LogLevel.INFORMATION, "A RawMaterial lista átmásolása csv fájlba befejeződött.");
+//        }
+//        catch (Exception e){
+//            e.printStackTrace();
+//            ApplicationLogger.logging(LogLevel.FATAL, e.getMessage());
+//        }
+//    }
+
     @Override
-    public void createFileFromRawMaterialList(Uri uri) {
+    public void createFileFromRawMaterialList() {
         try {
             ApplicationLogger.logging(LogLevel.INFORMATION, "A RawMaterial lista átmásolása csv fájlba elkezdődött.");
 
-            CreateFile callable = new CreateFile(context, CreateFile.RunModes.CREATE_RAWMATERIAL_CSV, uri, RawMaterial.getCSVHeader(), "csv");
+            CreateFile callable = new CreateFile(context, CreateFile.RunModes.CREATE_RAWMATERIAL, RawMaterial.getCSVHeader(), "csv");
             callable.setCustomThreadPoolManager(mCustomThreadPoolManager);
             mCustomThreadPoolManager.addCallableMethod(callable);
 
@@ -221,36 +238,36 @@ public class ProgramPresenter implements IProgramPresenter, PresenterThreadCallb
 
     @Override
     public void createFileFromRawMaterialTypeMassList(Uri uri) {
-        try {
-            ApplicationLogger.logging(LogLevel.INFORMATION, "A RawMaterial lista átmásolása csv fájlba elkezdődött.");
-
-            CreateFile callable = new CreateFile(context, CreateFile.RunModes.CREATE_RAWMATERIALTYPEMASS_CSV, uri, RawMaterialTypeMass.getCSVHeader(), "csv");
-            callable.setCustomThreadPoolManager(mCustomThreadPoolManager);
-            mCustomThreadPoolManager.addCallableMethod(callable);
-
-            ApplicationLogger.logging(LogLevel.INFORMATION, "A RawMaterial lista átmásolása txt fájlba befejeződött.");
-        }
-        catch (Exception e){
-            e.printStackTrace();
-            ApplicationLogger.logging(LogLevel.FATAL, e.getMessage());
-        }
+//        try {
+//            ApplicationLogger.logging(LogLevel.INFORMATION, "A RawMaterial lista átmásolása csv fájlba elkezdődött.");
+//
+//            CreateFile callable = new CreateFile(context, CreateFile.RunModes.CREATE_RAWMATERIALTYPEMASS_CSV, uri, RawMaterialTypeMass.getCSVHeader(), "csv");
+//            callable.setCustomThreadPoolManager(mCustomThreadPoolManager);
+//            mCustomThreadPoolManager.addCallableMethod(callable);
+//
+//            ApplicationLogger.logging(LogLevel.INFORMATION, "A RawMaterial lista átmásolása txt fájlba befejeződött.");
+//        }
+//        catch (Exception e){
+//            e.printStackTrace();
+//            ApplicationLogger.logging(LogLevel.FATAL, e.getMessage());
+//        }
     }
 
     @Override
     public void createFileFromRecycledMaterialTypeMassList(Uri uri) {
-        try {
-            ApplicationLogger.logging(LogLevel.INFORMATION, "A RecycledMaterial lista átmásolása csv fájlba elkezdődött.");
-
-            CreateFile callable = new CreateFile(context, CreateFile.RunModes.CREATE_RECYCLEDMATERIAL_CSV, uri, RecycledMaterial.getCSVHeader(), "csv");
-            callable.setCustomThreadPoolManager(mCustomThreadPoolManager);
-            mCustomThreadPoolManager.addCallableMethod(callable);
-
-            ApplicationLogger.logging(LogLevel.INFORMATION, "A RecycledMaterial lista átmásolása csv fájlba befejeződött.");
-        }
-        catch (Exception e){
-            e.printStackTrace();
-            ApplicationLogger.logging(LogLevel.FATAL, e.getMessage());
-        }
+//        try {
+//            ApplicationLogger.logging(LogLevel.INFORMATION, "A RecycledMaterial lista átmásolása csv fájlba elkezdődött.");
+//
+//            CreateFile callable = new CreateFile(context, CreateFile.RunModes.CREATE_RECYCLEDMATERIAL_CSV, uri, RecycledMaterial.getCSVHeader(), "csv");
+//            callable.setCustomThreadPoolManager(mCustomThreadPoolManager);
+//            mCustomThreadPoolManager.addCallableMethod(callable);
+//
+//            ApplicationLogger.logging(LogLevel.INFORMATION, "A RecycledMaterial lista átmásolása csv fájlba befejeződött.");
+//        }
+//        catch (Exception e){
+//            e.printStackTrace();
+//            ApplicationLogger.logging(LogLevel.FATAL, e.getMessage());
+//        }
     }
 
     @Override
@@ -264,10 +281,45 @@ public class ProgramPresenter implements IProgramPresenter, PresenterThreadCallb
     @Override
     public void sendMessageToView(String message) {
         if(message == null) return;
-        Log.e("pre", message);
+
         if(iModesOneView != null) iModesOneView.getMessageFromPresenter(message);
         if(iModesTwoView != null) iModesTwoView.getMessageFromPresenter(message);
         if(iModesThreeView != null) iModesThreeView.getMessageFromPresenter(message);
+        if(iSettingsView != null) iSettingsView.getMessageFromPresenter(message);
+    }
+
+    @Override
+    public void saveBooleanValueToJSONFile(String jsonIdValue, boolean booleanValue) {
+        try {
+            ApplicationLogger.logging(LogLevel.INFORMATION, "A boolean érték elmentése JSON fáljba elkezdődött.");
+
+            JSONValueWriter callable = new JSONValueWriter(context, jsonIdValue, booleanValue, JSONValueWriter.MODE.WRITE_BOOLEAN);
+            callable.setCustomThreadPoolManager(mCustomThreadPoolManager);
+            mCustomThreadPoolManager.addCallableMethod(callable);
+
+            ApplicationLogger.logging(LogLevel.INFORMATION, "A boolean érték elmentése JSON fáljba befejeződött.");
+        }
+        catch (Exception e){
+            e.printStackTrace();
+            ApplicationLogger.logging(LogLevel.FATAL, e.getMessage());
+        }
+    }
+
+    @Override
+    public void saveStringValueToJSONFile(String jsonIdValue, String value) {
+        try {
+            ApplicationLogger.logging(LogLevel.INFORMATION, "A String érték elmentése JSON fáljba elkezdődött.");
+
+            JSONValueWriter callable = new JSONValueWriter(context, jsonIdValue, value, JSONValueWriter.MODE.WRITE_STRING);
+            callable.setCustomThreadPoolManager(mCustomThreadPoolManager);
+            mCustomThreadPoolManager.addCallableMethod(callable);
+
+            ApplicationLogger.logging(LogLevel.INFORMATION, "A String érték elmentése JSON fáljba befejeződött.");
+        }
+        catch (Exception e){
+            e.printStackTrace();
+            ApplicationLogger.logging(LogLevel.FATAL, e.getMessage());
+        }
     }
 
     @Override
@@ -304,6 +356,19 @@ public class ProgramPresenter implements IProgramPresenter, PresenterThreadCallb
 
                     iProgramPresenterWeakReference.get().setSaveButtonState(EditButtonEnums.SAVE_BUTTON_DISABLED);
                     iProgramPresenterWeakReference.get().sendMessageToView("A fájl létrehozása sikeres!");
+                    break;
+                }
+                case HandlerMessageIdentifiers.WRITE_VAULE_SUCCES:{
+                    ApplicationLogger.logging(LogLevel.INFORMATION, getWeakReferenceNotification(msg));
+
+                    iProgramPresenterWeakReference.get().sendMessageToView("Beállítások mentése sikeres!");
+                    break;
+                }
+
+                case HandlerMessageIdentifiers.READ_VAULES_FAILED:{
+                    ApplicationLogger.logging(LogLevel.FATAL, getWeakReferenceNotification(msg));
+
+                    iProgramPresenterWeakReference.get().sendMessageToView("Beállítások mentése sikertelen!");
                     break;
                 }
             }

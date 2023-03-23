@@ -21,10 +21,13 @@ public interface IProgramPresenter {
     void addRawMaterialTypeMassToAdapterList(RawMaterialTypeMass rawMaterialTypeMass);
     void addRecycledMaterialToAdapterList(RecycledMaterial recycledMaterial);
 
-    void createFileFromRawMaterialList(Uri uri);
+    void createFileFromRawMaterialList();
     void createFileFromRawMaterialTypeMassList(Uri uri);
     void createFileFromRecycledMaterialTypeMassList(Uri uri);
 
     void setSaveButtonState(EditButtonEnums editButtonEnum);
     void sendMessageToView(String message);
+
+    void saveBooleanValueToJSONFile(String jsonIdValue, boolean value);
+    void saveStringValueToJSONFile(String jsonIdValue, String value);
 }

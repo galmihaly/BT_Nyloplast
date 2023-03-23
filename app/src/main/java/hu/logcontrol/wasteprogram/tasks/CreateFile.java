@@ -1,10 +1,7 @@
 package hu.logcontrol.wasteprogram.tasks;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
-import android.net.Uri;
 import android.os.Message;
-import android.util.Log;
 
 import androidx.documentfile.provider.DocumentFile;
 
@@ -18,6 +15,7 @@ import java.util.concurrent.Callable;
 
 import hu.logcontrol.wasteprogram.enums.HandlerMessageIdentifiers;
 import hu.logcontrol.wasteprogram.helpers.Helper;
+import hu.logcontrol.wasteprogram.helpers.JSONFileReaderHelper;
 import hu.logcontrol.wasteprogram.logger.ApplicationLogger;
 import hu.logcontrol.wasteprogram.models.LocalRawMaterialTypeMassesStorage;
 import hu.logcontrol.wasteprogram.models.LocalRawMaterialsStorage;
@@ -39,7 +37,6 @@ public class CreateFile implements Callable {
 
     private Context context;
     private RunModes runMode;
-    private Uri uri;
     private String header;
     private String fileExtension;
 
@@ -49,14 +46,15 @@ public class CreateFile implements Callable {
     private DocumentFile documentFile;
     private FileWriter writer = null;
 
+    private File file;
+
     private LocalRawMaterialsStorage localRawMatStorage;
     private LocalRawMaterialTypeMassesStorage localTypeMassStorage;
     private LocalRecycLedMaterialsStorage localRecMatsStorage;
 
-    public CreateFile(Context context, RunModes runMode, Uri uri, String header, String fileExtension) {
+    public CreateFile(Context context, RunModes runMode, String header, String fileExtension) {
         this.context = context;
         this.runMode = runMode;
-        this.uri = uri;
         this.header = header;
         this.fileExtension = fileExtension;
     }
@@ -72,17 +70,14 @@ public class CreateFile implements Callable {
             if (Thread.interrupted()) throw new InterruptedException();
 
             switch (runMode){
-                case CREATE_RAWMATERIAL_CSV:{
+                case CREATE_RAWMATERIAL:{
 
                     localRawMatStorage = LocalRawMaterialsStorage.getInstance();
                     rawMaterialList = localRawMatStorage.getRawMaterialList();
 
                     fileName = ApplicationLogger.getDateTimeString() + "_RawMaterialList" + "." + fileExtension;
-                    documentFile = DocumentFile.fromTreeUri(context, uri);
-                    if(documentFile != null) documentFile.createFile(fileExtension, fileName);
-
-                    fos = new FileOutputStream(getPathFromUri() + File.separator + fileName);
-                    Log.e("rawMAt","");
+                    file = new File(getPathFromJSONFile() + File.separator + fileName);
+                    fos = new FileOutputStream(file);
 
                     if(rawMaterialList != null) {
 
@@ -98,16 +93,14 @@ public class CreateFile implements Callable {
 
                     break;
                 }
-                case CREATE_RAWMATERIALTYPEMASS_CSV:{
+                case CREATE_RAWMATERIALTYPEMASS:{
 
                     localTypeMassStorage = LocalRawMaterialTypeMassesStorage.getInstance();
                     rawMaterialTypeMassList = localTypeMassStorage.getRawMaterialTypeMassList();
 
                     fileName = ApplicationLogger.getDateTimeString() + "_RawMaterialTypeMassList" + "." + fileExtension;
-                    documentFile = DocumentFile.fromTreeUri(context, uri);
-                    if(documentFile != null) documentFile.createFile(fileExtension, fileName);
-
-                    fos = new FileOutputStream(getPathFromUri() + File.separator + fileName);
+                    file = new File(getPathFromJSONFile() + File.separator + fileName);
+                    fos = new FileOutputStream(file);
 
                     if(rawMaterialTypeMassList != null) {
 
@@ -122,16 +115,14 @@ public class CreateFile implements Callable {
                     localTypeMassStorage.clearRawMaterialTypeMassList();
                     break;
                 }
-                case CREATE_RECYCLEDMATERIAL_CSV:{
+                case CREATE_RECYCLEDMATERIAL:{
 
                     localRecMatsStorage = LocalRecycLedMaterialsStorage.getInstance();
                     recycledMaterialList = localRecMatsStorage.getRecycledMaterialList();
 
                     fileName = ApplicationLogger.getDateTimeString() + "_RecycledMaterialList" + "." + fileExtension;
-                    documentFile = DocumentFile.fromTreeUri(context, uri);
-                    if(documentFile != null) documentFile.createFile(fileExtension, fileName);
-
-                    fos = new FileOutputStream(getPathFromUri() + File.separator + fileName);
+                    file = new File(getPathFromJSONFile() + File.separator + fileName);
+                    fos = new FileOutputStream(file);
 
                     if(rawMaterialTypeMassList != null) {
 
@@ -167,16 +158,15 @@ public class CreateFile implements Callable {
         return null;
     }
 
-    @SuppressLint("SdCardPath")
-    private String getPathFromUri(){
-        return "/sdcard/" + this.uri.getPath().split(":")[1];
+    private String getPathFromJSONFile(){
+        return JSONFileReaderHelper.getStringFromJSONFile(context, "values.json", "LocalSavePath");
     }
 
     private void sendMessageToPresenterHandler(CreateFileEnums createFileEnum){
 
         switch (createFileEnum){
             case CREATEFILE_THREAD_INTERRUPTED:{
-                message = Helper.createMessage(HandlerMessageIdentifiers.TEXTFILE_ADD_TO_DIRECTORY_PATH_FAILED, "Az fájl létrehozása és hozzádadása a mappaútvonalhoz sikertelen!");
+                message = Helper.createMessage(HandlerMessageIdentifiers.TEXTFILE_ADD_TO_DIRECTORY_PATH_FAILED, "A feldolgozó szál megszűnt létezni vagy nem jött létre a folyamat betöltésekor!");
                 break;
             }
             case CREATEFILE_IOEXCEPTION:{
@@ -201,8 +191,8 @@ public class CreateFile implements Callable {
     }
 
     public enum RunModes{
-        CREATE_RAWMATERIAL_CSV,
-        CREATE_RAWMATERIALTYPEMASS_CSV,
-        CREATE_RECYCLEDMATERIAL_CSV
+        CREATE_RAWMATERIAL,
+        CREATE_RAWMATERIALTYPEMASS,
+        CREATE_RECYCLEDMATERIAL
     }
 }

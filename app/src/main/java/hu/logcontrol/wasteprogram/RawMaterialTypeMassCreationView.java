@@ -17,8 +17,6 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ScrollView;
 
-import hu.logcontrol.wasteprogram.enums.EditButtonEnums;
-import hu.logcontrol.wasteprogram.helpers.ElementStateChangeHelper;
 import hu.logcontrol.wasteprogram.helpers.Helper;
 
 public class RawMaterialTypeMassCreationView extends AppCompatActivity {
