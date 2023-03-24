@@ -89,7 +89,7 @@ public class CreateFile implements Callable {
                         writer.flush();
                     }
 
-                    localRawMatStorage.clearRawMaterialList();
+                    //localRawMatStorage.clearRawMaterialList();
 
                     break;
                 }
@@ -112,7 +112,7 @@ public class CreateFile implements Callable {
                         writer.flush();
                     }
 
-                    localTypeMassStorage.clearRawMaterialTypeMassList();
+                    //localTypeMassStorage.clearRawMaterialTypeMassList();
                     break;
                 }
                 case CREATE_RECYCLEDMATERIAL:{
@@ -134,7 +134,7 @@ public class CreateFile implements Callable {
                         writer.flush();
                     }
 
-                    localRecMatsStorage.clearRecycledMaterialList();
+                    //localRecMatsStorage.clearRecycledMaterialList();
                     break;
                 }
             }

@@ -13,10 +13,13 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
 import java.util.List;
+import java.util.Observable;
+import java.util.Observer;
 
 import hu.logcontrol.wasteprogram.adapters.RawMaterialAdapter;
 import hu.logcontrol.wasteprogram.enums.ActivityEnums;
@@ -118,6 +121,8 @@ public class ModesOne extends AppCompatActivity implements IModesOneView {
                 });
             }
         }
+
+
 
         RawMaterialAdapter rawMaterialAdapter = new RawMaterialAdapter(getApplicationContext(), rawMaterialList, this);
         recycleViewModesOneRV.setAdapter(rawMaterialAdapter);

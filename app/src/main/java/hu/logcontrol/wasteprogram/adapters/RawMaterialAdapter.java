@@ -73,11 +73,13 @@ public class RawMaterialAdapter extends RecyclerView.Adapter<RawMaterialAdapter.
             }
 
             holder.getDeleteItemButton().setOnClickListener(view -> {
-                rawMaterialList.remove(position);
-                notifyDataSetChanged();
+                if(rawMaterialList.size() > 0){
+                    rawMaterialList.remove(position);
+                    notifyDataSetChanged();
 
-                if(rawMaterialList.size() == 0){
-                    modesOneWeakReference.get().settingButton(EditButtonEnums.SAVE_BUTTON_DISABLED);
+                    if(rawMaterialList.size() == 0){
+                        modesOneWeakReference.get().settingButton(EditButtonEnums.SAVE_BUTTON_DISABLED);
+                    }
                 }
             });
         }
