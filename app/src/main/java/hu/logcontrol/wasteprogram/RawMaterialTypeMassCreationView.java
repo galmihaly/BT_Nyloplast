@@ -375,17 +375,21 @@ public class RawMaterialTypeMassCreationView extends AppCompatActivity {
                             return false;
                         });
 
-                        addBut.setOnClickListener(v -> {
-                            Intent intent = new Intent();
+                        addBut.setOnFocusChangeListener((view, hasFocus) -> {
+                            if(hasFocus){
+                                addBut.setOnClickListener(v -> {
+                                    Intent intent = new Intent();
 
-                            intent.putExtra("typeMassCountTextBox", textBox_1.getText().toString());
-                            intent.putExtra("typeMassTypeTextBox", textBox_2.getText().toString());
-                            intent.putExtra("storageBoxIdentifierTextBox", textBox_3.getText().toString());
-                            intent.putExtra("massDataTextBox", textBox_4.getText().toString());
+                                    intent.putExtra("typeMassCountTextBox", textBox_1.getText().toString());
+                                    intent.putExtra("typeMassTypeTextBox", textBox_2.getText().toString());
+                                    intent.putExtra("storageBoxIdentifierTextBox", textBox_3.getText().toString());
+                                    intent.putExtra("massDataTextBox", textBox_4.getText().toString());
 
-                            setResult(1, intent);
+                                    setResult(1, intent);
 
-                            RawMaterialTypeMassCreationView.super.onBackPressed();
+                                    RawMaterialTypeMassCreationView.super.onBackPressed();
+                                });
+                            }
                         });
                     }
                 }

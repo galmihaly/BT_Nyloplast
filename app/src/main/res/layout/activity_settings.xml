@@ -98,7 +98,6 @@
                     android:layout_height="wrap_content"
                     android:layout_margin="10dp"
                     android:hint="Globális mentési útvonal"
-                    android:visibility="visible"
                     app:boxStrokeColor="@color/black"
                     app:boxStrokeWidthFocused="1dp"
                     app:hintTextColor="@color/black"
@@ -170,7 +169,6 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                android:visibility="invisible"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/constraintLayout5">
@@ -182,7 +180,6 @@
                     android:layout_height="wrap_content"
                     android:layout_margin="10dp"
                     android:hint="Lokális mentési útvonal"
-                    android:visibility="visible"
                     app:boxStrokeColor="@color/black"
                     app:boxStrokeWidthFocused="1dp"
                     app:hintTextColor="@color/black"

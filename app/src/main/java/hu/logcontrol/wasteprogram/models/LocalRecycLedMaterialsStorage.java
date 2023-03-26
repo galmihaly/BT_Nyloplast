@@ -20,5 +20,5 @@ public class LocalRecycLedMaterialsStorage {
         return recycledMaterialList;
     }
 
-    public void clearRecycledMaterialList() { recycledMaterialList.clear(); };
+    public int getRecycLedMaterialListSize() { return recycledMaterialList.size(); }
 }

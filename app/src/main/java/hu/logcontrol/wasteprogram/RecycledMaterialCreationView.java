@@ -167,49 +167,50 @@ public class RecycledMaterialCreationView extends AppCompatActivity {
 
                         if(!enterBut_2.isEnabled())enterBut_2.setEnabled(true);
                         if(!deleteBut.isEnabled())deleteBut.setEnabled(true);
-                    }
 
-                    enterBut_2.setOnClickListener(v -> {
+                        enterBut_2.setOnClickListener(v -> {
 
-                        constraint_3.setVisibility(View.VISIBLE);
-                        constraint_2.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.cardview_green_background));
+                            constraint_3.setVisibility(View.VISIBLE);
+                            constraint_2.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.cardview_green_background));
 
-                        textBox_2.setTextColor(Color.parseColor(disableColor));
+                            textBox_2.setTextColor(Color.parseColor(disableColor));
 
-                        enterBut_2.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.disable_button_background_rectangle));
+                            enterBut_2.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.disable_button_background_rectangle));
 
-                        textBox_3.setText("");
-                    });
+                            textBox_3.setText("");
+                        });
 
-                    textBox_2.setOnFocusChangeListener((v, hasFocus) -> {
-                        if(!textBox_2.getText().toString().equals("")){
-                            textBox_2.setEnabled(false);
-                            enterBut_2.setEnabled(false);
+                        textBox_2.setOnFocusChangeListener((v, hasFocus) -> {
+                            if(!textBox_2.getText().toString().equals("")){
+                                textBox_2.setEnabled(false);
+                                enterBut_2.setEnabled(false);
 
-                            isSeged_3 = false;
-                        }
-                    });
+                                isSeged_3 = false;
+                            }
+                        });
 
-                    textBox_2.setOnKeyListener((v, keyCode, event) -> {
+                        textBox_2.setOnKeyListener((v, keyCode, event) -> {
 
-                        if(keyCode == KeyEvent.KEYCODE_ENTER){
-                            if(event.getAction() == KeyEvent.ACTION_UP){
+                            if(keyCode == KeyEvent.KEYCODE_ENTER){
+                                if(event.getAction() == KeyEvent.ACTION_UP){
 
-                                if(!textBox_2.getText().toString().equals("")){
-                                    constraint_3.setVisibility(View.VISIBLE);
-                                    constraint_2.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.cardview_green_background));
+                                    if(!textBox_2.getText().toString().equals("")){
+                                        constraint_3.setVisibility(View.VISIBLE);
+                                        constraint_2.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.cardview_green_background));
 
-                                    textBox_2.setTextColor(Color.parseColor(disableColor));
+                                        textBox_2.setTextColor(Color.parseColor(disableColor));
 
-                                    enterBut_2.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.disable_button_background_rectangle));
+                                        enterBut_2.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.disable_button_background_rectangle));
 
-                                    textBox_3.setText("");
+                                        textBox_3.setText("");
+                                    }
                                 }
                             }
-                        }
 
-                        return false;
-                    });
+                            return false;
+                        });
+                    }
+
                 }
 
                 @Override public void afterTextChanged(Editable s) {
@@ -286,16 +287,20 @@ public class RecycledMaterialCreationView extends AppCompatActivity {
                             return false;
                         });
 
-                        addBut.setOnClickListener(v -> {
-                            Intent intent = new Intent();
+                        addBut.setOnFocusChangeListener((view, hasFocus) -> {
+                            if(hasFocus){
+                                addBut.setOnClickListener(v -> {
+                                    Intent intent = new Intent();
 
-                            intent.putExtra("typeRecMatTextBox", textBox_1.getText().toString());
-                            intent.putExtra("storageBoxIdentifierTextBox2", textBox_2.getText().toString());
-                            intent.putExtra("massDataTextBox2", textBox_3.getText().toString());
+                                    intent.putExtra("typeRecMatTextBox", textBox_1.getText().toString());
+                                    intent.putExtra("storageBoxIdentifierTextBox2", textBox_2.getText().toString());
+                                    intent.putExtra("massDataTextBox2", textBox_3.getText().toString());
 
-                            setResult(1, intent);
+                                    setResult(1, intent);
 
-                            RecycledMaterialCreationView.super.onBackPressed();
+                                    RecycledMaterialCreationView.super.onBackPressed();
+                                });
+                            }
                         });
                     }
                 }

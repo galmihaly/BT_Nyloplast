@@ -7,7 +7,9 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -17,9 +19,13 @@ import android.util.Log;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
+import java.util.Random;
 
 import hu.logcontrol.wasteprogram.adapters.RawMaterialAdapter;
 import hu.logcontrol.wasteprogram.enums.ActivityEnums;
@@ -39,10 +45,14 @@ public class ModesOne extends AppCompatActivity implements IModesOneView {
     private ImageButton backButton;
     private ImageButton saveButton;
 
-    private RecyclerView recycleViewModesOneRV;
-
     private ConstraintLayout mainModesOneCL;
 
+    private RecyclerView recycleViewModesOneRV;
+    private SwipeRefreshLayout swipeRefreshLayout;
+    private SwipeRefreshLayout.OnRefreshListener onRefreshListener;
+    private boolean isHaveToClearList = false;
+
+    private RawMaterialAdapter rawMaterialAdapter;
     private List<RawMaterial> rawMaterialList;
 
     private final ActivityResultLauncher<Intent> activityResultLauncher = registerForActivityResult(
@@ -61,14 +71,6 @@ public class ModesOne extends AppCompatActivity implements IModesOneView {
                     programPresenter.addRawMaterialToAdapterList(rawMaterial);
                     hideNavigationBar();
                 }
-
-//                if(result.getResultCode() == Activity.RESULT_OK){
-//                    Intent intent = result.getData();
-//                    if(intent == null) return;
-//
-//                    programPresenter.createFileFromRawMaterialList(intent.getData());
-//                    hideNavigationBar();
-//                }
             }
     );
 
@@ -84,8 +86,6 @@ public class ModesOne extends AppCompatActivity implements IModesOneView {
         rawMaterialList = LocalRawMaterialsStorage.getInstance().getRawMaterialList();
     }
 
-
-
     @Override
     protected void onResume() {
         super.onResume();
@@ -98,33 +98,51 @@ public class ModesOne extends AppCompatActivity implements IModesOneView {
             });
         }
 
-        if(saveButton != null && rawMaterialList != null){
-            if(rawMaterialList.size() > 0){
-                settingButton(EditButtonEnums.SAVE_BUTTON_ENABLED);
-
-                saveButton.setOnClickListener(view -> {
-                    //programPresenter.openActivityByEnum(ActivityEnums.FOLDERPICKER_ACTIVITY);
-                    programPresenter.createFileFromRawMaterialList();
-                });
-            }
-        }
-
         if(programPresenter != null){
             if(addButton != null){
                 addButton.setOnClickListener(view -> {
                     programPresenter.openActivityByEnum(ActivityEnums.RAW_MATERIAL_CREATION_ACTIVITY);
                 });
             }
+
             if(backButton != null){
                 backButton.setOnClickListener(view -> {
                     programPresenter.openActivityByEnum(ActivityEnums.MAIN_ACTIVITY);
                 });
             }
+
+            if(saveButton != null){
+
+                int sizeOfRawMaterialList = LocalRawMaterialsStorage.getInstance().getRawMaterialListSize();
+
+                if(sizeOfRawMaterialList > 0){
+                    settingButton(EditButtonEnums.SAVE_BUTTON_ENABLED);
+
+                    saveButton.setOnClickListener(view -> {
+                        programPresenter.createFileFromRawMaterialList();
+                    });
+                }
+            }
         }
 
+        onRefreshListener = () -> {
+            if(isHaveToClearList){
+                rawMaterialAdapter.clearRawMaterialList();
+                settingButton(EditButtonEnums.SAVE_BUTTON_DISABLED);
+                isHaveToClearList = false;
+            }
 
+            rawMaterialList = LocalRawMaterialsStorage.getInstance().getRawMaterialList();
 
-        RawMaterialAdapter rawMaterialAdapter = new RawMaterialAdapter(getApplicationContext(), rawMaterialList, this);
+            for (int i = 0; i < rawMaterialList.size(); i++) {
+                Log.e("list", rawMaterialList.get(i).toString());
+            }
+
+            swipeRefreshLayout.setRefreshing(false);
+        };
+        swipeRefreshLayout.setOnRefreshListener(onRefreshListener);
+
+        rawMaterialAdapter = new RawMaterialAdapter(getApplicationContext(), rawMaterialList,  this);
         recycleViewModesOneRV.setAdapter(rawMaterialAdapter);
     }
 
@@ -157,6 +175,7 @@ public class ModesOne extends AppCompatActivity implements IModesOneView {
         recycleViewModesOneRV.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
 
         mainModesOneCL = findViewById(R.id.mainModesOneCL);
+        swipeRefreshLayout = findViewById(R.id.swipeRefresLayoutModesOneRV);
 
         hideNavigationBar();
     }
@@ -201,6 +220,22 @@ public class ModesOne extends AppCompatActivity implements IModesOneView {
     public void getMessageFromPresenter(String message) {
         if(message == null) return;
         new Handler(Looper.getMainLooper()).post(() -> { Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show(); });
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    @Override
+    public void clearRawMaterialList(String message) {
+        if(message == null) return;
+        if(swipeRefreshLayout == null) return;
+        if(onRefreshListener == null) return;
+
+        getMessageFromPresenter(message);
+
+        swipeRefreshLayout.post(() -> {
+            swipeRefreshLayout.setRefreshing(true);
+            isHaveToClearList = true;
+            onRefreshListener.onRefresh();
+        });
     }
 
     private void hideNavigationBar(){

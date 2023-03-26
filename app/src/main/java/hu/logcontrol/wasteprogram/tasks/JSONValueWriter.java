@@ -2,27 +2,19 @@ package hu.logcontrol.wasteprogram.tasks;
 
 import android.content.Context;
 import android.os.Message;
-import android.util.Log;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.lang.ref.WeakReference;
-import java.nio.charset.StandardCharsets;
 import java.util.concurrent.Callable;
 
 import hu.logcontrol.wasteprogram.enums.HandlerMessageIdentifiers;
 import hu.logcontrol.wasteprogram.helpers.Helper;
-import hu.logcontrol.wasteprogram.helpers.JSONFileReaderHelper;
+import hu.logcontrol.wasteprogram.helpers.JSONFileHelper;
 import hu.logcontrol.wasteprogram.taskmanager.CustomThreadPoolManager;
 
 public class JSONValueWriter implements Callable {
@@ -77,7 +69,7 @@ public class JSONValueWriter implements Callable {
 
             if(file.exists()){
 
-                JSONObject jsonObject = getJSONObjectFromJSONFile(context, FILE_NAME);
+                JSONObject jsonObject = JSONFileHelper.getJSONObject(context, FILE_NAME);
 
                 if(jsonObject != null) {
 
@@ -96,7 +88,7 @@ public class JSONValueWriter implements Callable {
 
                     fileWriter = new FileWriter(file);
                     bufferedWriter = new BufferedWriter(fileWriter);
-                    bufferedWriter.write(JSONFileReaderHelper.formatJSONObjectString(jsonObject.toString()));
+                    bufferedWriter.write(JSONFileHelper.formatJSONObjectString(jsonObject.toString()));
                 }
             }
         }
@@ -116,34 +108,6 @@ public class JSONValueWriter implements Callable {
         }
 
         return null;
-    }
-
-    public static JSONObject getJSONObjectFromJSONFile(Context context, String fileName){
-
-        JSONObject result = null;
-        String s;
-        FileInputStream fileInputStream;
-
-        try {
-
-            File file = new File(context.getApplicationContext().getFilesDir() + File.separator + fileName);
-            if(file.exists()){
-                fileInputStream = new FileInputStream(file);
-                InputStreamReader isr = new InputStreamReader(fileInputStream);
-                BufferedReader br = new BufferedReader(isr);
-                StringBuilder sb = new StringBuilder();
-
-                while((s = br.readLine()) != null) sb.append(s);
-
-                result = new JSONObject(sb.toString());
-            }
-
-        } catch (IOException | JSONException ex) {
-            ex.printStackTrace();
-            return null;
-        }
-
-        return result;
     }
 
     private void sendMessageToPresenterHandler(JSONWriterEnums jsonWriterEnum){

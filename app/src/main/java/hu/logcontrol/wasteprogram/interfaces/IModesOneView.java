@@ -12,4 +12,5 @@ public interface IModesOneView {
     void openActivityByIntent(Intent intent);
     void settingButton(EditButtonEnums editButtonEnum);
     void getMessageFromPresenter(String message);
+    void clearRawMaterialList(String message);
 }

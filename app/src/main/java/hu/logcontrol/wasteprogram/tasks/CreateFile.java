@@ -3,8 +3,6 @@ package hu.logcontrol.wasteprogram.tasks;
 import android.content.Context;
 import android.os.Message;
 
-import androidx.documentfile.provider.DocumentFile;
-
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
@@ -15,7 +13,7 @@ import java.util.concurrent.Callable;
 
 import hu.logcontrol.wasteprogram.enums.HandlerMessageIdentifiers;
 import hu.logcontrol.wasteprogram.helpers.Helper;
-import hu.logcontrol.wasteprogram.helpers.JSONFileReaderHelper;
+import hu.logcontrol.wasteprogram.helpers.JSONFileHelper;
 import hu.logcontrol.wasteprogram.logger.ApplicationLogger;
 import hu.logcontrol.wasteprogram.models.LocalRawMaterialTypeMassesStorage;
 import hu.logcontrol.wasteprogram.models.LocalRawMaterialsStorage;
@@ -43,9 +41,7 @@ public class CreateFile implements Callable {
     private String fileName;
 
     private FileOutputStream fos;
-    private DocumentFile documentFile;
-    private FileWriter writer = null;
-
+    private FileWriter writer;
     private File file;
 
     private LocalRawMaterialsStorage localRawMatStorage;
@@ -77,19 +73,24 @@ public class CreateFile implements Callable {
 
                     fileName = ApplicationLogger.getDateTimeString() + "_RawMaterialList" + "." + fileExtension;
                     file = new File(getPathFromJSONFile() + File.separator + fileName);
-                    fos = new FileOutputStream(file);
 
-                    if(rawMaterialList != null) {
-
-                        writer = new FileWriter(fos.getFD());
-                        writer.write(header + "\n\n");
-                        for (int i = 0; i < rawMaterialList.size(); i++) {
-                            writer.write(rawMaterialList.get(i).toString() + "\n");
-                        }
-                        writer.flush();
+                    if(!file.exists()){
+                        file.createNewFile();
                     }
 
-                    //localRawMatStorage.clearRawMaterialList();
+                    if (file.exists()){
+                        fos = new FileOutputStream(file);
+
+                        if(rawMaterialList != null) {
+
+                            writer = new FileWriter(fos.getFD());
+                            writer.write(header + "\n\n");
+                            for (int i = 0; i < rawMaterialList.size(); i++) {
+                                writer.write(rawMaterialList.get(i).toString() + "\n");
+                            }
+                            writer.flush();
+                        }
+                    }
 
                     break;
                 }
@@ -100,19 +101,25 @@ public class CreateFile implements Callable {
 
                     fileName = ApplicationLogger.getDateTimeString() + "_RawMaterialTypeMassList" + "." + fileExtension;
                     file = new File(getPathFromJSONFile() + File.separator + fileName);
-                    fos = new FileOutputStream(file);
 
-                    if(rawMaterialTypeMassList != null) {
-
-                        writer = new FileWriter(fos.getFD());
-                        writer.write(header + "\n\n");
-                        for (int i = 0; i < rawMaterialTypeMassList.size(); i++) {
-                            writer.write(rawMaterialTypeMassList.get(i).toString() + "\n");
-                        }
-                        writer.flush();
+                    if(!file.exists()){
+                        file.createNewFile();
                     }
 
-                    //localTypeMassStorage.clearRawMaterialTypeMassList();
+                    if(file.exists()) {
+                        fos = new FileOutputStream(file);
+
+                        if(rawMaterialTypeMassList != null) {
+
+                            writer = new FileWriter(fos.getFD());
+                            writer.write(header + "\n\n");
+                            for (int i = 0; i < rawMaterialTypeMassList.size(); i++) {
+                                writer.write(rawMaterialTypeMassList.get(i).toString() + "\n");
+                            }
+                            writer.flush();
+                        }
+                    }
+
                     break;
                 }
                 case CREATE_RECYCLEDMATERIAL:{
@@ -122,19 +129,25 @@ public class CreateFile implements Callable {
 
                     fileName = ApplicationLogger.getDateTimeString() + "_RecycledMaterialList" + "." + fileExtension;
                     file = new File(getPathFromJSONFile() + File.separator + fileName);
-                    fos = new FileOutputStream(file);
 
-                    if(rawMaterialTypeMassList != null) {
-
-                        writer = new FileWriter(fos.getFD());
-                        writer.write(header + "\n\n");
-                        for (int i = 0; i < rawMaterialTypeMassList.size(); i++) {
-                            writer.write(rawMaterialTypeMassList.get(i).toString() + "\n");
-                        }
-                        writer.flush();
+                    if(!file.exists()){
+                        file.createNewFile();
                     }
 
-                    //localRecMatsStorage.clearRecycledMaterialList();
+                    if(file.exists()) {
+                        fos = new FileOutputStream(file);
+
+                        if(recycledMaterialList != null) {
+
+                            writer = new FileWriter(fos.getFD());
+                            writer.write(header + "\n\n");
+                            for (int i = 0; i < recycledMaterialList.size(); i++) {
+                                writer.write(recycledMaterialList.get(i).toString() + "\n");
+                            }
+                            writer.flush();
+                        }
+                    }
+
                     break;
                 }
             }
@@ -159,7 +172,7 @@ public class CreateFile implements Callable {
     }
 
     private String getPathFromJSONFile(){
-        return JSONFileReaderHelper.getStringFromJSONFile(context, "values.json", "LocalSavePath");
+        return JSONFileHelper.getString(context, "values.json", "LocalSavePath");
     }
 
     private void sendMessageToPresenterHandler(CreateFileEnums createFileEnum){
@@ -187,7 +200,7 @@ public class CreateFile implements Callable {
     private enum  CreateFileEnums{
         CREATEFILE_THREAD_INTERRUPTED,
         CREATEFILE_IOEXCEPTION,
-        CREATEFILE_SUCCES
+        CREATEFILE_SUCCES,
     }
 
     public enum RunModes{

@@ -22,12 +22,15 @@ public interface IProgramPresenter {
     void addRecycledMaterialToAdapterList(RecycledMaterial recycledMaterial);
 
     void createFileFromRawMaterialList();
-    void createFileFromRawMaterialTypeMassList(Uri uri);
-    void createFileFromRecycledMaterialTypeMassList(Uri uri);
+    void createFileFromRawMaterialTypeMassList();
+    void createFileFromRecycledMaterialTypeMassList();
 
     void setSaveButtonState(EditButtonEnums editButtonEnum);
     void sendMessageToView(String message);
 
     void saveBooleanValueToJSONFile(String jsonIdValue, boolean value);
     void saveStringValueToJSONFile(String jsonIdValue, String value);
+
+    void clearRawMaterialList(String message);
+    void initBaseJSONFile(String fileName);
 }

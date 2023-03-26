@@ -7,17 +7,20 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
 import java.util.List;
 
+import hu.logcontrol.wasteprogram.adapters.RawMaterialAdapter;
 import hu.logcontrol.wasteprogram.adapters.RawMaterialTypeMassAdapter;
 import hu.logcontrol.wasteprogram.enums.ActivityEnums;
 import hu.logcontrol.wasteprogram.enums.EditButtonEnums;
@@ -25,19 +28,27 @@ import hu.logcontrol.wasteprogram.helpers.Helper;
 import hu.logcontrol.wasteprogram.interfaces.IModesTwoView;
 import hu.logcontrol.wasteprogram.logger.ApplicationLogger;
 import hu.logcontrol.wasteprogram.models.LocalRawMaterialTypeMassesStorage;
+import hu.logcontrol.wasteprogram.models.LocalRawMaterialsStorage;
+import hu.logcontrol.wasteprogram.models.LocalRecycLedMaterialsStorage;
 import hu.logcontrol.wasteprogram.models.RawMaterialTypeMass;
 import hu.logcontrol.wasteprogram.presenters.ProgramPresenter;
 
 public class ModesTwo extends AppCompatActivity implements IModesTwoView {
 
-    private ConstraintLayout mainModesTwoCL;
+    private ProgramPresenter programPresenter;
 
     private ImageButton addButton_2;
     private  ImageButton saveButton_2;
     private ImageButton backButton_2;
-    private RecyclerView recycleViewModesTwoRV;
 
-    private ProgramPresenter programPresenter;
+    private ConstraintLayout mainModesTwoCL;
+
+    private RecyclerView recycleViewModesTwoRV;
+    private SwipeRefreshLayout swipeRefreshLayout;
+    private SwipeRefreshLayout.OnRefreshListener onRefreshListener;
+    private boolean isHaveToClearList = false;
+
+    private RawMaterialTypeMassAdapter rawMaterialTypeMassAdapter;
     private List<RawMaterialTypeMass> rawMaterialTypeMassList;
 
     private final ActivityResultLauncher<Intent> activityResultLauncher = registerForActivityResult(
@@ -56,14 +67,6 @@ public class ModesTwo extends AppCompatActivity implements IModesTwoView {
                     RawMaterialTypeMass rawMaterialTypeMass = new RawMaterialTypeMass(ApplicationLogger.getUTCDateTimeString(),typeMassCountTextBox, typeMassTypeTextBox, storageBoxIdentifierTextBox, massDataTextBox);
 
                     programPresenter.addRawMaterialTypeMassToAdapterList(rawMaterialTypeMass);
-                    hideNavigationBar();
-                }
-
-                if(result.getResultCode() == Activity.RESULT_OK){
-                    Intent intent = result.getData();
-                    if(intent == null) return;
-
-                    programPresenter.createFileFromRawMaterialTypeMassList(intent.getData());
                     hideNavigationBar();
                 }
             }
@@ -94,11 +97,13 @@ public class ModesTwo extends AppCompatActivity implements IModesTwoView {
         }
 
         if(saveButton_2 != null && rawMaterialTypeMassList != null){
-            if(rawMaterialTypeMassList.size() > 0){
+            int sizeOfRawMaterialList = LocalRawMaterialTypeMassesStorage.getInstance().getRawMaterialTypeMassListSize();
+
+            if(sizeOfRawMaterialList > 0){
                 settingButton(EditButtonEnums.SAVE_BUTTON_ENABLED);
 
                 saveButton_2.setOnClickListener(view -> {
-                    programPresenter.openActivityByEnum(ActivityEnums.FOLDERPICKER_ACTIVITY);
+                    programPresenter.createFileFromRawMaterialTypeMassList();
                 });
             }
         }
@@ -116,7 +121,24 @@ public class ModesTwo extends AppCompatActivity implements IModesTwoView {
             }
         }
 
-        RawMaterialTypeMassAdapter rawMaterialTypeMassAdapter = new RawMaterialTypeMassAdapter(getApplicationContext(), rawMaterialTypeMassList, this);
+        onRefreshListener = () -> {
+            if(isHaveToClearList){
+                rawMaterialTypeMassAdapter.clearRawMaterialList();
+                settingButton(EditButtonEnums.SAVE_BUTTON_DISABLED);
+                isHaveToClearList = false;
+            }
+
+            rawMaterialTypeMassList = LocalRawMaterialTypeMassesStorage.getInstance().getRawMaterialTypeMassList();
+
+            for (int i = 0; i < rawMaterialTypeMassList.size(); i++) {
+                Log.e("list", rawMaterialTypeMassList.get(i).toString());
+            }
+
+            swipeRefreshLayout.setRefreshing(false);
+        };
+        swipeRefreshLayout.setOnRefreshListener(onRefreshListener);
+
+        rawMaterialTypeMassAdapter = new RawMaterialTypeMassAdapter(getApplicationContext(), rawMaterialTypeMassList, this);
         recycleViewModesTwoRV.setAdapter(rawMaterialTypeMassAdapter);
     }
 
@@ -179,6 +201,21 @@ public class ModesTwo extends AppCompatActivity implements IModesTwoView {
         new Handler(Looper.getMainLooper()).post(() -> { Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show(); });
     }
 
+    @Override
+    public void clearRawMaterialTypeMassList(String message) {
+        if(message == null) return;
+        if(swipeRefreshLayout == null) return;
+        if(onRefreshListener == null) return;
+
+        getMessageFromPresenter(message);
+
+        swipeRefreshLayout.post(() -> {
+            swipeRefreshLayout.setRefreshing(true);
+            isHaveToClearList = true;
+            onRefreshListener.onRefresh();
+        });
+    }
+
     private void initView(){
         addButton_2 = findViewById(R.id.addButton_2);
         backButton_2 = findViewById(R.id.backButton_2);
@@ -190,6 +227,7 @@ public class ModesTwo extends AppCompatActivity implements IModesTwoView {
         recycleViewModesTwoRV.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
 
         mainModesTwoCL = findViewById(R.id.mainModesTwoCL);
+        swipeRefreshLayout = findViewById(R.id.swipeRefresLayoutModesTwoRV);
 
         hideNavigationBar();
     }

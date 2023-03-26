@@ -57,27 +57,30 @@ public class RawMaterialTypeMassAdapter extends RecyclerView.Adapter<RawMaterial
 
         if(rawMaterialTypeMassList != null){
             if(rawMaterialTypeMassList.size() != 0){
+                if(holder.getAdapterPosition() != RecyclerView.NO_POSITION){
+                    holder.getNumberOfItem_2().setText(position + 1 + ".");
+                    holder.getRawMaterialWasteCodeInput().setText(rawMaterialTypeMassList.get(position).getWasteCode());
+                    holder.getRawMaterialTypeInput_2().setText(rawMaterialTypeMassList.get(position).getMaterialType());
+                    holder.getStorageBoxIdentifierInput().setText(rawMaterialTypeMassList.get(position).getStorageBoxIdentifier());
+                    holder.getMassDataInput().setText(rawMaterialTypeMassList.get(position).getMassData());
 
-                holder.getNumberOfItem_2().setText(position + 1 + ".");
-                holder.getRawMaterialWasteCodeInput().setText(rawMaterialTypeMassList.get(position).getWasteCode());
-                holder.getRawMaterialTypeInput_2().setText(rawMaterialTypeMassList.get(position).getMaterialType());
-                holder.getStorageBoxIdentifierInput().setText(rawMaterialTypeMassList.get(position).getStorageBoxIdentifier());
-                holder.getMassDataInput().setText(rawMaterialTypeMassList.get(position).getMassData());
-
-                if(rawMaterialTypeMassList.size() == preferences.getIntValueByKey("listvalue")){
-                    modesTwoWeakReference.get().settingButton(EditButtonEnums.ADD_BUTTON_DISABLED);
-                }
-                else {
-                    modesTwoWeakReference.get().settingButton(EditButtonEnums.ADD_BUTTON_ENABLED);
+                    if(rawMaterialTypeMassList.size() == preferences.getIntValueByKey("listvalue")){
+                        modesTwoWeakReference.get().settingButton(EditButtonEnums.ADD_BUTTON_DISABLED);
+                    }
+                    else {
+                        modesTwoWeakReference.get().settingButton(EditButtonEnums.ADD_BUTTON_ENABLED);
+                    }
                 }
             }
 
             holder.getDeleteItemButton_2().setOnClickListener(view -> {
-                rawMaterialTypeMassList.remove(position);
-                notifyDataSetChanged();
+                if(rawMaterialTypeMassList.size() > 0){
+                    rawMaterialTypeMassList.remove(position);
+                    notifyItemChanged(position);
 
-                if(rawMaterialTypeMassList.size() == 0){
-                    modesTwoWeakReference.get().settingButton(EditButtonEnums.SAVE_BUTTON_DISABLED);
+                    if(rawMaterialTypeMassList.size() == 0){
+                        modesTwoWeakReference.get().settingButton(EditButtonEnums.SAVE_BUTTON_DISABLED);
+                    }
                 }
             });
         }
@@ -89,6 +92,13 @@ public class RawMaterialTypeMassAdapter extends RecyclerView.Adapter<RawMaterial
     @Override
     public int getItemCount() {
         return rawMaterialTypeMassList.size();
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    public void clearRawMaterialList(){
+        if(rawMaterialTypeMassList == null) return;
+        rawMaterialTypeMassList.clear();
+        notifyDataSetChanged();
     }
 
     public static class RawMaterialTypeMassViewHolder extends RecyclerView.ViewHolder {

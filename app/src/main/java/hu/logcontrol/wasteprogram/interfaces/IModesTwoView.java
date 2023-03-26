@@ -8,4 +8,5 @@ public interface IModesTwoView {
     void openActivityByIntent(Intent intent);
     void settingButton(EditButtonEnums editButtonEnum);
     void getMessageFromPresenter(String message);
+    void clearRawMaterialTypeMassList(String message);
 }

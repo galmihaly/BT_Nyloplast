@@ -16,6 +16,7 @@ import android.widget.Toast;
 
 import hu.logcontrol.wasteprogram.enums.ActivityEnums;
 import hu.logcontrol.wasteprogram.helpers.Helper;
+import hu.logcontrol.wasteprogram.helpers.JSONFileHelper;
 import hu.logcontrol.wasteprogram.interfaces.IMainView;
 import hu.logcontrol.wasteprogram.presenters.ProgramPresenter;
 
@@ -38,6 +39,10 @@ public class MainActivity extends AppCompatActivity implements IMainView {
         startWrite();
 
         programPresenter = new ProgramPresenter(this, getApplicationContext());
+
+        if(!JSONFileHelper.isExist(getApplicationContext(), "values.json")) {
+            programPresenter.initBaseJSONFile("values.json");
+        }
     }
 
     @Override

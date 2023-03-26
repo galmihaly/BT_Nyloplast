@@ -58,24 +58,24 @@ public class RawMaterialAdapter extends RecyclerView.Adapter<RawMaterialAdapter.
 
         if(rawMaterialList != null){
             if(rawMaterialList.size() != 0){
-                holder.getNumberOfItem().setText(position + 1 + ".");
-                holder.getRawMaterialTypeInput().setText(rawMaterialList.get(position).getMaterialType());
-                holder.getRawMaterialCountInput().setText(rawMaterialList.get(position).getDoseNumber());
+                if(holder.getAdapterPosition() != RecyclerView.NO_POSITION){
+                    holder.getNumberOfItem().setText(position + 1 + ".");
+                    holder.getRawMaterialTypeInput().setText(rawMaterialList.get(position).getMaterialType());
+                    holder.getRawMaterialCountInput().setText(rawMaterialList.get(position).getDoseNumber());
 
-                if(rawMaterialList.size() == preferences.getIntValueByKey("listvalue")){
-                    Log.e("adapter", "beléptem");
-                    modesOneWeakReference.get().settingButton(EditButtonEnums.ADD_BUTTON_DISABLED);
-                }
-                else {
-                    Log.e("adapter", "nem beléptem");
-                    modesOneWeakReference.get().settingButton(EditButtonEnums.ADD_BUTTON_ENABLED);
+                    if(rawMaterialList.size() == preferences.getIntValueByKey("listvalue")){
+                        modesOneWeakReference.get().settingButton(EditButtonEnums.ADD_BUTTON_DISABLED);
+                    }
+                    else {
+                        modesOneWeakReference.get().settingButton(EditButtonEnums.ADD_BUTTON_ENABLED);
+                    }
                 }
             }
 
             holder.getDeleteItemButton().setOnClickListener(view -> {
                 if(rawMaterialList.size() > 0){
                     rawMaterialList.remove(position);
-                    notifyDataSetChanged();
+                    notifyItemChanged(position);
 
                     if(rawMaterialList.size() == 0){
                         modesOneWeakReference.get().settingButton(EditButtonEnums.SAVE_BUTTON_DISABLED);
@@ -92,6 +92,13 @@ public class RawMaterialAdapter extends RecyclerView.Adapter<RawMaterialAdapter.
     public int getItemCount() {
         if(rawMaterialList == null) return -1;
         return rawMaterialList.size();
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    public void clearRawMaterialList(){
+        if(rawMaterialList == null) return;
+        rawMaterialList.clear();
+        notifyDataSetChanged();
     }
 
     public static class RawMaterialItemViewHolder extends RecyclerView.ViewHolder {

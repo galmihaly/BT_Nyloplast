@@ -20,5 +20,5 @@ public class LocalRawMaterialTypeMassesStorage {
         return rawMaterialTypeMassList;
     }
 
-    public void clearRawMaterialTypeMassList() { rawMaterialTypeMassList.clear(); };
+    public int getRawMaterialTypeMassListSize() { return rawMaterialTypeMassList.size(); }
 }

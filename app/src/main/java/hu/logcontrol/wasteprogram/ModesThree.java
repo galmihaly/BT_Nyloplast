@@ -7,12 +7,14 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
@@ -24,20 +26,27 @@ import hu.logcontrol.wasteprogram.enums.EditButtonEnums;
 import hu.logcontrol.wasteprogram.helpers.Helper;
 import hu.logcontrol.wasteprogram.interfaces.IModesThreeView;
 import hu.logcontrol.wasteprogram.logger.ApplicationLogger;
+import hu.logcontrol.wasteprogram.models.LocalRawMaterialsStorage;
 import hu.logcontrol.wasteprogram.models.LocalRecycLedMaterialsStorage;
 import hu.logcontrol.wasteprogram.models.RecycledMaterial;
 import hu.logcontrol.wasteprogram.presenters.ProgramPresenter;
 
 public class ModesThree extends AppCompatActivity implements IModesThreeView {
 
-    private ConstraintLayout mainModesThreeCL;
+    private ProgramPresenter programPresenter;
 
     private ImageButton addButton_3;
     private  ImageButton saveButton_3;
     private ImageButton backButton_3;
-    private RecyclerView recycleViewModesThreeRV;
 
-    private ProgramPresenter programPresenter;
+    private ConstraintLayout mainModesThreeCL;
+
+    private RecyclerView recycleViewModesThreeRV;
+    private SwipeRefreshLayout swipeRefreshLayout;
+    private SwipeRefreshLayout.OnRefreshListener onRefreshListener;
+    private boolean isHaveToClearList = false;
+
+    private RecycledMaterialAdapter recycledMaterialAdapter;
     private List<RecycledMaterial> recycledMaterialList;
 
     private final ActivityResultLauncher<Intent> activityResultLauncher = registerForActivityResult(
@@ -55,14 +64,6 @@ public class ModesThree extends AppCompatActivity implements IModesThreeView {
                     RecycledMaterial recycledMaterial = new RecycledMaterial(ApplicationLogger.getUTCDateTimeString(),typeRecMatTextBox, storageBoxIdentifierTextBox2, massDataTextBox2);
 
                     programPresenter.addRecycledMaterialToAdapterList(recycledMaterial);
-                    hideNavigationBar();
-                }
-
-                if(result.getResultCode() == Activity.RESULT_OK){
-                    Intent intent = result.getData();
-                    if(intent == null) return;
-
-                    programPresenter.createFileFromRecycledMaterialTypeMassList(intent.getData());
                     hideNavigationBar();
                 }
             }
@@ -93,11 +94,13 @@ public class ModesThree extends AppCompatActivity implements IModesThreeView {
         }
 
         if(saveButton_3 != null && recycledMaterialList != null){
-            if(recycledMaterialList.size() > 0){
+            int sizeOfRawMaterialList = LocalRecycLedMaterialsStorage.getInstance().getRecycLedMaterialListSize();
+
+            if(sizeOfRawMaterialList > 0){
                 settingButton(EditButtonEnums.SAVE_BUTTON_ENABLED);
 
                 saveButton_3.setOnClickListener(view -> {
-                    programPresenter.openActivityByEnum(ActivityEnums.FOLDERPICKER_ACTIVITY);
+                    programPresenter.createFileFromRecycledMaterialTypeMassList();
                 });
             }
         }
@@ -115,7 +118,25 @@ public class ModesThree extends AppCompatActivity implements IModesThreeView {
             }
         }
 
-        RecycledMaterialAdapter recycledMaterialAdapter = new RecycledMaterialAdapter(getApplicationContext(), recycledMaterialList, this);
+        onRefreshListener = () -> {
+            if(isHaveToClearList){
+                recycledMaterialAdapter.clearRawMaterialList();
+                settingButton(EditButtonEnums.SAVE_BUTTON_DISABLED);
+                isHaveToClearList = false;
+            }
+
+            recycledMaterialList = LocalRecycLedMaterialsStorage.getInstance().getRecycledMaterialList();
+
+            for (int i = 0; i < recycledMaterialList.size(); i++) {
+                Log.e("list", recycledMaterialList.get(i).toString());
+            }
+
+            swipeRefreshLayout.setRefreshing(false);
+        };
+        swipeRefreshLayout.setOnRefreshListener(onRefreshListener);
+
+
+        recycledMaterialAdapter = new RecycledMaterialAdapter(getApplicationContext(), recycledMaterialList, this);
         recycleViewModesThreeRV.setAdapter(recycledMaterialAdapter);
     }
 
@@ -178,6 +199,21 @@ public class ModesThree extends AppCompatActivity implements IModesThreeView {
         new Handler(Looper.getMainLooper()).post(() -> { Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show(); });
     }
 
+    @Override
+    public void clearRecycledMaterialList(String message) {
+        if(message == null) return;
+        if(swipeRefreshLayout == null) return;
+        if(onRefreshListener == null) return;
+
+        getMessageFromPresenter(message);
+
+        swipeRefreshLayout.post(() -> {
+            swipeRefreshLayout.setRefreshing(true);
+            isHaveToClearList = true;
+            onRefreshListener.onRefresh();
+        });
+    }
+
     private void initView(){
         addButton_3 = findViewById(R.id.addButton_3);
         backButton_3 = findViewById(R.id.backButton_3);
@@ -189,6 +225,7 @@ public class ModesThree extends AppCompatActivity implements IModesThreeView {
         recycleViewModesThreeRV.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
 
         mainModesThreeCL = findViewById(R.id.mainModesThreeCL);
+        swipeRefreshLayout = findViewById(R.id.swipeRefresLayoutModesThreeRV);
 
         hideNavigationBar();
     }

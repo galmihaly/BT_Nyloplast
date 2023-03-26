@@ -1,5 +1,6 @@
 package hu.logcontrol.wasteprogram.adapters;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Color;
 import android.util.Log;
@@ -57,25 +58,29 @@ public class RecycledMaterialAdapter extends RecyclerView.Adapter<RecycledMateri
         if(recycledMaterialList != null){
             if(recycledMaterialList.size() != 0){
 
-                holder.getNumberOfItem_3().setText(position + 1 + ".");
-                holder.getRawMaterialTypeInput_3().setText(recycledMaterialList.get(position).getMaterialType());
-                holder.getStorageBoxIdentifierInput_3().setText(recycledMaterialList.get(position).getStorageBoxIdentifier());
-                holder.getMassDataInput_3().setText(recycledMaterialList.get(position).getMassData());
+                if(holder.getAdapterPosition() != RecyclerView.NO_POSITION){
+                    holder.getNumberOfItem_3().setText(position + 1 + ".");
+                    holder.getRawMaterialTypeInput_3().setText(recycledMaterialList.get(position).getMaterialType());
+                    holder.getStorageBoxIdentifierInput_3().setText(recycledMaterialList.get(position).getStorageBoxIdentifier());
+                    holder.getMassDataInput_3().setText(recycledMaterialList.get(position).getMassData());
 
-                if(recycledMaterialList.size() == preferences.getIntValueByKey("listvalue")){
-                    modesThreeWeakReference.get().settingButton(EditButtonEnums.ADD_BUTTON_DISABLED);
-                }
-                else {
-                    modesThreeWeakReference.get().settingButton(EditButtonEnums.ADD_BUTTON_ENABLED);
+                    if(recycledMaterialList.size() == preferences.getIntValueByKey("listvalue")){
+                        modesThreeWeakReference.get().settingButton(EditButtonEnums.ADD_BUTTON_DISABLED);
+                    }
+                    else {
+                        modesThreeWeakReference.get().settingButton(EditButtonEnums.ADD_BUTTON_ENABLED);
+                    }
                 }
             }
 
             holder.getDeleteItemButton_3().setOnClickListener(view -> {
-                recycledMaterialList.remove(position);
-                notifyDataSetChanged();
+                if(recycledMaterialList.size() > 0){
+                    recycledMaterialList.remove(position);
+                    notifyItemChanged(position);
 
-                if(recycledMaterialList.size() == 0){
-                    modesThreeWeakReference.get().settingButton(EditButtonEnums.SAVE_BUTTON_DISABLED);
+                    if(recycledMaterialList.size() == 0){
+                        modesThreeWeakReference.get().settingButton(EditButtonEnums.SAVE_BUTTON_DISABLED);
+                    }
                 }
             });
         }
@@ -87,6 +92,13 @@ public class RecycledMaterialAdapter extends RecyclerView.Adapter<RecycledMateri
     @Override
     public int getItemCount() {
         return recycledMaterialList.size();
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    public void clearRawMaterialList(){
+        if(recycledMaterialList == null) return;
+        recycledMaterialList.clear();
+        notifyDataSetChanged();
     }
 
     public static class RecycledMaterialViewHolder extends RecyclerView.ViewHolder {

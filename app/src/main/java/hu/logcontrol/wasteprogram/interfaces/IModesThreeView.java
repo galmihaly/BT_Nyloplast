@@ -8,4 +8,5 @@ public interface IModesThreeView {
     void openActivityByIntent(Intent intent);
     void settingButton(EditButtonEnums editButtonEnum);
     void getMessageFromPresenter(String message);
+    void clearRecycledMaterialList(String message);
 }

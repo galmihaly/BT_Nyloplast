@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
+import android.util.Log;
 
 import java.lang.ref.WeakReference;
 
@@ -21,6 +22,7 @@ import hu.logcontrol.wasteprogram.SettingsActivity;
 import hu.logcontrol.wasteprogram.enums.ActivityEnums;
 import hu.logcontrol.wasteprogram.enums.EditButtonEnums;
 import hu.logcontrol.wasteprogram.enums.HandlerMessageIdentifiers;
+import hu.logcontrol.wasteprogram.helpers.JSONFileHelper;
 import hu.logcontrol.wasteprogram.interfaces.IModesOneView;
 import hu.logcontrol.wasteprogram.interfaces.IModesThreeView;
 import hu.logcontrol.wasteprogram.interfaces.IModesTwoView;
@@ -220,7 +222,7 @@ public class ProgramPresenter implements IProgramPresenter, PresenterThreadCallb
     }
 
     @Override
-    public void createFileFromRawMaterialTypeMassList(Uri uri) {
+    public void createFileFromRawMaterialTypeMassList() {
         try {
             ApplicationLogger.logging(LogLevel.INFORMATION, "A RawMaterial lista átmásolása csv fájlba elkezdődött.");
 
@@ -237,7 +239,7 @@ public class ProgramPresenter implements IProgramPresenter, PresenterThreadCallb
     }
 
     @Override
-    public void createFileFromRecycledMaterialTypeMassList(Uri uri) {
+    public void createFileFromRecycledMaterialTypeMassList() {
         try {
             ApplicationLogger.logging(LogLevel.INFORMATION, "A RecycledMaterial lista átmásolása csv fájlba elkezdődött.");
 
@@ -251,6 +253,11 @@ public class ProgramPresenter implements IProgramPresenter, PresenterThreadCallb
             e.printStackTrace();
             ApplicationLogger.logging(LogLevel.FATAL, e.getMessage());
         }
+    }
+
+    @Override
+    public void initBaseJSONFile(String localNewFileName) {
+        JSONFileHelper.initBaseJSONFile(context, "DefaultValues.json", localNewFileName);
     }
 
     @Override
@@ -306,6 +313,15 @@ public class ProgramPresenter implements IProgramPresenter, PresenterThreadCallb
     }
 
     @Override
+    public void clearRawMaterialList(String message) {
+        if(message == null) return;
+
+        if(iModesOneView != null) iModesOneView.clearRawMaterialList(message);
+        if(iModesTwoView != null) iModesTwoView.clearRawMaterialTypeMassList(message);
+        if(iModesThreeView != null) iModesThreeView.clearRecycledMaterialList(message);
+    }
+
+    @Override
     public void sendResultToPresenter(Message message) {
         if(programHandler == null) return;
         programHandler.handleMessage(message);
@@ -337,8 +353,7 @@ public class ProgramPresenter implements IProgramPresenter, PresenterThreadCallb
                 case HandlerMessageIdentifiers.TEXTFILE_ADD_TO_DIRECTORY_PATH_SUCCES:{
                     ApplicationLogger.logging(LogLevel.INFORMATION, getWeakReferenceNotification(msg));
 
-                    iProgramPresenterWeakReference.get().setSaveButtonState(EditButtonEnums.SAVE_BUTTON_DISABLED);
-                    iProgramPresenterWeakReference.get().sendMessageToView("A fájl létrehozása sikeres!");
+                    iProgramPresenterWeakReference.get().clearRawMaterialList("Sikeres mentés!");
                     break;
                 }
                 case HandlerMessageIdentifiers.WRITE_VAULE_SUCCES:{
