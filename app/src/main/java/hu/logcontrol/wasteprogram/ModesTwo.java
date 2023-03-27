@@ -129,11 +129,6 @@ public class ModesTwo extends AppCompatActivity implements IModesTwoView {
             }
 
             rawMaterialTypeMassList = LocalRawMaterialTypeMassesStorage.getInstance().getRawMaterialTypeMassList();
-
-            for (int i = 0; i < rawMaterialTypeMassList.size(); i++) {
-                Log.e("list", rawMaterialTypeMassList.get(i).toString());
-            }
-
             swipeRefreshLayout.setRefreshing(false);
         };
         swipeRefreshLayout.setOnRefreshListener(onRefreshListener);
