@@ -31,7 +31,7 @@ public class RecycledMaterial {
     }
 
     @Override
-    public String toString() { return String.format("%s;%s;%s;%s;%s", this.timeStamp, this.materialType, this.storageBoxIdentifier, this.massData); }
+    public String toString() { return String.format("%s;%s;%s;%s", this.timeStamp, this.materialType, this.storageBoxIdentifier, this.massData); }
 
     public static String getCSVHeader(){
         return "TimeStamp;MaterialType;StorageBoxIdentifier;MassData";

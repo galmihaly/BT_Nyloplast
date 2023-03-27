@@ -18,6 +18,7 @@ import android.widget.ImageButton;
 import android.widget.ScrollView;
 
 import hu.logcontrol.wasteprogram.helpers.Helper;
+import hu.logcontrol.wasteprogram.helpers.JSONFileHelper;
 
 public class RawMaterialTypeMassCreationView extends AppCompatActivity {
 
@@ -42,8 +43,6 @@ public class RawMaterialTypeMassCreationView extends AppCompatActivity {
     private ImageButton enterBut_3;
     private ImageButton enterBut_4;
 
-    private boolean isSeged_4 = false;
-
     private final String disableColor = "#B7C0C1";
     private final String enableColor = "#000000";
 
@@ -59,6 +58,7 @@ public class RawMaterialTypeMassCreationView extends AppCompatActivity {
         initTextWatcher();
 
         addBut.setFocusableInTouchMode(true);
+        isEnableBarcodeReaderMode = JSONFileHelper.getBoolean(getApplicationContext(), "values.json", "IsEnableBarcodeReaderMode");
     }
 
     private void initTextWatcher() {
@@ -110,12 +110,6 @@ public class RawMaterialTypeMassCreationView extends AppCompatActivity {
 
                             enterBut_1.setOnClickListener(v -> {
                                 setStateFirstEdittext();
-
-                                textBox_1.setEnabled(false);
-                                enterBut_1.setEnabled(false);
-
-                                if(!textBox_2.isFocused()) textBox_2.requestFocus();
-
                             });
 
 
@@ -123,26 +117,14 @@ public class RawMaterialTypeMassCreationView extends AppCompatActivity {
                             textBox_1.setOnKeyListener((v, keyCode, event) -> {
                                 if(keyCode == KeyEvent.KEYCODE_ENTER){
                                     if(event.getAction() == KeyEvent.ACTION_UP){
-                                        if(!textBox_1.getText().toString().equals("")){
-                                            setStateFirstEdittext();
-                                            textBox_1.setEnabled(false);
-                                            enterBut_1.setEnabled(false);
-                                            if(!textBox_2.isFocused()) textBox_2.requestFocus();
-                                        }
+                                        setStateFirstEdittext();
                                     }
                                 }
 
                                 if(isEnableBarcodeReaderMode){
                                     if(keyCode == KeyEvent.KEYCODE_BUTTON_R1){
                                         if(event.getAction() == KeyEvent.ACTION_UP){
-                                            if(!textBox_1.getText().toString().equals("")){
-                                                setStateFirstEdittext();
-
-                                                textBox_1.setEnabled(false);
-                                                enterBut_1.setEnabled(false);
-
-                                                if(!textBox_2.isFocused()) textBox_2.requestFocus();
-                                            }
+                                            setStateFirstEdittext();
                                         }
                                     }
                                 }
@@ -193,40 +175,20 @@ public class RawMaterialTypeMassCreationView extends AppCompatActivity {
 
                             enterBut_2.setOnClickListener(v -> {
                                 setStateSecondEdittext();
-
-                                textBox_2.setEnabled(false);
-                                enterBut_2.setEnabled(false);
-
-                                if(!textBox_3.isFocused()) textBox_3.requestFocus();
-
                             });
 
 
                             textBox_2.setOnKeyListener((v, keyCode, event) -> {
                                 if(keyCode == KeyEvent.KEYCODE_ENTER){
                                     if(event.getAction() == KeyEvent.ACTION_UP){
-                                        if(!textBox_2.getText().toString().equals("")){
-                                            setStateSecondEdittext();
-
-                                            textBox_2.setEnabled(false);
-                                            enterBut_2.setEnabled(false);
-
-                                            if(!textBox_3.isFocused()) textBox_3.requestFocus();
-                                        }
+                                        setStateSecondEdittext();
                                     }
                                 }
 
                                 if(isEnableBarcodeReaderMode){
                                     if(keyCode == KeyEvent.KEYCODE_BUTTON_R1){
                                         if(event.getAction() == KeyEvent.ACTION_UP){
-                                            if(!textBox_2.getText().toString().equals("")){
-                                                setStateSecondEdittext();
-
-                                                textBox_2.setEnabled(false);
-                                                enterBut_2.setEnabled(false);
-
-                                                if(!textBox_3.isFocused()) textBox_3.requestFocus();
-                                            }
+                                            setStateSecondEdittext();
                                         }
                                     }
                                 }
@@ -277,23 +239,13 @@ public class RawMaterialTypeMassCreationView extends AppCompatActivity {
 
                             enterBut_3.setOnClickListener(v -> {
                                 setStateThirdEdittext();
-
-                                textBox_3.setEnabled(false);
-                                enterBut_3.setEnabled(false);
-                                if(!textBox_4.isFocused()) textBox_4.requestFocus();
-
                             });
-
-
 
                             textBox_3.setOnKeyListener((v, keyCode, event) -> {
                                 if(keyCode == KeyEvent.KEYCODE_ENTER){
                                     if(event.getAction() == KeyEvent.ACTION_UP){
                                         if(!textBox_3.getText().toString().equals("")){
                                             setStateThirdEdittext();
-                                            textBox_3.setEnabled(false);
-                                            enterBut_3.setEnabled(false);
-                                            if(!textBox_4.isFocused()) textBox_4.requestFocus();
                                         }
                                     }
                                 }
@@ -301,13 +253,7 @@ public class RawMaterialTypeMassCreationView extends AppCompatActivity {
                                 if(isEnableBarcodeReaderMode){
                                     if(keyCode == KeyEvent.KEYCODE_BUTTON_R1){
                                         if(event.getAction() == KeyEvent.ACTION_UP){
-                                            if(!textBox_3.getText().toString().equals("")){
-                                                setStateThirdEdittext();
-
-                                                textBox_3.setEnabled(false);
-                                                enterBut_3.setEnabled(false);
-                                                if(!textBox_4.isFocused()) textBox_4.requestFocus();
-                                            }
+                                            setStateThirdEdittext();
                                         }
                                     }
                                 }
@@ -356,12 +302,6 @@ public class RawMaterialTypeMassCreationView extends AppCompatActivity {
                             enterBut_4.setOnClickListener(v -> {
                                 if(!textBox_4.getText().toString().equals("")){
                                     setStateFourthEdittext();
-
-                                    addBut.setFocusableInTouchMode(true);
-                                    addBut.requestFocus();
-
-                                    if(textBox_4.isEnabled()) textBox_4.setEnabled(false);
-                                    if(enterBut_4.isEnabled()) enterBut_4.setEnabled(false);
                                 }
 
                             });
@@ -371,15 +311,6 @@ public class RawMaterialTypeMassCreationView extends AppCompatActivity {
                                     if(event.getAction() == KeyEvent.ACTION_UP){
                                         if(!textBox_4.getText().toString().equals("")){
                                             setStateFourthEdittext();
-
-                                            if(textBox_4.isEnabled()) textBox_4.setEnabled(false);
-                                            if(enterBut_4.isEnabled()) enterBut_4.setEnabled(false);
-
-                                            textBox_4.setEnabled(false);
-                                            textBox_4.clearFocus();
-
-                                            addBut.setFocusableInTouchMode(false);
-                                            addBut.requestFocus(View.FOCUS_DOWN);
                                         }
                                     }
                                 }
@@ -389,14 +320,6 @@ public class RawMaterialTypeMassCreationView extends AppCompatActivity {
                                         if(event.getAction() == KeyEvent.ACTION_UP){
                                             if(!textBox_4.getText().toString().equals("")){
                                                 setStateFourthEdittext();
-
-                                                if(textBox_4.isEnabled()) textBox_4.setEnabled(false);
-                                                if(enterBut_4.isEnabled()) enterBut_4.setEnabled(false);
-
-                                                addBut.setFocusableInTouchMode(false);
-
-                                                textBox_4.clearFocus();
-                                                addBut.requestFocus(View.FOCUS_DOWN);
                                             }
                                         }
                                     }
@@ -457,6 +380,11 @@ public class RawMaterialTypeMassCreationView extends AppCompatActivity {
 
             enterBut_1.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.disable_button_background_rectangle));
             textBox_2.setText("");
+
+            if(textBox_1.isEnabled()) textBox_1.setEnabled(false);
+            if(enterBut_1.isEnabled()) enterBut_1.setEnabled(false);
+
+            if(!textBox_2.isFocused()) textBox_2.requestFocus();
         }
     }
 
@@ -468,6 +396,11 @@ public class RawMaterialTypeMassCreationView extends AppCompatActivity {
 
             enterBut_2.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.disable_button_background_rectangle));
             textBox_3.setText("");
+
+            if(textBox_2.isEnabled()) textBox_2.setEnabled(false);
+            if(enterBut_2.isEnabled()) enterBut_2.setEnabled(false);
+
+            if(!textBox_3.isFocused()) textBox_3.requestFocus();
         }
     }
 
@@ -479,10 +412,13 @@ public class RawMaterialTypeMassCreationView extends AppCompatActivity {
 
             enterBut_3.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.disable_button_background_rectangle));
             textBox_4.setText("");
+
+            if(textBox_3.isEnabled()) textBox_3.setEnabled(false);
+            if(enterBut_3.isEnabled()) enterBut_3.setEnabled(false);
+
+            if(!textBox_4.isFocused()) textBox_4.requestFocus();
         }
     }
-
-
 
     private void setStateFourthEdittext(){
         if(!textBox_4.getText().toString().equals("")){
@@ -494,13 +430,13 @@ public class RawMaterialTypeMassCreationView extends AppCompatActivity {
 
             if(!addBut.isEnabled()) addBut.setEnabled(true);
             if(textBox_4.isFocused()) textBox_4.clearFocus();
+
+            if(textBox_4.isEnabled()) textBox_4.setEnabled(false);
+            if(enterBut_4.isEnabled()) enterBut_4.setEnabled(false);
+
+            addBut.setFocusableInTouchMode(true);
+            addBut.requestFocus(View.FOCUS_DOWN);
         }
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-
     }
 
     @Override
@@ -528,10 +464,10 @@ public class RawMaterialTypeMassCreationView extends AppCompatActivity {
 
         textBox_1.requestFocus();
 
-        if(textBox_1 != null){ textBox_1.setShowSoftInputOnFocus(false); }
-        if(textBox_2 != null){ textBox_2.setShowSoftInputOnFocus(false); }
-        if(textBox_3 != null){ textBox_3.setShowSoftInputOnFocus(false); }
-        if(textBox_4 != null){ textBox_4.setShowSoftInputOnFocus(false); }
+//        if(textBox_1 != null){ textBox_1.setShowSoftInputOnFocus(false); }
+//        if(textBox_2 != null){ textBox_2.setShowSoftInputOnFocus(false); }
+//        if(textBox_3 != null){ textBox_3.setShowSoftInputOnFocus(false); }
+//        if(textBox_4 != null){ textBox_4.setShowSoftInputOnFocus(false); }
 
         addBut = findViewById(R.id.addRMTMC_BUT);
         deleteBut = findViewById(R.id.deleteRMTMC_BUT);

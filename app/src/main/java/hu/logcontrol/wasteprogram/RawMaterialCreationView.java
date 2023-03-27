@@ -46,34 +46,13 @@ public class RawMaterialCreationView extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_raw_material_creation);
         initView();
-
         initTextWatcher();
 
-        if(deleteBut != null){
-            deleteBut.setOnClickListener(v -> {
-                textBox_1.setText("");
-
-                if(!textBox_1.isEnabled()) textBox_1.setEnabled(true);
-                if(!textBox_1.isFocused()) textBox_1.requestFocus();
-
-                if(addBut.isEnabled()) addBut.setEnabled(false);
-                if(deleteBut.isEnabled()) deleteBut.setEnabled(false);
-            });
-        }
-
-        if(backBut != null){
-            backBut.setOnClickListener(view -> {
-                Intent intent = new Intent(getApplicationContext(), ModesOne.class);
-                startActivity(intent);
-            });
-        }
-
         addBut.setFocusableInTouchMode(true);
-     }
+        isEnableBarcodeReaderMode = JSONFileHelper.getBoolean(getApplicationContext(), "values.json", "IsEnableBarcodeReaderMode");
+    }
 
     private void initTextWatcher() {
-        isEnableBarcodeReaderMode = JSONFileHelper.getBoolean(getApplicationContext(), "values.json", "IsEnableBarcodeReaderMode");
-
         if(constraint_1 != null && textBox_1 != null && enterBut_1 != null && deleteBut != null){
 
             textBox_1.addTextChangedListener(new TextWatcher() {
@@ -90,8 +69,10 @@ public class RawMaterialCreationView extends AppCompatActivity {
                         enterBut_1.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.disable_button_background_rectangle));
                         textBox_1.setTextColor(Color.parseColor(enableColor));
                         constraint_1.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.cardview_red_background));
+
                         textBox_2.setTextColor(Color.parseColor(enableColor));
                         constraint_2.setVisibility(View.INVISIBLE);
+
                         addBut.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.disable_button_background_circle));
                         deleteBut.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.disable_button_background_circle));
 
@@ -114,36 +95,19 @@ public class RawMaterialCreationView extends AppCompatActivity {
 
                             enterBut_1.setOnClickListener(v -> {
                                 setStateFirstEdittext();
-
-                                textBox_1.setEnabled(false);
-                                enterBut_1.setEnabled(false);
-                                if(!textBox_2.isFocused()) textBox_2.requestFocus();
-
                             });
-
-
 
                             textBox_1.setOnKeyListener((v, keyCode, event) -> {
                                 if(keyCode == KeyEvent.KEYCODE_ENTER){
                                     if(event.getAction() == KeyEvent.ACTION_UP){
-                                        if(!textBox_1.getText().toString().equals("")){
-                                            setStateFirstEdittext();
-                                            textBox_1.setEnabled(false);
-                                            enterBut_1.setEnabled(false);
-                                            if(!textBox_2.isFocused()) textBox_2.requestFocus();
-                                        }
+                                        setStateFirstEdittext();
                                     }
                                 }
 
                                 if(isEnableBarcodeReaderMode){
                                     if(keyCode == KeyEvent.KEYCODE_BUTTON_R1){
                                         if(event.getAction() == KeyEvent.ACTION_UP){
-                                            if(!textBox_1.getText().toString().equals("")){
-                                                setStateFirstEdittext();
-                                                textBox_1.setEnabled(false);
-                                                enterBut_1.setEnabled(false);
-                                                if(!textBox_2.isFocused()) textBox_2.requestFocus();
-                                            }
+                                            setStateFirstEdittext();
                                         }
                                     }
                                 }
@@ -190,40 +154,20 @@ public class RawMaterialCreationView extends AppCompatActivity {
                             if(!enterBut_2.isEnabled()) enterBut_2.setEnabled(true);
 
                             enterBut_2.setOnClickListener(v -> {
-                                if(!textBox_2.getText().toString().equals("")){
-                                    setStateSecondEdittext();
-                                    addBut.requestFocus();
-                                    if(textBox_2.isEnabled()) textBox_2.setEnabled(false);
-                                    if(enterBut_2.isEnabled()) enterBut_2.setEnabled(false);
-                                    textBox_2.setEnabled(false);
-                                }
-
+                                setStateSecondEdittext();
                             });
 
                             textBox_2.setOnKeyListener((v, keyCode, event) -> {
                                 if(keyCode == KeyEvent.KEYCODE_ENTER){
                                     if(event.getAction() == KeyEvent.ACTION_UP){
-                                        if(!textBox_2.getText().toString().equals("")){
-                                            setStateSecondEdittext();
-
-                                            if(textBox_2.isEnabled()) textBox_2.setEnabled(false);
-                                            if(enterBut_2.isEnabled()) enterBut_2.setEnabled(false);
-
-                                            textBox_2.setEnabled(false);
-                                        }
+                                        setStateSecondEdittext();
                                     }
                                 }
 
                                 if(isEnableBarcodeReaderMode){
                                     if(keyCode == KeyEvent.KEYCODE_BUTTON_R1){
                                         if(event.getAction() == KeyEvent.ACTION_UP){
-                                            if(!textBox_2.getText().toString().equals("")){
-                                                setStateSecondEdittext();
-                                                if(textBox_2.isEnabled()) textBox_2.setEnabled(false);
-                                                if(enterBut_2.isEnabled()) enterBut_2.setEnabled(false);
-                                                textBox_2.clearFocus();
-                                                addBut.requestFocus(View.FOCUS_DOWN);
-                                            }
+                                            setStateSecondEdittext();
                                         }
                                     }
                                 }
@@ -231,21 +175,44 @@ public class RawMaterialCreationView extends AppCompatActivity {
                                 return false;
                             });
 
-                            addBut.setOnClickListener(v -> {
-                                Intent intent = new Intent();
+                            addBut.setOnFocusChangeListener((view, hasFocus) -> {
+                                if(hasFocus){
+                                    addBut.setOnClickListener(v -> {
+                                        Intent intent = new Intent();
 
-                                intent.putExtra("rawMatCountTextBox", textBox_1.getText().toString());
-                                intent.putExtra("rawMatTypeTextBox", textBox_2.getText().toString());
+                                        intent.putExtra("rawMatCountTextBox", textBox_1.getText().toString());
+                                        intent.putExtra("rawMatTypeTextBox", textBox_2.getText().toString());
 
-                                setResult(1, intent);
+                                        setResult(1, intent);
 
-                                RawMaterialCreationView.super.onBackPressed();
+                                        RawMaterialCreationView.super.onBackPressed();
+                                    });
+                                }
                             });
                         }
                     }
                 }
 
                 @Override public void afterTextChanged(Editable s) {}
+            });
+        }
+
+        if(deleteBut != null){
+            deleteBut.setOnClickListener(v -> {
+                textBox_1.setText("");
+
+                if(!textBox_1.isEnabled()) textBox_1.setEnabled(true);
+                if(!textBox_1.isFocused()) textBox_1.requestFocus();
+
+                if(addBut.isEnabled()) addBut.setEnabled(false);
+                if(deleteBut.isEnabled()) deleteBut.setEnabled(false);
+            });
+        }
+
+        if(backBut != null){
+            backBut.setOnClickListener(view -> {
+                Intent intent = new Intent(getApplicationContext(), ModesOne.class);
+                startActivity(intent);
             });
         }
     }
@@ -258,6 +225,11 @@ public class RawMaterialCreationView extends AppCompatActivity {
 
             enterBut_1.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.disable_button_background_rectangle));
             textBox_2.setText("");
+
+            if(textBox_1.isEnabled()) textBox_1.setEnabled(false);
+            if(enterBut_1.isEnabled()) enterBut_1.setEnabled(false);
+
+            if(!textBox_2.isFocused()) textBox_2.requestFocus();
         }
     }
 
@@ -271,6 +243,11 @@ public class RawMaterialCreationView extends AppCompatActivity {
 
             if(!addBut.isEnabled()) addBut.setEnabled(true);
             if(textBox_2.isFocused()) textBox_2.clearFocus();
+
+            if(textBox_2.isEnabled()) textBox_2.setEnabled(false);
+            if(enterBut_2.isEnabled()) enterBut_2.setEnabled(false);
+
+            addBut.requestFocus(View.FOCUS_DOWN);
         }
     }
 
@@ -287,24 +264,23 @@ public class RawMaterialCreationView extends AppCompatActivity {
     }
 
     private void initView() {
-        textBox_1 = findViewById(R.id.countRMC_TB);
-//        if(textBox_1 != null){ textBox_1.setShowSoftInputOnFocus(false); }
+        constraint_1 = findViewById(R.id.countRMC_CL);
+        constraint_2 = findViewById(R.id.typeRMC_CL);
 
+        textBox_1 = findViewById(R.id.countRMC_TB);
         textBox_2 = findViewById(R.id.typeRMC_TB);
+
+//        if(textBox_1 != null){ textBox_1.setShowSoftInputOnFocus(false); }
 //        if(textBox_2 != null){ textBox_2.setShowSoftInputOnFocus(false); }
 
         textBox_1.requestFocus();
 
-        constraint_1 = findViewById(R.id.countRMC_CL);
-        constraint_2 = findViewById(R.id.typeRMC_CL);
-
         addBut = findViewById(R.id.addRMCBut);
-        addBut.setEnabled(false);
-
         deleteBut = findViewById(R.id.deleteRMCBut);
-        deleteBut.setEnabled(false);
-
         backBut = findViewById(R.id.backRMCBut);
+
+        addBut.setEnabled(false);
+        deleteBut.setEnabled(false);
 
         enterBut_1 = findViewById(R.id.enterCountRMC_BUT);
         enterBut_2 = findViewById(R.id.enterTypeRMC_BUT);

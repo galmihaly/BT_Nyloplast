@@ -76,7 +76,7 @@ public class RecycledMaterialAdapter extends RecyclerView.Adapter<RecycledMateri
             holder.getDeleteItemButton_3().setOnClickListener(view -> {
                 if(recycledMaterialList.size() > 0){
                     recycledMaterialList.remove(position);
-                    notifyItemChanged(position);
+                    notifyDataSetChanged();
 
                     if(recycledMaterialList.size() == 0){
                         modesThreeWeakReference.get().settingButton(EditButtonEnums.SAVE_BUTTON_DISABLED);

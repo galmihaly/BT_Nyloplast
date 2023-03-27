@@ -76,7 +76,7 @@ public class RawMaterialTypeMassAdapter extends RecyclerView.Adapter<RawMaterial
             holder.getDeleteItemButton_2().setOnClickListener(view -> {
                 if(rawMaterialTypeMassList.size() > 0){
                     rawMaterialTypeMassList.remove(position);
-                    notifyItemChanged(position);
+                    notifyDataSetChanged();
 
                     if(rawMaterialTypeMassList.size() == 0){
                         modesTwoWeakReference.get().settingButton(EditButtonEnums.SAVE_BUTTON_DISABLED);

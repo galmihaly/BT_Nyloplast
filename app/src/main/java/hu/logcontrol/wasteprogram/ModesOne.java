@@ -134,10 +134,6 @@ public class ModesOne extends AppCompatActivity implements IModesOneView {
 
             rawMaterialList = LocalRawMaterialsStorage.getInstance().getRawMaterialList();
 
-            for (int i = 0; i < rawMaterialList.size(); i++) {
-                Log.e("list", rawMaterialList.get(i).toString());
-            }
-
             swipeRefreshLayout.setRefreshing(false);
         };
         swipeRefreshLayout.setOnRefreshListener(onRefreshListener);
