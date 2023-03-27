@@ -177,6 +177,8 @@ public class ModesOne extends AppCompatActivity implements IModesOneView {
         mainModesOneCL = findViewById(R.id.mainModesOneCL);
         swipeRefreshLayout = findViewById(R.id.swipeRefresLayoutModesOneRV);
 
+
+
         hideNavigationBar();
     }
 
