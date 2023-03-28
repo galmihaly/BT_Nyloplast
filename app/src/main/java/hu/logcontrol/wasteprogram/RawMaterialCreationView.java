@@ -38,6 +38,7 @@ public class RawMaterialCreationView extends AppCompatActivity {
     private final String enableColor = "#000000";
 
     private boolean isEnableBarcodeReaderMode = false;
+    private boolean isEnableKeyBoardOnTextBoxes = false;
     private boolean isFirstGettingText = true;
 
 
@@ -49,6 +50,7 @@ public class RawMaterialCreationView extends AppCompatActivity {
         initTextWatcher();
 
         addBut.setFocusableInTouchMode(true);
+
         isEnableBarcodeReaderMode = JSONFileHelper.getBoolean(getApplicationContext(), "values.json", "IsEnableBarcodeReaderMode");
     }
 
@@ -270,8 +272,12 @@ public class RawMaterialCreationView extends AppCompatActivity {
         textBox_1 = findViewById(R.id.countRMC_TB);
         textBox_2 = findViewById(R.id.typeRMC_TB);
 
-//        if(textBox_1 != null){ textBox_1.setShowSoftInputOnFocus(false); }
-//        if(textBox_2 != null){ textBox_2.setShowSoftInputOnFocus(false); }
+        isEnableKeyBoardOnTextBoxes = JSONFileHelper.getBoolean(getApplicationContext(), "values.json", "IsEnableKeyBoardOnTextBoxes");
+
+        if(isEnableKeyBoardOnTextBoxes){
+            if(textBox_1 != null){ textBox_1.setShowSoftInputOnFocus(false); }
+            if(textBox_2 != null){ textBox_2.setShowSoftInputOnFocus(false); }
+        }
 
         textBox_1.requestFocus();
 

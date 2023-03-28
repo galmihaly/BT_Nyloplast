@@ -5,8 +5,10 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
+import androidx.fragment.app.Fragment;
 import androidx.security.crypto.EncryptedSharedPreferences;
 import androidx.security.crypto.MasterKeys;
+import androidx.viewpager2.widget.ViewPager2;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -20,20 +22,26 @@ import android.widget.CheckBox;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
+import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.textfield.TextInputEditText;
 
-import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
+import hu.logcontrol.wasteprogram.adapters.SettingViewPagerAdapter;
 import hu.logcontrol.wasteprogram.enums.ActivityEnums;
 import hu.logcontrol.wasteprogram.enums.EditButtonEnums;
+import hu.logcontrol.wasteprogram.fragments.GeneralSettingsFragment;
+import hu.logcontrol.wasteprogram.fragments.UploadFileSettingsFragment;
 import hu.logcontrol.wasteprogram.helpers.Helper;
 import hu.logcontrol.wasteprogram.helpers.JSONFileHelper;
+import hu.logcontrol.wasteprogram.interfaces.GeneralListener;
 import hu.logcontrol.wasteprogram.interfaces.ISettingsView;
+import hu.logcontrol.wasteprogram.interfaces.UploadFileListener;
 import hu.logcontrol.wasteprogram.models.LocalEncryptedPreferences;
 import hu.logcontrol.wasteprogram.presenters.ProgramPresenter;
 
-public class SettingsActivity extends AppCompatActivity implements ISettingsView {
+public class SettingsActivity extends AppCompatActivity implements ISettingsView, GeneralListener, UploadFileListener {
 
     private TextInputEditText settingsLocalSavePathTB;
     private TextInputEditText settingsGlobalSavePathTB;
@@ -43,6 +51,7 @@ public class SettingsActivity extends AppCompatActivity implements ISettingsView
 
     private CheckBox localSavePathCheckbox;
     private CheckBox settingBarcodeNextCheckBox;
+    private CheckBox settingKeyboardCheckBox;
 
     private ConstraintLayout localSavePathCL;
 
@@ -52,7 +61,11 @@ public class SettingsActivity extends AppCompatActivity implements ISettingsView
     private String resultString;
     private boolean resultBoolean;
 
+    private TabLayout settingTabLayout;
+    private ViewPager2 settingViewPager;
+
     private String path = null;
+
 
     @SuppressLint("SetTextI18n")
     private final ActivityResultLauncher<Intent> activityResultLauncher = registerForActivityResult(
@@ -89,7 +102,7 @@ public class SettingsActivity extends AppCompatActivity implements ISettingsView
         programPresenter = new ProgramPresenter(this, getApplicationContext());
         programPresenter.initTaskManager();
 
-        if(settingsGlobalSavePathTB != null && settingsLocalSavePathTB != null && settingBarcodeNextCheckBox != null && localSavePathCheckbox != null){
+        if(settingsGlobalSavePathTB != null && settingsLocalSavePathTB != null && settingBarcodeNextCheckBox != null && localSavePathCheckbox != null && settingKeyboardCheckBox != null){
 
             boolean isExist = JSONFileHelper.isExist(getApplicationContext(), "values.json");
             if(isExist) {
@@ -106,10 +119,46 @@ public class SettingsActivity extends AppCompatActivity implements ISettingsView
                 resultBoolean = JSONFileHelper.getBoolean(getApplicationContext(), "values.json", "IsEnableSaveLocalStorage");
                 localSavePathCheckbox.setChecked(resultBoolean);
 
+                resultBoolean = JSONFileHelper.getBoolean(getApplicationContext(), "values.json", "IsEnableKeyBoardOnTextBoxes");
+                settingKeyboardCheckBox.setChecked(resultBoolean);
+
                 if(localSavePathCheckbox.isChecked()){ localSavePathCL.setVisibility(View.VISIBLE); }
                 else{ localSavePathCL.setVisibility(View.INVISIBLE); }
             }
         }
+
+        SettingViewPagerAdapter settingViewPagerAdapter = new SettingViewPagerAdapter(this);
+        List<Fragment> fragmentList = new ArrayList<>();
+        fragmentList.add(new UploadFileSettingsFragment());
+        fragmentList.add(new GeneralSettingsFragment());
+        settingViewPagerAdapter.setFragmentList(fragmentList);
+
+        settingViewPager.setAdapter(settingViewPagerAdapter);
+
+        settingTabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                settingViewPager.setCurrentItem(tab.getPosition());
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+
+            }
+        });
+
+        settingViewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
+            @Override
+            public void onPageSelected(int position) {
+                super.onPageSelected(position);
+                settingTabLayout.getTabAt(position).select();
+            }
+        });
 
     }
 
@@ -146,6 +195,19 @@ public class SettingsActivity extends AppCompatActivity implements ISettingsView
             });
         }
 
+        if(settingKeyboardCheckBox != null){
+            settingKeyboardCheckBox.setOnClickListener(v -> {
+                if(settingKeyboardCheckBox.isChecked()){
+
+                    settingKeyboardCheckBox.setChecked(true);
+                }
+                if(!settingKeyboardCheckBox.isChecked()){
+
+                    settingKeyboardCheckBox.setChecked(false);
+                }
+            });
+        }
+
         if(settingBarcodeNextCheckBox != null){
             settingBarcodeNextCheckBox.setOnClickListener(v -> {
                 if(settingBarcodeNextCheckBox.isChecked()){
@@ -173,6 +235,12 @@ public class SettingsActivity extends AppCompatActivity implements ISettingsView
                 }
                 if(!settingBarcodeNextCheckBox.isChecked()){
                     programPresenter.saveBooleanValueToJSONFile("IsEnableBarcodeReaderMode", false);
+                }
+                if(settingKeyboardCheckBox.isChecked()){
+                    programPresenter.saveBooleanValueToJSONFile("IsEnableKeyBoardOnTextBoxes", true);
+                }
+                if(!settingKeyboardCheckBox.isChecked()){
+                    programPresenter.saveBooleanValueToJSONFile("IsEnableKeyBoardOnTextBoxes", false);
                 }
                 if(path != null){
                     if(!path.equals("")){
@@ -210,23 +278,11 @@ public class SettingsActivity extends AppCompatActivity implements ISettingsView
     }
 
     private void initView(){
-        settingsLocalSavePathTB = findViewById(R.id.settingsLocalSavePathTB);
-        settingsGlobalSavePathTB = findViewById(R.id.settingsGlobalSavePathTB);
-
-        if(settingsLocalSavePathTB != null){
-            settingsLocalSavePathTB.setShowSoftInputOnFocus(false);
-            settingsLocalSavePathTB.setFocusable(false);
-        }
-
         settingsSaveButton = findViewById(R.id.settingsSaveButton);
         settingsBackButton = findViewById(R.id.settingsBackButton);
 
-        folderPickerButton = findViewById(R.id.folderPickerButton);
-
-        localSavePathCheckbox = findViewById(R.id.localSavePathCheckbox);
-        settingBarcodeNextCheckBox = findViewById(R.id.settingBarcodeNextCheckBox);
-
-        localSavePathCL = findViewById(R.id.localSavePathCL);
+        settingTabLayout = findViewById(R.id.settingTabLayout);
+        settingViewPager = findViewById(R.id.settingViewPager);
 
         hideNavigationBar();
     }
@@ -264,5 +320,35 @@ public class SettingsActivity extends AppCompatActivity implements ISettingsView
 
     private void hideNavigationBar(){
         Helper.hideNavigationBar(this);
+    }
+
+    @Override
+    public void sendBarcodeNextCheckBoxState(boolean state) {
+        Log.e("sendBarcodeNextCheckBoxState", String.valueOf(state));
+    }
+
+    @Override
+    public void sendKeyboardCheckBox(boolean state) {
+        Log.e("sendBarcodeKeyboardCheckBox", String.valueOf(state));
+    }
+
+    @Override
+    public void sendGlobalSavePath(String path) {
+        Log.e("sendGlobalSavePath", path);
+    }
+
+    @Override
+    public void sendLocalSavePath(String path) {
+        Log.e("sendLocalSavePath", path);
+    }
+
+    @Override
+    public void sendLocalSaveCheckbox(boolean state) {
+        Log.e("sendLocalSaveCheckbox", String.valueOf(state));
+    }
+
+    @Override
+    public void sendLocalSaveConstraintState(boolean state) {
+        Log.e("sendLocalSaveConstraintState", String.valueOf(state));
     }
 }

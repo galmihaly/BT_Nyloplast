@@ -14,11 +14,16 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
+
 import hu.logcontrol.wasteprogram.enums.ActivityEnums;
 import hu.logcontrol.wasteprogram.helpers.Helper;
 import hu.logcontrol.wasteprogram.helpers.JSONFileHelper;
 import hu.logcontrol.wasteprogram.interfaces.IMainView;
 import hu.logcontrol.wasteprogram.presenters.ProgramPresenter;
+import jcifs.smb.NtlmPasswordAuthentication;
+import jcifs.smb.SmbFile;
 
 public class MainActivity extends AppCompatActivity implements IMainView {
 
@@ -43,6 +48,33 @@ public class MainActivity extends AppCompatActivity implements IMainView {
         if(!JSONFileHelper.isExist(getApplicationContext(), "values.json")) {
             programPresenter.initBaseJSONFile("values.json");
         }
+
+
+//        Executor executor = Executors.newSingleThreadExecutor();
+//        executor.execute(() -> {
+//            String z = "";
+//            try {
+//
+//                String url = "smb://172.16.1.5/public/Misi/text2.txt";
+//                Log.e("url", url);
+//
+//                NtlmPasswordAuthentication auth = new NtlmPasswordAuthentication(
+//                        null, "Galmihaly", "Kutyaszar123!");
+//                SmbFile sfile = new SmbFile(url, auth);
+//
+//                if (!sfile.exists()) {
+//                    sfile.createNewFile();
+//                    Log.e("message", "Created the file for you!!!!");
+//                    z = "Created the file for you!!!!";
+//                } else {
+//                    Log.e("message", "Already exists at the specified location!!!!");
+//                    z = "Already exists at the specified location!!!!";
+//                }
+//            } catch (Exception ex) {
+//                // TODO: handle exception
+//                z = ex.getMessage().toString();
+//            }
+//        });
     }
 
     @Override
@@ -107,6 +139,7 @@ public class MainActivity extends AppCompatActivity implements IMainView {
 
         if (requestCode == 786) {
             Toast.makeText(this, "Engedély elfogadva!", Toast.LENGTH_SHORT).show();
+            hideNavigationBar();
         }
 
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);

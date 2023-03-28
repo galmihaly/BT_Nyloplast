@@ -47,6 +47,7 @@ public class RawMaterialTypeMassCreationView extends AppCompatActivity {
     private final String enableColor = "#000000";
 
     private boolean isEnableBarcodeReaderMode = false;
+    private boolean isEnableKeyBoardOnTextBoxes = false;
     private boolean isFirstGettingText = true;
 
     @Override
@@ -58,6 +59,7 @@ public class RawMaterialTypeMassCreationView extends AppCompatActivity {
         initTextWatcher();
 
         addBut.setFocusableInTouchMode(true);
+
         isEnableBarcodeReaderMode = JSONFileHelper.getBoolean(getApplicationContext(), "values.json", "IsEnableBarcodeReaderMode");
     }
 
@@ -464,10 +466,14 @@ public class RawMaterialTypeMassCreationView extends AppCompatActivity {
 
         textBox_1.requestFocus();
 
-//        if(textBox_1 != null){ textBox_1.setShowSoftInputOnFocus(false); }
-//        if(textBox_2 != null){ textBox_2.setShowSoftInputOnFocus(false); }
-//        if(textBox_3 != null){ textBox_3.setShowSoftInputOnFocus(false); }
-//        if(textBox_4 != null){ textBox_4.setShowSoftInputOnFocus(false); }
+        isEnableKeyBoardOnTextBoxes = JSONFileHelper.getBoolean(getApplicationContext(), "values.json", "IsEnableKeyBoardOnTextBoxes");
+
+        if(isEnableKeyBoardOnTextBoxes){
+            if(textBox_1 != null){ textBox_1.setShowSoftInputOnFocus(false); }
+            if(textBox_2 != null){ textBox_2.setShowSoftInputOnFocus(false); }
+            if(textBox_3 != null){ textBox_3.setShowSoftInputOnFocus(false); }
+            if(textBox_4 != null){ textBox_4.setShowSoftInputOnFocus(false); }
+        }
 
         addBut = findViewById(R.id.addRMTMC_BUT);
         deleteBut = findViewById(R.id.deleteRMTMC_BUT);

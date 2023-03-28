@@ -23,12 +23,14 @@ import hu.logcontrol.wasteprogram.enums.ActivityEnums;
 import hu.logcontrol.wasteprogram.enums.EditButtonEnums;
 import hu.logcontrol.wasteprogram.enums.HandlerMessageIdentifiers;
 import hu.logcontrol.wasteprogram.helpers.JSONFileHelper;
+import hu.logcontrol.wasteprogram.interfaces.IGeneralSettingFragment;
 import hu.logcontrol.wasteprogram.interfaces.IModesOneView;
 import hu.logcontrol.wasteprogram.interfaces.IModesThreeView;
 import hu.logcontrol.wasteprogram.interfaces.IModesTwoView;
 import hu.logcontrol.wasteprogram.interfaces.IProgramPresenter;
 import hu.logcontrol.wasteprogram.interfaces.IMainView;
 import hu.logcontrol.wasteprogram.interfaces.ISettingsView;
+import hu.logcontrol.wasteprogram.interfaces.IUploadFileSettingsFragment;
 import hu.logcontrol.wasteprogram.logger.ApplicationLogger;
 import hu.logcontrol.wasteprogram.logger.LogLevel;
 import hu.logcontrol.wasteprogram.models.RawMaterial;
@@ -48,9 +50,22 @@ public class ProgramPresenter implements IProgramPresenter, PresenterThreadCallb
     private IModesThreeView iModesThreeView;
     private ISettingsView iSettingsView;
 
+    private IGeneralSettingFragment iGeneralSettingFragment;
+    private IUploadFileSettingsFragment iUploadFileSettingsFragment;
+
     private Context context;
     private CustomThreadPoolManager mCustomThreadPoolManager;
     private ProgramHandler programHandler;
+
+    public ProgramPresenter(IUploadFileSettingsFragment iUploadFileSettingsFragment, Context context) {
+        this.iUploadFileSettingsFragment = iUploadFileSettingsFragment;
+        this.context = context.getApplicationContext();
+    }
+
+    public ProgramPresenter(IGeneralSettingFragment iGeneralSettingFragment, Context context) {
+        this.iGeneralSettingFragment = iGeneralSettingFragment;
+        this.context = context.getApplicationContext();
+    }
 
     public ProgramPresenter(IMainView iMainView, Context context) {
         this.iMainView = iMainView;
@@ -276,6 +291,8 @@ public class ProgramPresenter implements IProgramPresenter, PresenterThreadCallb
         if(iModesTwoView != null) iModesTwoView.getMessageFromPresenter(message);
         if(iModesThreeView != null) iModesThreeView.getMessageFromPresenter(message);
         if(iSettingsView != null) iSettingsView.getMessageFromPresenter(message);
+        if(iGeneralSettingFragment != null) iGeneralSettingFragment.getMessageFromPresenter(message);
+        if(iUploadFileSettingsFragment != null) iUploadFileSettingsFragment.getMessageFromPresenter(message);
     }
 
     @Override
