@@ -6,10 +6,12 @@ import androidx.fragment.app.Fragment;
 
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import hu.logcontrol.wasteprogram.R;
@@ -28,7 +30,8 @@ public class GeneralSettingsFragment extends Fragment implements IGeneralSetting
 
     private ProgramPresenter programPresenter;
 
-    private boolean resultBoolean;
+    private boolean resultBarcodeCheckbox;
+    private boolean resultKeyBoardCheckbox;
 
     private GeneralListener generalListener;
 
@@ -50,11 +53,11 @@ public class GeneralSettingsFragment extends Fragment implements IGeneralSetting
             boolean isExist = JSONFileHelper.isExist(getContext(), "values.json");
             if(isExist) {
 
-                resultBoolean = JSONFileHelper.getBoolean(getContext(), "values.json", "IsEnableBarcodeReaderMode");
-                settingBarcodeNextCheckBox.setChecked(resultBoolean);
+                resultBarcodeCheckbox = JSONFileHelper.getBoolean(getContext(), "values.json", "IsEnableBarcodeReaderMode");
+                settingBarcodeNextCheckBox.setChecked(resultBarcodeCheckbox);
 
-                resultBoolean = JSONFileHelper.getBoolean(getContext(), "values.json", "IsEnableKeyBoardOnTextBoxes");
-                settingKeyboardCheckBox.setChecked(resultBoolean);
+                resultKeyBoardCheckbox = JSONFileHelper.getBoolean(getContext(), "values.json", "IsEnableKeyBoardOnTextBoxes");
+                settingKeyboardCheckBox.setChecked(resultKeyBoardCheckbox);
             }
         }
 
@@ -79,11 +82,11 @@ public class GeneralSettingsFragment extends Fragment implements IGeneralSetting
             boolean isExist = JSONFileHelper.isExist(getContext(), "values.json");
             if(isExist) {
 
-                resultBoolean = JSONFileHelper.getBoolean(getContext(), "values.json", "IsEnableBarcodeReaderMode");
-                settingBarcodeNextCheckBox.setChecked(resultBoolean);
+                resultBarcodeCheckbox = JSONFileHelper.getBoolean(getContext(), "values.json", "IsEnableBarcodeReaderMode");
+                settingBarcodeNextCheckBox.setChecked(resultBarcodeCheckbox);
 
-                resultBoolean = JSONFileHelper.getBoolean(getContext(), "values.json", "IsEnableKeyBoardOnTextBoxes");
-                settingKeyboardCheckBox.setChecked(resultBoolean);
+                resultKeyBoardCheckbox = JSONFileHelper.getBoolean(getContext(), "values.json", "IsEnableKeyBoardOnTextBoxes");
+                settingKeyboardCheckBox.setChecked(resultKeyBoardCheckbox);
 
             }
         }
@@ -95,8 +98,7 @@ public class GeneralSettingsFragment extends Fragment implements IGeneralSetting
                     settingKeyboardCheckBox.setChecked(true);
                     generalListener.sendKeyboardCheckBox(true);
                 }
-                if(!settingKeyboardCheckBox.isChecked()){
-
+                else {
                     settingKeyboardCheckBox.setChecked(false);
                     generalListener.sendKeyboardCheckBox(false);
                 }
@@ -107,11 +109,11 @@ public class GeneralSettingsFragment extends Fragment implements IGeneralSetting
             settingBarcodeNextCheckBox.setOnClickListener(v -> {
                 if(settingBarcodeNextCheckBox.isChecked()){
 
+                    Log.e("beléptem", "ide");
                     settingBarcodeNextCheckBox.setChecked(true);
                     generalListener.sendBarcodeNextCheckBoxState(true);
                 }
-                if(!settingBarcodeNextCheckBox.isChecked()){
-
+                else {
                     settingBarcodeNextCheckBox.setChecked(false);
                     generalListener.sendBarcodeNextCheckBoxState(false);
                 }

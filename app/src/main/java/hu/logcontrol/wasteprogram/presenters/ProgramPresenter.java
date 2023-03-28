@@ -159,7 +159,8 @@ public class ProgramPresenter implements IProgramPresenter, PresenterThreadCallb
         if(iModesOneView != null) iModesOneView.openActivityByIntent(intent);
         if(iModesTwoView != null) iModesTwoView.openActivityByIntent(intent);
         if(iModesThreeView != null) iModesThreeView.openActivityByIntent(intent);
-        if(iSettingsView!= null) iSettingsView.openActivityByIntent(intent);
+        if(iSettingsView != null) iSettingsView.openActivityByIntent(intent);
+        if(iUploadFileSettingsFragment != null) iUploadFileSettingsFragment.openActivityByIntent(intent);
     }
 
     @Override

@@ -1,5 +1,5 @@
 {
-  "GlobalSavePath": "",
+  "GlobalSavePath": "path",
   "IsEnableBarcodeReaderMode": false,
   "IsEnableSaveLocalStorage": false,
   "IsEnableKeyBoardOnTextBoxes": false,
