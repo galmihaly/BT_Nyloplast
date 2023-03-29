@@ -55,8 +55,6 @@ public class RawMaterialCreationView extends AppCompatActivity {
         initTextWatcher();
 
         addBut.setFocusableInTouchMode(true);
-
-        isEnableBarcodeReaderMode = JSONFileHelper.getBoolean(getApplicationContext(), "values.json", "IsEnableBarcodeReaderMode");
     }
 
     private void initTextWatcher() {
@@ -300,7 +298,7 @@ public class RawMaterialCreationView extends AppCompatActivity {
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
 
-        if(keyCode == KeyEvent.KEYCODE_BUTTON_L1){
+        if(keyCode == KeyEvent.KEYCODE_BUTTON_R1 || keyCode == KeyEvent.KEYCODE_BUTTON_L1){
             if(event.getAction() == KeyEvent.ACTION_DOWN){
                 if(isClickAddButton) addBut.callOnClick();
             }
@@ -370,8 +368,14 @@ public class RawMaterialCreationView extends AppCompatActivity {
         textBox_3 = findViewById(R.id.commentRMC_TB);
 
         isEnableKeyBoardOnTextBoxes = JSONFileHelper.getBoolean(getApplicationContext(), "values.json", "IsEnableKeyBoardOnTextBoxes");
+        isEnableBarcodeReaderMode = JSONFileHelper.getBoolean(getApplicationContext(), "values.json", "IsEnableBarcodeReaderMode");
 
         if(isEnableKeyBoardOnTextBoxes){
+            if(textBox_1 != null){ textBox_1.setShowSoftInputOnFocus(true); }
+            if(textBox_2 != null){ textBox_2.setShowSoftInputOnFocus(true); }
+            if(textBox_3 != null){ textBox_3.setShowSoftInputOnFocus(true); }
+        }
+        else {
             if(textBox_1 != null){ textBox_1.setShowSoftInputOnFocus(false); }
             if(textBox_2 != null){ textBox_2.setShowSoftInputOnFocus(false); }
             if(textBox_3 != null){ textBox_3.setShowSoftInputOnFocus(false); }

@@ -1,7 +1,7 @@
 {
-  "GlobalSavePath": "path",
+  "GlobalSavePath": "",
   "IsEnableBarcodeReaderMode": false,
   "IsEnableSaveLocalStorage": false,
   "IsEnableKeyBoardOnTextBoxes": false,
-  "LocalSavePath": "/sdcard/Music/WasteProgram"
+  "LocalSavePath": "/sdcard/WasteProgram"
 }

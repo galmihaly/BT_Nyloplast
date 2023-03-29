@@ -33,7 +33,7 @@
             android:layout_width="230dp"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
-            android:hint="Tömegadat:"
+            android:hint="Megjegyzés:"
             android:textColorHint="@color/black"
             app:boxStrokeColor="@color/black"
             app:boxStrokeWidth="2dp"

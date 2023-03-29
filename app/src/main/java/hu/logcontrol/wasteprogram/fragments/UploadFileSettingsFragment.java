@@ -12,8 +12,6 @@ import androidx.fragment.app.Fragment;
 
 import android.os.Handler;
 import android.os.Looper;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -95,7 +93,7 @@ public class UploadFileSettingsFragment extends Fragment implements IUploadFileS
         programPresenter = new ProgramPresenter(this, getContext());
         programPresenter.initTaskManager();
 
-        if(settingsGlobalSavePathTB != null && settingsLocalSavePathTB != null && localSavePathCheckbox != null && localSavePathCL != null){
+        if(settingsGlobalSavePathTB != null && settingsLocalSavePathTB != null && localSavePathCheckbox != null && localSavePathCL != null && folderPickerButton != null){
 
             boolean isExist = JSONFileHelper.isExist(getContext(), "values.json");
             if(isExist) {
@@ -106,11 +104,20 @@ public class UploadFileSettingsFragment extends Fragment implements IUploadFileS
                 resultLocalPath = JSONFileHelper.getString(getContext(), "values.json", "LocalSavePath");
                 if(resultLocalPath != null) settingsLocalSavePathTB.setText(resultLocalPath);
 
+                settingsGlobalSavePathTB.setShowSoftInputOnFocus(false);
+
                 resultLocalSaveBoolean = JSONFileHelper.getBoolean(getContext(), "values.json", "IsEnableSaveLocalStorage");
                 localSavePathCheckbox.setChecked(resultLocalSaveBoolean);
 
                 if(localSavePathCheckbox.isChecked()){
                     localSavePathCL.setVisibility(View.VISIBLE);
+
+                    if(localSavePathCheckbox.isChecked()){
+                        folderPickerButton.setOnClickListener(view -> {
+                            programPresenter.openActivityByEnum(ActivityEnums.FOLDERPICKER_ACTIVITY);
+                        });
+                    }
+
                 }
                 else{
                     localSavePathCL.setVisibility(View.INVISIBLE);
@@ -124,7 +131,7 @@ public class UploadFileSettingsFragment extends Fragment implements IUploadFileS
     public void initListeners(){
         try {
             uploadFileListener = (UploadFileListener) getActivity();
-            ((SettingsActivity) getActivity()).setActivityListener(UploadFileSettingsFragment.this);
+            ((SettingsActivity) getActivity()).setUploadFileFragmentListener(UploadFileSettingsFragment.this);
         }
         catch (ClassCastException e) {
             e.printStackTrace();

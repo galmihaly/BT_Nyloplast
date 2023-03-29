@@ -57,13 +57,10 @@ public class RawMaterialTypeMassCreationView extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_raw_material_type_mass_creation);
-
         initView();
         initTextWatcher();
 
         addBut.setFocusableInTouchMode(true);
-
-        isEnableBarcodeReaderMode = JSONFileHelper.getBoolean(getApplicationContext(), "values.json", "IsEnableBarcodeReaderMode");
     }
 
     private void initTextWatcher() {
@@ -510,7 +507,7 @@ public class RawMaterialTypeMassCreationView extends AppCompatActivity {
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
 
-        if(keyCode == KeyEvent.KEYCODE_BUTTON_L1){
+        if(keyCode == KeyEvent.KEYCODE_BUTTON_R1 || keyCode == KeyEvent.KEYCODE_BUTTON_L1){
             if(event.getAction() == KeyEvent.ACTION_DOWN){
                 if(isClickAddButton) addBut.callOnClick();
             }
@@ -617,9 +614,17 @@ public class RawMaterialTypeMassCreationView extends AppCompatActivity {
 
         textBox_1.requestFocus();
 
+        isEnableBarcodeReaderMode = JSONFileHelper.getBoolean(getApplicationContext(), "values.json", "IsEnableBarcodeReaderMode");
         isEnableKeyBoardOnTextBoxes = JSONFileHelper.getBoolean(getApplicationContext(), "values.json", "IsEnableKeyBoardOnTextBoxes");
 
         if(isEnableKeyBoardOnTextBoxes){
+            if(textBox_1 != null){ textBox_1.setShowSoftInputOnFocus(true); }
+            if(textBox_2 != null){ textBox_2.setShowSoftInputOnFocus(true); }
+            if(textBox_3 != null){ textBox_3.setShowSoftInputOnFocus(true); }
+            if(textBox_4 != null){ textBox_4.setShowSoftInputOnFocus(true); }
+            if(textBox_5 != null){ textBox_5.setShowSoftInputOnFocus(true); }
+        }
+        else{
             if(textBox_1 != null){ textBox_1.setShowSoftInputOnFocus(false); }
             if(textBox_2 != null){ textBox_2.setShowSoftInputOnFocus(false); }
             if(textBox_3 != null){ textBox_3.setShowSoftInputOnFocus(false); }

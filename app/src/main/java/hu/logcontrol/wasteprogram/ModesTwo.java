@@ -134,7 +134,7 @@ public class ModesTwo extends AppCompatActivity implements IModesTwoView {
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
 
-        if(keyCode == KeyEvent.KEYCODE_BUTTON_L1){
+        if(keyCode == KeyEvent.KEYCODE_BUTTON_R1 || keyCode == KeyEvent.KEYCODE_BUTTON_L1){
             if(event.getAction() == KeyEvent.ACTION_DOWN){
                 addButton_2.callOnClick();
             }

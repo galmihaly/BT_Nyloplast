@@ -36,6 +36,7 @@ import hu.logcontrol.wasteprogram.fragments.UploadFileSettingsFragment;
 import hu.logcontrol.wasteprogram.helpers.Helper;
 import hu.logcontrol.wasteprogram.helpers.JSONFileHelper;
 import hu.logcontrol.wasteprogram.interfaces.GeneralListener;
+import hu.logcontrol.wasteprogram.interfaces.IGeneralFragmentListener;
 import hu.logcontrol.wasteprogram.interfaces.ISettingsView;
 import hu.logcontrol.wasteprogram.interfaces.IUploadFileFragmentListener;
 import hu.logcontrol.wasteprogram.interfaces.IUploadFileSettingsFragment;
@@ -52,9 +53,15 @@ public class SettingsActivity extends AppCompatActivity implements ISettingsView
 
     private String resultGlobalPath;
     private String resultLocalPath;
+
     private boolean resultLocalCheckbox;
+    private boolean isReadyLocalCheckbox = true;
+
     private boolean resultBarcodeCheckbox;
+    private boolean isReadyBarcodeCheckbox = true;
+
     private boolean resultKeyBoardCheckbox;
+    private boolean isReadyKeyBoardCheckbox = true;
 
     private String originalGlobalPath = null;
     private String originalLocalPath = null;
@@ -65,8 +72,11 @@ public class SettingsActivity extends AppCompatActivity implements ISettingsView
 
     private TabLayout settingTabLayout;
     private ViewPager2 settingViewPager;
+    private SettingViewPagerAdapter settingViewPagerAdapter;
+    private List<Fragment> fragmentList;
 
     public IUploadFileFragmentListener iUploadFileFragmentListener;
+    public IGeneralFragmentListener iGeneralFragmentListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,13 +101,12 @@ public class SettingsActivity extends AppCompatActivity implements ISettingsView
             Log.e("originalKeyBoardCheckbox_a", String.valueOf(originalKeyBoardCheckbox));
         }
 
-        SettingViewPagerAdapter settingViewPagerAdapter = new SettingViewPagerAdapter(this);
-        List<Fragment> fragmentList = new ArrayList<>();
-
+        settingViewPagerAdapter = new SettingViewPagerAdapter(this);
+        fragmentList = new ArrayList<>();
         fragmentList.add(new UploadFileSettingsFragment());
         fragmentList.add(new GeneralSettingsFragment());
-        settingViewPagerAdapter.setFragmentList(fragmentList);
 
+        settingViewPagerAdapter.setFragmentList(fragmentList);
         settingViewPager.setAdapter(settingViewPagerAdapter);
 
         settingTabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
@@ -105,23 +114,15 @@ public class SettingsActivity extends AppCompatActivity implements ISettingsView
             public void onTabSelected(TabLayout.Tab tab) {
                 settingViewPager.setCurrentItem(tab.getPosition());
             }
-
-            @Override
-            public void onTabUnselected(TabLayout.Tab tab) {
-
-            }
-
-            @Override
-            public void onTabReselected(TabLayout.Tab tab) {
-
-            }
+            @Override public void onTabUnselected(TabLayout.Tab tab) {}
+            @Override public void onTabReselected(TabLayout.Tab tab) {}
         });
 
         settingViewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
             @Override
             public void onPageSelected(int position) {
                 super.onPageSelected(position);
-                if(settingTabLayout.getTabAt(position) != null){
+                if(settingTabLayout != null){
                     settingTabLayout.getTabAt(position).select();
                 }
             }
@@ -137,28 +138,34 @@ public class SettingsActivity extends AppCompatActivity implements ISettingsView
             settingsSaveButton.setOnClickListener(v -> {
 
                 if(iUploadFileFragmentListener != null){
-                    Log.e("localsave", String.valueOf(iUploadFileFragmentListener.getLocalSaveCheckBoxState()));
+                    if(isReadyLocalCheckbox){
+                        resultLocalCheckbox = iUploadFileFragmentListener.getLocalSaveCheckBoxState();
+                        Log.e("resultLocalCheckbox_iUploadFileFragmentListener", String.valueOf(resultLocalCheckbox));
+                    }
                 }
 
-                // TODO: ki kell javítani a hibát
+                if(iGeneralFragmentListener != null){
+                    if(isReadyBarcodeCheckbox){
+                        resultBarcodeCheckbox = iGeneralFragmentListener.getBarcodeCheckBoxState();
+                    }
+
+                    if(isReadyKeyBoardCheckbox){
+                        resultKeyBoardCheckbox = iGeneralFragmentListener.getKeyBoardCheckBoxState();
+                    }
+                }
 
                 if((originalBarcodeCheckbox || resultBarcodeCheckbox) && !(originalBarcodeCheckbox && resultBarcodeCheckbox)){
-                    Log.e("resultBarcodeCheckbox", String.valueOf(resultBarcodeCheckbox));
-                    Log.e("originalBarcodeCheckbox", String.valueOf(originalBarcodeCheckbox));
                     originalBarcodeCheckbox = resultBarcodeCheckbox;
                     programPresenter.saveBooleanValueToJSONFile("IsEnableBarcodeReaderMode", originalBarcodeCheckbox);
                 }
 
                 if((originalLocalCheckbox || resultLocalCheckbox) && !(originalLocalCheckbox && resultLocalCheckbox)){
-                    Log.e("resultLocalCheckbox", String.valueOf(resultLocalCheckbox));
-                    Log.e("originalLocalCheckbox", String.valueOf(originalLocalCheckbox));
                     originalLocalCheckbox = resultLocalCheckbox;
+                    Log.e("resultLocalCheckbox_programPresenter", String.valueOf(resultLocalCheckbox));
                     programPresenter.saveBooleanValueToJSONFile("IsEnableSaveLocalStorage", originalLocalCheckbox);
                 }
 
                 if((originalKeyBoardCheckbox || resultKeyBoardCheckbox) && !(originalKeyBoardCheckbox && resultKeyBoardCheckbox)){
-                    Log.e("resultKeyBoardCheckbox", String.valueOf(resultKeyBoardCheckbox));
-                    Log.e("originalKeyBoardCheckbox", String.valueOf(originalKeyBoardCheckbox));
                     originalKeyBoardCheckbox = resultKeyBoardCheckbox;
                     programPresenter.saveBooleanValueToJSONFile("IsEnableKeyBoardOnTextBoxes", originalKeyBoardCheckbox);
                 }
@@ -230,14 +237,14 @@ public class SettingsActivity extends AppCompatActivity implements ISettingsView
 
     @Override
     public void sendBarcodeNextCheckBoxState(boolean state) {
-        Log.e("sendBarcodeNextCheckBoxState", String.valueOf(state));
         resultBarcodeCheckbox = state;
+        isReadyBarcodeCheckbox = false;
     }
 
     @Override
     public void sendKeyboardCheckBox(boolean state) {
-        Log.e("sendKeyboardCheckBox", String.valueOf(state));
         resultKeyBoardCheckbox = state;
+        isReadyKeyBoardCheckbox = false;
     }
 
     @Override
@@ -247,11 +254,18 @@ public class SettingsActivity extends AppCompatActivity implements ISettingsView
 
     @Override
     public void sendLocalSaveCheckbox(boolean state) {
-        Log.e("sendLocalSaveCheckbox", String.valueOf(state));
+
+        Log.e("resultLocalCheckbox", String.valueOf(state));
+
         resultLocalCheckbox = state;
+        isReadyLocalCheckbox = false;
     }
 
-    public void setActivityListener(IUploadFileFragmentListener iUploadFileFragmentListener) {
+    public void setUploadFileFragmentListener(IUploadFileFragmentListener iUploadFileFragmentListener) {
         this.iUploadFileFragmentListener = iUploadFileFragmentListener;
+    }
+
+    public void setGeneralFragmentListener(IGeneralFragmentListener iGeneralFragmentListener) {
+        this.iGeneralFragmentListener = iGeneralFragmentListener;
     }
 }

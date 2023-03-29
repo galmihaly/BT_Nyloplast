@@ -11,17 +11,17 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
-import android.widget.ImageButton;
 import android.widget.Toast;
 
 import hu.logcontrol.wasteprogram.R;
 import hu.logcontrol.wasteprogram.SettingsActivity;
 import hu.logcontrol.wasteprogram.helpers.JSONFileHelper;
 import hu.logcontrol.wasteprogram.interfaces.GeneralListener;
+import hu.logcontrol.wasteprogram.interfaces.IGeneralFragmentListener;
 import hu.logcontrol.wasteprogram.interfaces.IGeneralSettingFragment;
 import hu.logcontrol.wasteprogram.presenters.ProgramPresenter;
 
-public class GeneralSettingsFragment extends Fragment implements IGeneralSettingFragment {
+public class GeneralSettingsFragment extends Fragment implements IGeneralSettingFragment, IGeneralFragmentListener {
 
     private View view;
 
@@ -40,7 +40,7 @@ public class GeneralSettingsFragment extends Fragment implements IGeneralSetting
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_general, container, false);
 
-        initGeneralListener();
+        initListeners();
 
         settingBarcodeNextCheckBox = view.findViewById(R.id.settingBarcodeNextCheckBox);
         settingKeyboardCheckBox = view.findViewById(R.id.settingKeyboardCheckBox);
@@ -64,9 +64,10 @@ public class GeneralSettingsFragment extends Fragment implements IGeneralSetting
         return view;
     }
 
-    public void initGeneralListener(){
+    public void initListeners(){
         try {
             generalListener = (SettingsActivity) getActivity();
+            ((SettingsActivity) getActivity()).setGeneralFragmentListener(GeneralSettingsFragment.this);
         }
         catch (ClassCastException e) {
             e.printStackTrace();
@@ -109,7 +110,6 @@ public class GeneralSettingsFragment extends Fragment implements IGeneralSetting
             settingBarcodeNextCheckBox.setOnClickListener(v -> {
                 if(settingBarcodeNextCheckBox.isChecked()){
 
-                    Log.e("beléptem", "ide");
                     settingBarcodeNextCheckBox.setChecked(true);
                     generalListener.sendBarcodeNextCheckBoxState(true);
                 }
@@ -127,4 +127,15 @@ public class GeneralSettingsFragment extends Fragment implements IGeneralSetting
         new Handler(Looper.getMainLooper()).post(() -> { Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show(); });
     }
 
+    @Override
+    public boolean getBarcodeCheckBoxState() {
+        if(settingBarcodeNextCheckBox.isChecked()) { return true; }
+        return false;
+    }
+
+    @Override
+    public boolean getKeyBoardCheckBoxState() {
+        if(settingKeyboardCheckBox.isChecked()) { return true; }
+        return false;
+    }
 }
