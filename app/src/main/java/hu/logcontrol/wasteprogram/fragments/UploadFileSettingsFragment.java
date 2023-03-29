@@ -177,4 +177,10 @@ public class UploadFileSettingsFragment extends Fragment implements IUploadFileS
         if(settingsGlobalSavePathTB == null && !settingsGlobalSavePathTB.getText().toString().equals("")) return null;
         return settingsGlobalSavePathTB.getText().toString();
     }
+
+    @Override
+    public boolean getLocalSaveCheckBoxState() {
+        if(localSavePathCheckbox.isChecked()) return true;
+        return false;
+    }
 }

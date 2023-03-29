@@ -24,7 +24,9 @@
             android:insetBottom="0dp"
             android:text="Alapanyagkezelés"
             android:textSize="20sp"
-            app:backgroundTint="#79FF9E"
+            android:textColor="#FFFFFF"
+            android:textStyle="bold"
+            app:backgroundTint="#1270B4"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -38,7 +40,9 @@
             android:insetBottom="0dp"
             android:text="MEGHATÁROZOTT HULLADÉKFAJTÁK TÖMEGADATKEZELÉSE"
             android:textSize="20sp"
-            app:backgroundTint="#79FF9E"
+            android:textColor="#FFFFFF"
+            android:textStyle="bold"
+            app:backgroundTint="#1270B4"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/modeOne" />
@@ -52,7 +56,9 @@
             android:insetBottom="0dp"
             android:text="ÚJRAFELDOLGOZOTT HULLADÉKANYAGOK TÖMEGADATKEZELÉSE"
             android:textSize="20sp"
-            app:backgroundTint="#79FF9E"
+            android:textColor="#FFFFFF"
+            android:textStyle="bold"
+            app:backgroundTint="#1270B4"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/modeTwo" />
@@ -85,24 +91,21 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/titleCL"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:background="#038727"
+        android:layout_height="100dp"
+        android:background="#75CCEEFF"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <TextView
-            android:id="@+id/title"
+        <ImageView
+            android:id="@+id/imageView2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Kezdőlap"
-            android:textColor="#FFFFFF"
-            android:textSize="24sp"
-            android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/nyloplast_logo" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

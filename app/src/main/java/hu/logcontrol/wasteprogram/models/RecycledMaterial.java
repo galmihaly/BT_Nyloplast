@@ -6,12 +6,14 @@ public class RecycledMaterial {
     private String materialType;
     private String storageBoxIdentifier;
     private String massData;
+    private String comment;
 
-    public RecycledMaterial(String timeStamp, String materialType, String storageBoxIdentifier, String massData) {
+    public RecycledMaterial(String timeStamp, String materialType, String storageBoxIdentifier, String massData, String comment) {
         this.timeStamp = timeStamp;
         this.materialType = materialType;
         this.storageBoxIdentifier = storageBoxIdentifier;
         this.massData = massData;
+        this.comment = comment;
     }
 
     public String getTimeStamp() {
@@ -28,6 +30,10 @@ public class RecycledMaterial {
 
     public String getMassData() {
         return massData;
+    }
+
+    public String getComment() {
+        return comment;
     }
 
     @Override

@@ -62,6 +62,7 @@ public class RawMaterialAdapter extends RecyclerView.Adapter<RawMaterialAdapter.
                     holder.getNumberOfItem().setText(position + 1 + ".");
                     holder.getRawMaterialTypeInput().setText(rawMaterialList.get(position).getMaterialType());
                     holder.getRawMaterialCountInput().setText(rawMaterialList.get(position).getDoseNumber());
+                    holder.getComment().setText(rawMaterialList.get(position).getComment());
 
                     if(rawMaterialList.size() == preferences.getIntValueByKey("listvalue")){
                         modesOneWeakReference.get().settingButton(EditButtonEnums.ADD_BUTTON_DISABLED);
@@ -106,6 +107,7 @@ public class RawMaterialAdapter extends RecyclerView.Adapter<RawMaterialAdapter.
         private TextView rawMaterialTypeInput;
         private TextView rawMaterialCountInput;
         private TextView numberOfItem;
+        private TextView comment;
 
         private ImageButton deleteItemButton;
 
@@ -118,6 +120,7 @@ public class RawMaterialAdapter extends RecyclerView.Adapter<RawMaterialAdapter.
             rawMaterialTypeInput = itemView.findViewById(R.id.rawMaterialTypeInput_1);
             rawMaterialCountInput = itemView.findViewById(R.id.rawMaterialCountInput_1);
             numberOfItem = itemView.findViewById(R.id.numberOfItem_1);
+            comment = itemView.findViewById(R.id.rawMaterialCommentInput_1);
 
             deleteItemButton = itemView.findViewById(R.id.deleteItemButton_1);
         }
@@ -132,6 +135,10 @@ public class RawMaterialAdapter extends RecyclerView.Adapter<RawMaterialAdapter.
 
         public TextView getNumberOfItem() {
             return numberOfItem;
+        }
+
+        public TextView getComment() {
+            return comment;
         }
 
         public ImageButton getDeleteItemButton() {

@@ -15,6 +15,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
@@ -60,11 +61,11 @@ public class ModesThree extends AppCompatActivity implements IModesThreeView {
                     String typeRecMatTextBox = intent.getStringExtra("typeRecMatTextBox");
                     String storageBoxIdentifierTextBox2 = intent.getStringExtra("storageBoxIdentifierTextBox2");
                     String massDataTextBox2 = intent.getStringExtra("massDataTextBox2");
+                    String commentDataTextBox2 = intent.getStringExtra("commentDataTextBox2");
 
-                    RecycledMaterial recycledMaterial = new RecycledMaterial(ApplicationLogger.getUTCDateTimeString(),typeRecMatTextBox, storageBoxIdentifierTextBox2, massDataTextBox2);
+                    RecycledMaterial recycledMaterial = new RecycledMaterial(ApplicationLogger.getUTCDateTimeString(),typeRecMatTextBox, storageBoxIdentifierTextBox2, massDataTextBox2, commentDataTextBox2);
 
                     programPresenter.addRecycledMaterialToAdapterList(recycledMaterial);
-                    hideNavigationBar();
                 }
             }
     );
@@ -84,14 +85,6 @@ public class ModesThree extends AppCompatActivity implements IModesThreeView {
     @Override
     protected void onResume() {
         super.onResume();
-
-        hideNavigationBar();
-
-        if(mainModesThreeCL != null){
-            mainModesThreeCL.setOnClickListener(view -> {
-                hideNavigationBar();
-            });
-        }
 
         if(saveButton_3 != null && recycledMaterialList != null){
             int sizeOfRawMaterialList = LocalRecycLedMaterialsStorage.getInstance().getRecycLedMaterialListSize();
@@ -141,15 +134,15 @@ public class ModesThree extends AppCompatActivity implements IModesThreeView {
     }
 
     @Override
-    protected void onStart() {
-        super.onStart();
-        hideNavigationBar();
-    }
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
 
-    @Override
-    protected void onPause() {
-        super.onPause();
-        hideNavigationBar();
+        if(keyCode == KeyEvent.KEYCODE_BUTTON_L1){
+            if(event.getAction() == KeyEvent.ACTION_DOWN){
+                addButton_3.callOnClick();
+            }
+        }
+
+        return super.onKeyUp(keyCode, event);
     }
 
     @Override
@@ -226,11 +219,5 @@ public class ModesThree extends AppCompatActivity implements IModesThreeView {
 
         mainModesThreeCL = findViewById(R.id.mainModesThreeCL);
         swipeRefreshLayout = findViewById(R.id.swipeRefresLayoutModesThreeRV);
-
-        hideNavigationBar();
-    }
-
-    private void hideNavigationBar(){
-        Helper.hideNavigationBar(this);
     }
 }

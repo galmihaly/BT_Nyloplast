@@ -3,7 +3,6 @@ package hu.logcontrol.wasteprogram.adapters;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Color;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -63,6 +62,7 @@ public class RecycledMaterialAdapter extends RecyclerView.Adapter<RecycledMateri
                     holder.getRawMaterialTypeInput_3().setText(recycledMaterialList.get(position).getMaterialType());
                     holder.getStorageBoxIdentifierInput_3().setText(recycledMaterialList.get(position).getStorageBoxIdentifier());
                     holder.getMassDataInput_3().setText(recycledMaterialList.get(position).getMassData());
+                    holder.getCommentDataInput_3().setText(recycledMaterialList.get(position).getComment());
 
                     if(recycledMaterialList.size() == preferences.getIntValueByKey("listvalue")){
                         modesThreeWeakReference.get().settingButton(EditButtonEnums.ADD_BUTTON_DISABLED);
@@ -107,6 +107,7 @@ public class RecycledMaterialAdapter extends RecyclerView.Adapter<RecycledMateri
         private TextView rawMaterialTypeInput_3;
         private TextView storageBoxIdentifierInput_3;
         private TextView massDataInput_3;
+        private TextView commentDataInput_3;
 
         private ImageButton deleteItemButton_3;
 
@@ -117,6 +118,7 @@ public class RecycledMaterialAdapter extends RecyclerView.Adapter<RecycledMateri
             rawMaterialTypeInput_3 = itemView.findViewById(R.id.rawMaterialTypeInput_3);
             storageBoxIdentifierInput_3 = itemView.findViewById(R.id.storageBoxIdentifierInput_3);
             massDataInput_3 = itemView.findViewById(R.id.massDataInput_3);
+            commentDataInput_3 = itemView.findViewById(R.id.commentDataInput_3);
 
             deleteItemButton_3 = itemView.findViewById(R.id.deleteItemButton_3);
         }
@@ -135,6 +137,10 @@ public class RecycledMaterialAdapter extends RecyclerView.Adapter<RecycledMateri
 
         public TextView getMassDataInput_3() {
             return massDataInput_3;
+        }
+
+        public TextView getCommentDataInput_3() {
+            return commentDataInput_3;
         }
 
         public ImageButton getDeleteItemButton_3() {

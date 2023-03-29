@@ -15,6 +15,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
@@ -63,11 +64,11 @@ public class ModesTwo extends AppCompatActivity implements IModesTwoView {
                     String typeMassTypeTextBox = intent.getStringExtra("typeMassTypeTextBox");
                     String storageBoxIdentifierTextBox = intent.getStringExtra("storageBoxIdentifierTextBox");
                     String massDataTextBox = intent.getStringExtra("massDataTextBox");
+                    String commentDataTextBox = intent.getStringExtra("commentDataTextBox");
 
-                    RawMaterialTypeMass rawMaterialTypeMass = new RawMaterialTypeMass(ApplicationLogger.getUTCDateTimeString(),typeMassCountTextBox, typeMassTypeTextBox, storageBoxIdentifierTextBox, massDataTextBox);
+                    RawMaterialTypeMass rawMaterialTypeMass = new RawMaterialTypeMass(ApplicationLogger.getUTCDateTimeString(),typeMassCountTextBox, typeMassTypeTextBox, storageBoxIdentifierTextBox, massDataTextBox, commentDataTextBox);
 
                     programPresenter.addRawMaterialTypeMassToAdapterList(rawMaterialTypeMass);
-                    hideNavigationBar();
                 }
             }
     );
@@ -87,14 +88,6 @@ public class ModesTwo extends AppCompatActivity implements IModesTwoView {
     @Override
     protected void onResume() {
         super.onResume();
-
-        hideNavigationBar();
-
-        if(mainModesTwoCL != null){
-            mainModesTwoCL.setOnClickListener(view -> {
-                hideNavigationBar();
-            });
-        }
 
         if(saveButton_2 != null && rawMaterialTypeMassList != null){
             int sizeOfRawMaterialList = LocalRawMaterialTypeMassesStorage.getInstance().getRawMaterialTypeMassListSize();
@@ -139,15 +132,15 @@ public class ModesTwo extends AppCompatActivity implements IModesTwoView {
     }
 
     @Override
-    protected void onStart() {
-        super.onStart();
-        hideNavigationBar();
-    }
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
 
-    @Override
-    protected void onPause() {
-        super.onPause();
-        hideNavigationBar();
+        if(keyCode == KeyEvent.KEYCODE_BUTTON_L1){
+            if(event.getAction() == KeyEvent.ACTION_DOWN){
+                addButton_2.callOnClick();
+            }
+        }
+
+        return super.onKeyUp(keyCode, event);
     }
 
     @Override
@@ -224,11 +217,5 @@ public class ModesTwo extends AppCompatActivity implements IModesTwoView {
 
         mainModesTwoCL = findViewById(R.id.mainModesTwoCL);
         swipeRefreshLayout = findViewById(R.id.swipeRefresLayoutModesTwoRV);
-
-        hideNavigationBar();
-    }
-
-    private void hideNavigationBar(){
-        Helper.hideNavigationBar(this);
     }
 }

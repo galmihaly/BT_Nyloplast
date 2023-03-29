@@ -5,11 +5,13 @@ public class RawMaterial {
     private String timeStamp;
     private String doseNumber;
     private String materialType;
+    private String comment;
 
-    public RawMaterial(String timeStamp, String doseNumber, String materialType) {
+    public RawMaterial(String timeStamp, String doseNumber, String materialType, String comment) {
         this.timeStamp = timeStamp;
         this.doseNumber = doseNumber;
         this.materialType = materialType;
+        this.comment = comment;
     }
 
     public String getTimeStamp() {
@@ -24,10 +26,14 @@ public class RawMaterial {
         return materialType;
     }
 
+    public String getComment() {
+        return comment;
+    }
+
     @Override
-    public String toString() { return String.format("%s;%s;%s", this.timeStamp, this.materialType, this.doseNumber); }
+    public String toString() { return String.format("%s;%s;%s;%s", this.timeStamp, this.materialType, this.doseNumber, this.comment); }
 
     public static String getCSVHeader(){
-        return "TimeStamp;RawMaterialType;RawMaterialCount";
+        return "TimeStamp;RawMaterialType;RawMaterialCount;Comment";
     }
 }

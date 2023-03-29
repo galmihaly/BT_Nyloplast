@@ -13,6 +13,38 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <TextView
+            android:id="@+id/rawMaterialComment_1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginBottom="5dp"
+            android:padding="0sp"
+            android:paddingStart="0sp"
+            android:paddingLeft="0sp"
+            android:paddingTop="0sp"
+            android:paddingEnd="0sp"
+            android:paddingRight="0sp"
+            android:paddingBottom="0sp"
+            android:text="Megjegyzés:"
+            android:textColor="@color/black"
+            android:textSize="14sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/rawMaterialType_1" />
+
+        <TextView
+            android:id="@+id/rawMaterialCommentInput_1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginBottom="5dp"
+            android:textColor="@color/black"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/rawMaterialComment_1"
+            app:layout_constraintTop_toBottomOf="@+id/rawMaterialTypeInput_1" />
+
+        <TextView
             android:id="@+id/rawMaterialCount_1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -39,7 +71,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
-            android:layout_marginBottom="5dp"
             android:padding="0sp"
             android:paddingStart="0sp"
             android:paddingLeft="0sp"
@@ -50,7 +81,6 @@
             android:text="Alapanyag típusa:"
             android:textColor="@color/black"
             android:textSize="14sp"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/rawMaterialCount_1" />
 
@@ -59,10 +89,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
-            android:layout_marginBottom="5dp"
             android:textColor="@color/black"
             android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toEndOf="@+id/rawMaterialType_1"
             app:layout_constraintTop_toBottomOf="@+id/rawMaterialCountInput_1" />
 

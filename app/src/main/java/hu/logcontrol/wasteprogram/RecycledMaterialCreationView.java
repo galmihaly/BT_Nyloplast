@@ -10,13 +10,11 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
 
-import hu.logcontrol.wasteprogram.helpers.Helper;
 import hu.logcontrol.wasteprogram.helpers.JSONFileHelper;
 
 public class RecycledMaterialCreationView extends AppCompatActivity {
@@ -24,10 +22,12 @@ public class RecycledMaterialCreationView extends AppCompatActivity {
     private ConstraintLayout constraint_1;
     private ConstraintLayout constraint_2;
     private ConstraintLayout constraint_3;
+    private ConstraintLayout constraint_4;
 
     private EditText textBox_1;
     private EditText textBox_2;
     private EditText textBox_3;
+    private EditText textBox_4;
 
     private ImageButton addBut;
     private ImageButton deleteBut;
@@ -36,6 +36,7 @@ public class RecycledMaterialCreationView extends AppCompatActivity {
     private ImageButton enterBut_1;
     private ImageButton enterBut_2;
     private ImageButton enterBut_3;
+    private ImageButton enterBut_4;
 
     private String disableColor = "#B7C0C1";
     private String enableColor = "#000000";
@@ -43,6 +44,8 @@ public class RecycledMaterialCreationView extends AppCompatActivity {
     private boolean isEnableBarcodeReaderMode = false;
     private boolean isEnableKeyBoardOnTextBoxes = false;
     private boolean isFirstGettingText = true;
+
+    private boolean isClickAddButton = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,6 +83,9 @@ public class RecycledMaterialCreationView extends AppCompatActivity {
                         textBox_3.setTextColor(Color.parseColor(enableColor));
                         constraint_3.setVisibility(View.INVISIBLE);
 
+                        textBox_4.setTextColor(Color.parseColor(enableColor));
+                        constraint_4.setVisibility(View.INVISIBLE);
+
                         addBut.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.disable_button_background_circle));
                         deleteBut.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.disable_button_background_circle));
 
@@ -112,7 +118,7 @@ public class RecycledMaterialCreationView extends AppCompatActivity {
                                 }
 
                                 if(isEnableBarcodeReaderMode){
-                                    if(keyCode == KeyEvent.KEYCODE_BUTTON_R1){
+                                    if(keyCode == KeyEvent.KEYCODE_BUTTON_R1 || keyCode == KeyEvent.KEYCODE_BUTTON_L1){
                                         if(event.getAction() == KeyEvent.ACTION_UP){
                                             setStateFirstEdittext();
                                         }
@@ -176,7 +182,7 @@ public class RecycledMaterialCreationView extends AppCompatActivity {
                                 }
 
                                 if(isEnableBarcodeReaderMode){
-                                    if(keyCode == KeyEvent.KEYCODE_BUTTON_R1){
+                                    if(keyCode == KeyEvent.KEYCODE_BUTTON_R1 || keyCode == KeyEvent.KEYCODE_BUTTON_L1){
                                         if(event.getAction() == KeyEvent.ACTION_UP){
                                             setStateSecondEdittext();
                                         }
@@ -194,7 +200,7 @@ public class RecycledMaterialCreationView extends AppCompatActivity {
             });
         }
 
-        if(constraint_3 != null && textBox_3 != null && enterBut_3 != null && addBut != null && deleteBut != null){
+        if(constraint_3 != null && textBox_3 != null && enterBut_3 != null && deleteBut != null){
 
             textBox_3.addTextChangedListener(new TextWatcher() {
 
@@ -208,11 +214,11 @@ public class RecycledMaterialCreationView extends AppCompatActivity {
                     if(watchedText.equals("")){
 
                         enterBut_3.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.disable_button_background_rectangle));
-                        constraint_3.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.cardview_red_background));
                         textBox_3.setTextColor(Color.parseColor(enableColor));
+                        constraint_3.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.cardview_red_background));
 
                         if(enterBut_3.isEnabled()) enterBut_3.setEnabled(false);
-                        if(!textBox_3.isEnabled())textBox_3.setEnabled(true);
+                        if(!textBox_3.isEnabled()) textBox_3.setEnabled(true);
                         if(!textBox_3.isFocused()) textBox_3.requestFocus();
 
                         isFirstGettingText = true;
@@ -223,14 +229,17 @@ public class RecycledMaterialCreationView extends AppCompatActivity {
                             isFirstGettingText = false;
 
                             enterBut_3.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.enter_button_background));
-                            if(!enterBut_3.isEnabled()) enterBut_3.setEnabled(true);
+                            deleteBut.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.delete_button_background));
+
+                            if(!enterBut_3.isEnabled())enterBut_3.setEnabled(true);
+                            if(!deleteBut.isEnabled())deleteBut.setEnabled(true);
 
                             enterBut_3.setOnClickListener(v -> {
                                 setStateThirdEdittext();
                             });
 
-
                             textBox_3.setOnKeyListener((v, keyCode, event) -> {
+
                                 if(keyCode == KeyEvent.KEYCODE_ENTER){
                                     if(event.getAction() == KeyEvent.ACTION_UP){
                                         setStateThirdEdittext();
@@ -238,9 +247,76 @@ public class RecycledMaterialCreationView extends AppCompatActivity {
                                 }
 
                                 if(isEnableBarcodeReaderMode){
-                                    if(keyCode == KeyEvent.KEYCODE_BUTTON_R1){
+                                    if(keyCode == KeyEvent.KEYCODE_BUTTON_R1 || keyCode == KeyEvent.KEYCODE_BUTTON_L1){
                                         if(event.getAction() == KeyEvent.ACTION_UP){
                                             setStateThirdEdittext();
+                                        }
+                                    }
+                                }
+
+                                return false;
+                            });
+                        }
+                    }
+
+                }
+
+                @Override public void afterTextChanged(Editable s) {}
+            });
+        }
+
+        if(constraint_4 != null && textBox_4 != null && enterBut_4 != null && addBut != null && deleteBut != null){
+
+            textBox_4.addTextChangedListener(new TextWatcher() {
+
+                @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+                @SuppressLint("ClickableViewAccessibility")
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+                    String watchedText = textBox_4.getText().toString();
+
+                    if(watchedText.equals("")){
+
+                        enterBut_4.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.disable_button_background_rectangle));
+                        constraint_4.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.cardview_red_background));
+                        textBox_4.setTextColor(Color.parseColor(enableColor));
+
+                        if(enterBut_4.isEnabled()) enterBut_4.setEnabled(false);
+                        if(!textBox_4.isEnabled())textBox_4.setEnabled(true);
+                        if(!textBox_4.isFocused()) textBox_4.requestFocus();
+
+                        isFirstGettingText = true;
+                    }
+                    else {
+                        if(isFirstGettingText){
+
+                            isFirstGettingText = false;
+
+                            enterBut_4.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.enter_button_background));
+                            if(!enterBut_4.isEnabled()) enterBut_4.setEnabled(true);
+
+                            enterBut_4.setOnClickListener(v -> {
+                                setStateFourthEdittext();
+                                isClickAddButton = true;
+                            });
+
+
+                            textBox_4.setOnKeyListener((v, keyCode, event) -> {
+                                if(keyCode == KeyEvent.KEYCODE_ENTER){
+                                    if(event.getAction() == KeyEvent.ACTION_UP){
+                                        setStateFourthEdittext();
+                                        isClickAddButton = true;
+                                    }
+                                }
+
+                                if(isEnableBarcodeReaderMode){
+                                    if(keyCode == KeyEvent.KEYCODE_BUTTON_R1 || keyCode == KeyEvent.KEYCODE_BUTTON_L1){
+                                        if(event.getAction() == KeyEvent.ACTION_UP){
+                                            if(!isClickAddButton){
+                                                setStateFourthEdittext();
+                                                isClickAddButton = true;
+                                            }
                                         }
                                     }
                                 }
@@ -256,6 +332,7 @@ public class RecycledMaterialCreationView extends AppCompatActivity {
                                         intent.putExtra("typeRecMatTextBox", textBox_1.getText().toString());
                                         intent.putExtra("storageBoxIdentifierTextBox2", textBox_2.getText().toString());
                                         intent.putExtra("massDataTextBox2", textBox_3.getText().toString());
+                                        intent.putExtra("commentDataTextBox2", textBox_4.getText().toString());
 
                                         setResult(1, intent);
 
@@ -276,6 +353,8 @@ public class RecycledMaterialCreationView extends AppCompatActivity {
             deleteBut.setOnClickListener(v -> {
                 textBox_1.setText("");
 
+                isClickAddButton = false;
+
                 if(!textBox_1.isEnabled()) textBox_1.setEnabled(true);
                 if(!textBox_1.isFocused()) textBox_1.requestFocus();
                 if(addBut.isEnabled()) addBut.setEnabled(false);
@@ -285,10 +364,22 @@ public class RecycledMaterialCreationView extends AppCompatActivity {
 
         if(backBut != null){
             backBut.setOnClickListener(view -> {
-                Intent intent = new Intent(getApplicationContext(), ModesOne.class);
+                Intent intent = new Intent(getApplicationContext(), ModesThree.class);
                 startActivity(intent);
             });
         }
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+
+        if(keyCode == KeyEvent.KEYCODE_BUTTON_L1){
+            if(event.getAction() == KeyEvent.ACTION_DOWN){
+                if(isClickAddButton) addBut.callOnClick();
+            }
+        }
+
+        return super.onKeyUp(keyCode, event);
     }
 
     private void setStateFirstEdittext(){
@@ -325,32 +416,36 @@ public class RecycledMaterialCreationView extends AppCompatActivity {
 
     private void setStateThirdEdittext(){
         if(!textBox_3.getText().toString().equals("")){
+            constraint_4.setVisibility(View.VISIBLE);
             constraint_3.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.cardview_green_background));
-            enterBut_3.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.disable_button_background_rectangle));
             textBox_3.setTextColor(Color.parseColor(disableColor));
 
-            addBut.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.add_button_background));
-
-            if(!addBut.isEnabled()) addBut.setEnabled(true);
-            if(textBox_3.isFocused()) textBox_3.clearFocus();
+            enterBut_3.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.disable_button_background_rectangle));
+            textBox_4.setText("");
 
             if(textBox_3.isEnabled()) textBox_3.setEnabled(false);
             if(enterBut_3.isEnabled()) enterBut_3.setEnabled(false);
 
-            addBut.requestFocus(View.FOCUS_DOWN);
+            if(!textBox_4.isFocused()) textBox_4.requestFocus();
         }
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-        hideNavigationBar();
-    }
+    private void setStateFourthEdittext(){
+        if(!textBox_4.getText().toString().equals("")){
+            constraint_4.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.cardview_green_background));
+            enterBut_4.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.disable_button_background_rectangle));
+            textBox_4.setTextColor(Color.parseColor(disableColor));
 
-    @Override
-    protected void onPause() {
-        super.onPause();
-        hideNavigationBar();
+            addBut.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.add_button_background));
+
+            if(!addBut.isEnabled()) addBut.setEnabled(true);
+            if(textBox_4.isFocused()) textBox_4.clearFocus();
+
+            if(textBox_4.isEnabled()) textBox_4.setEnabled(false);
+            if(enterBut_4.isEnabled()) enterBut_4.setEnabled(false);
+
+            addBut.requestFocus(View.FOCUS_DOWN);
+        }
     }
 
     public void initView(){
@@ -358,10 +453,12 @@ public class RecycledMaterialCreationView extends AppCompatActivity {
         constraint_1 = findViewById(R.id.typeRecMatCL);
         constraint_2 = findViewById(R.id.storageBoxIdentifierCL2);
         constraint_3 = findViewById(R.id.massDataCL2);
+        constraint_4 = findViewById(R.id.commentDataCL2);
 
         textBox_1 = findViewById(R.id.typeRecMatTextBox);
         textBox_2 = findViewById(R.id.storageBoxIdentifierTextBox2);
         textBox_3 = findViewById(R.id.massDataTextBox2);
+        textBox_4 = findViewById(R.id.commentDataTextBox2);
 
         textBox_1.requestFocus();
 
@@ -371,6 +468,7 @@ public class RecycledMaterialCreationView extends AppCompatActivity {
             if(textBox_1 != null){ textBox_1.setShowSoftInputOnFocus(false); }
             if(textBox_2 != null){ textBox_2.setShowSoftInputOnFocus(false); }
             if(textBox_3 != null){ textBox_3.setShowSoftInputOnFocus(false); }
+            if(textBox_4 != null){ textBox_3.setShowSoftInputOnFocus(false); }
         }
 
         addBut = findViewById(R.id.addRecMatButton);
@@ -383,11 +481,6 @@ public class RecycledMaterialCreationView extends AppCompatActivity {
         enterBut_1 = findViewById(R.id.enterButton_rec_1);
         enterBut_2 = findViewById(R.id.enterButton_rec_2);
         enterBut_3 = findViewById(R.id.enterButton_rec_3);
-
-        hideNavigationBar();
-    }
-
-    private void hideNavigationBar(){
-        Helper.hideNavigationBar(this);
+        enterBut_4 = findViewById(R.id.enterButton_rec_4);
     }
 }

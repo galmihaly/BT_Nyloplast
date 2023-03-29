@@ -136,6 +136,10 @@ public class SettingsActivity extends AppCompatActivity implements ISettingsView
         if(settingsSaveButton != null){
             settingsSaveButton.setOnClickListener(v -> {
 
+                if(iUploadFileFragmentListener != null){
+                    Log.e("localsave", String.valueOf(iUploadFileFragmentListener.getLocalSaveCheckBoxState()));
+                }
+
                 // TODO: ki kell javítani a hibát
 
                 if((originalBarcodeCheckbox || resultBarcodeCheckbox) && !(originalBarcodeCheckbox && resultBarcodeCheckbox)){
@@ -185,32 +189,12 @@ public class SettingsActivity extends AppCompatActivity implements ISettingsView
         }
     }
 
-    @Override
-    protected void onRestart() {
-        super.onRestart();
-        hideNavigationBar();
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        hideNavigationBar();
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        hideNavigationBar();
-    }
-
     private void initView(){
         settingsSaveButton = findViewById(R.id.settingsSaveButton);
         settingsBackButton = findViewById(R.id.settingsBackButton);
 
         settingTabLayout = findViewById(R.id.settingTabLayout);
         settingViewPager = findViewById(R.id.settingViewPager);
-
-        hideNavigationBar();
     }
 
     @Override
@@ -242,10 +226,6 @@ public class SettingsActivity extends AppCompatActivity implements ISettingsView
     public void getMessageFromPresenter(String message) {
         if(message == null) return;
         new Handler(Looper.getMainLooper()).post(() -> { Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show(); });
-    }
-
-    private void hideNavigationBar(){
-        Helper.hideNavigationBar(this);
     }
 
     @Override

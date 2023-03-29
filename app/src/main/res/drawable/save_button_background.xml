@@ -5,7 +5,7 @@
             android:pivotY="50%">
             <shape>
                 <corners android:radius="50dp"/>
-                <solid android:color="#3087D8"/>
+                <solid android:color="#0878be"/>
             </shape>
         </rotate>
     </item>

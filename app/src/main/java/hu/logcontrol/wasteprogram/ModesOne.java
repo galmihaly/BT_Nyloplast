@@ -16,6 +16,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
@@ -65,11 +66,11 @@ public class ModesOne extends AppCompatActivity implements IModesOneView {
 
                     String rawMatTypeTextBox = intent.getStringExtra("rawMatTypeTextBox");
                     String rawMatCountTextBox = intent.getStringExtra("rawMatCountTextBox");
+                    String rawMatContentTextBox = intent.getStringExtra("rawMatContentTextBox");
 
-                    RawMaterial rawMaterial = new RawMaterial(ApplicationLogger.getUTCDateTimeString(),rawMatTypeTextBox, rawMatCountTextBox);
+                    RawMaterial rawMaterial = new RawMaterial(ApplicationLogger.getUTCDateTimeString(),rawMatTypeTextBox, rawMatCountTextBox, rawMatContentTextBox);
 
                     programPresenter.addRawMaterialToAdapterList(rawMaterial);
-                    hideNavigationBar();
                 }
             }
     );
@@ -89,14 +90,6 @@ public class ModesOne extends AppCompatActivity implements IModesOneView {
     @Override
     protected void onResume() {
         super.onResume();
-
-        hideNavigationBar();
-
-        if(mainModesOneCL != null){
-            mainModesOneCL.setOnClickListener(view -> {
-                hideNavigationBar();
-            });
-        }
 
         if(programPresenter != null){
             if(addButton != null){
@@ -143,15 +136,15 @@ public class ModesOne extends AppCompatActivity implements IModesOneView {
     }
 
     @Override
-    protected void onStart() {
-        super.onStart();
-        hideNavigationBar();
-    }
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
 
-    @Override
-    protected void onPause() {
-        super.onPause();
-        hideNavigationBar();
+        if(keyCode == KeyEvent.KEYCODE_BUTTON_L1){
+            if(event.getAction() == KeyEvent.ACTION_DOWN){
+                addButton.callOnClick();
+            }
+        }
+
+        return super.onKeyUp(keyCode, event);
     }
 
     @Override
@@ -172,10 +165,6 @@ public class ModesOne extends AppCompatActivity implements IModesOneView {
 
         mainModesOneCL = findViewById(R.id.mainModesOneCL);
         swipeRefreshLayout = findViewById(R.id.swipeRefresLayoutModesOneRV);
-
-
-
-        hideNavigationBar();
     }
 
     @Override
@@ -234,9 +223,5 @@ public class ModesOne extends AppCompatActivity implements IModesOneView {
             isHaveToClearList = true;
             onRefreshListener.onRefresh();
         });
-    }
-
-    private void hideNavigationBar(){
-        Helper.hideNavigationBar(this);
     }
 }

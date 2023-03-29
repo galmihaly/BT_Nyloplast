@@ -108,18 +108,6 @@ public class MainActivity extends AppCompatActivity implements IMainView {
         }
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-        hideNavigationBar();
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        hideNavigationBar();
-    }
-
     public void startWrite() {
         if(ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
             Log.e("", "Jelenleg rendelkezik írási joggal!");
@@ -139,7 +127,6 @@ public class MainActivity extends AppCompatActivity implements IMainView {
 
         if (requestCode == 786) {
             Toast.makeText(this, "Engedély elfogadva!", Toast.LENGTH_SHORT).show();
-            hideNavigationBar();
         }
 
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -153,8 +140,6 @@ public class MainActivity extends AppCompatActivity implements IMainView {
 
         exitButton = findViewById(R.id.exitButton);
         settingsButton = findViewById(R.id.settingsButton);
-
-        hideNavigationBar();
     }
 
     @Override
@@ -173,9 +158,5 @@ public class MainActivity extends AppCompatActivity implements IMainView {
         finishAndRemoveTask();
         System.exit(0);
         super.onDestroy();
-    }
-
-    private void hideNavigationBar(){
-        Helper.hideNavigationBar(this);
     }
 }

@@ -7,6 +7,54 @@
     tools:context=".RawMaterialTypeMassCreationView">
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/commentDataCL"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/cardview_red_background"
+        android:visibility="invisible"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/massDataCL">
+
+        <ImageButton
+            android:id="@+id/enterButton_type_5"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:background="@drawable/disable_button_background_rectangle"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/textLayout_typeMass_5"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_fluent_arrow_enter_left_20_regular" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/textLayout_typeMass_5"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="230dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:hint="Megjegyzés:"
+            android:textColorHint="@color/black"
+            app:boxStrokeColor="@color/black"
+            app:boxStrokeWidth="2dp"
+            app:boxStrokeWidthFocused="1dp"
+            app:counterTextColor="@color/black"
+            app:hintTextColor="@color/black"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/commentDataTextBox"
+                android:layout_width="230dp"
+                android:layout_height="wrap_content"
+                android:singleLine="true" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/massDataCL"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -202,7 +250,7 @@
         android:id="@+id/titleTypeMassCreationCL"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:background="#038727"
+        android:background="#1270B4"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">

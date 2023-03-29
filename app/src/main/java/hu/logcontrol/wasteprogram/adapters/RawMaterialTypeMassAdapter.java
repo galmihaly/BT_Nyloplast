@@ -63,6 +63,7 @@ public class RawMaterialTypeMassAdapter extends RecyclerView.Adapter<RawMaterial
                     holder.getRawMaterialTypeInput_2().setText(rawMaterialTypeMassList.get(position).getMaterialType());
                     holder.getStorageBoxIdentifierInput().setText(rawMaterialTypeMassList.get(position).getStorageBoxIdentifier());
                     holder.getMassDataInput().setText(rawMaterialTypeMassList.get(position).getMassData());
+                    holder.getCommentDataInput().setText(rawMaterialTypeMassList.get(position).getComment());
 
                     if(rawMaterialTypeMassList.size() == preferences.getIntValueByKey("listvalue")){
                         modesTwoWeakReference.get().settingButton(EditButtonEnums.ADD_BUTTON_DISABLED);
@@ -108,6 +109,7 @@ public class RawMaterialTypeMassAdapter extends RecyclerView.Adapter<RawMaterial
         private TextView rawMaterialTypeInput_2;
         private TextView storageBoxIdentifierInput;
         private TextView massDataInput;
+        private TextView commentDataInput;
 
         private ImageButton deleteItemButton_2;
 
@@ -119,6 +121,7 @@ public class RawMaterialTypeMassAdapter extends RecyclerView.Adapter<RawMaterial
             rawMaterialTypeInput_2 = itemView.findViewById(R.id.rawMaterialTypeInput_2);
             storageBoxIdentifierInput = itemView.findViewById(R.id.storageBoxIdentifierInput);
             massDataInput = itemView.findViewById(R.id.massDataInput);
+            commentDataInput = itemView.findViewById(R.id.commentDataInput);
 
             deleteItemButton_2 = itemView.findViewById(R.id.deleteItemButton_2);
         }
@@ -141,6 +144,10 @@ public class RawMaterialTypeMassAdapter extends RecyclerView.Adapter<RawMaterial
 
         public TextView getMassDataInput() {
             return massDataInput;
+        }
+
+        public TextView getCommentDataInput() {
+            return commentDataInput;
         }
 
         public ImageButton getDeleteItemButton_2() {
