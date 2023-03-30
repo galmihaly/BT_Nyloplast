@@ -49,6 +49,8 @@ public class MainActivity extends AppCompatActivity implements IMainView {
             programPresenter.initBaseJSONFile("values.json");
         }
 
+        programPresenter.initBaseJSONFile("values.json");
+
 //        Executor executor = Executors.newSingleThreadExecutor();
 //        executor.execute(() -> {
 //            String z = "";

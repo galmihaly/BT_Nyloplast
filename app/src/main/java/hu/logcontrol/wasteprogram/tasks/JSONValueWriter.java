@@ -88,7 +88,7 @@ public class JSONValueWriter implements Callable {
 
                     fileWriter = new FileWriter(file);
                     bufferedWriter = new BufferedWriter(fileWriter);
-                    bufferedWriter.write(JSONFileHelper.formatJSONObjectString(jsonObject.toString()));
+                    bufferedWriter.write(jsonObject.toString(4).replace("\\", ""));
                 }
             }
         }

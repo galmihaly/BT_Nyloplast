@@ -1,29 +1,23 @@
 package hu.logcontrol.wasteprogram;
 
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
-import androidx.security.crypto.EncryptedSharedPreferences;
-import androidx.security.crypto.MasterKeys;
 import androidx.viewpager2.widget.ViewPager2;
 
-import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
 import android.view.View;
-import android.widget.CheckBox;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
 import com.google.android.material.tabs.TabLayout;
-import com.google.android.material.textfield.TextInputEditText;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,15 +27,12 @@ import hu.logcontrol.wasteprogram.enums.ActivityEnums;
 import hu.logcontrol.wasteprogram.enums.EditButtonEnums;
 import hu.logcontrol.wasteprogram.fragments.GeneralSettingsFragment;
 import hu.logcontrol.wasteprogram.fragments.UploadFileSettingsFragment;
-import hu.logcontrol.wasteprogram.helpers.Helper;
 import hu.logcontrol.wasteprogram.helpers.JSONFileHelper;
 import hu.logcontrol.wasteprogram.interfaces.GeneralListener;
 import hu.logcontrol.wasteprogram.interfaces.IGeneralFragmentListener;
 import hu.logcontrol.wasteprogram.interfaces.ISettingsView;
 import hu.logcontrol.wasteprogram.interfaces.IUploadFileFragmentListener;
-import hu.logcontrol.wasteprogram.interfaces.IUploadFileSettingsFragment;
 import hu.logcontrol.wasteprogram.interfaces.UploadFileListener;
-import hu.logcontrol.wasteprogram.models.LocalEncryptedPreferences;
 import hu.logcontrol.wasteprogram.presenters.ProgramPresenter;
 
 public class SettingsActivity extends AppCompatActivity implements ISettingsView, GeneralListener, UploadFileListener {
@@ -53,6 +44,9 @@ public class SettingsActivity extends AppCompatActivity implements ISettingsView
 
     private String resultGlobalPath;
     private String resultLocalPath;
+    private String resultFileSeparatorCharachter;
+    private String resultUsername;
+    private String resultPassword;
 
     private boolean resultLocalCheckbox;
     private boolean isReadyLocalCheckbox = true;
@@ -65,6 +59,9 @@ public class SettingsActivity extends AppCompatActivity implements ISettingsView
 
     private String originalGlobalPath = null;
     private String originalLocalPath = null;
+    private String originalFileSeparatorCharachter = null;
+    private String originalUsername = null;
+    private String originalPassword = null;
 
     private boolean originalLocalCheckbox;
     private boolean originalBarcodeCheckbox;
@@ -75,8 +72,8 @@ public class SettingsActivity extends AppCompatActivity implements ISettingsView
     private SettingViewPagerAdapter settingViewPagerAdapter;
     private List<Fragment> fragmentList;
 
-    public IUploadFileFragmentListener iUploadFileFragmentListener;
-    public IGeneralFragmentListener iGeneralFragmentListener;
+    private IUploadFileFragmentListener iUploadFileFragmentListener;
+    private IGeneralFragmentListener iGeneralFragmentListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,50 +81,9 @@ public class SettingsActivity extends AppCompatActivity implements ISettingsView
         setContentView(R.layout.activity_settings);
 
         initView();
-        programPresenter = new ProgramPresenter(this, getApplicationContext());
-        programPresenter.initTaskManager();
-
-        boolean isExist = JSONFileHelper.isExist(getApplicationContext(), "values.json");
-        if(isExist) {
-            originalGlobalPath = JSONFileHelper.getString(getApplicationContext(), "values.json", "GlobalSavePath");
-            originalLocalPath = JSONFileHelper.getString(getApplicationContext(), "values.json", "LocalSavePath");
-
-            originalBarcodeCheckbox = JSONFileHelper.getBoolean(getApplicationContext(), "values.json", "IsEnableBarcodeReaderMode");
-            originalLocalCheckbox = JSONFileHelper.getBoolean(getApplicationContext(), "values.json", "IsEnableSaveLocalStorage");
-            originalKeyBoardCheckbox = JSONFileHelper.getBoolean(getApplicationContext(), "values.json", "IsEnableKeyBoardOnTextBoxes");
-
-            Log.e("originalBarcodeCheckbox_a", String.valueOf(originalBarcodeCheckbox));
-            Log.e("originalLocalCheckbox_a", String.valueOf(originalLocalCheckbox));
-            Log.e("originalKeyBoardCheckbox_a", String.valueOf(originalKeyBoardCheckbox));
-        }
-
-        settingViewPagerAdapter = new SettingViewPagerAdapter(this);
-        fragmentList = new ArrayList<>();
-        fragmentList.add(new UploadFileSettingsFragment());
-        fragmentList.add(new GeneralSettingsFragment());
-
-        settingViewPagerAdapter.setFragmentList(fragmentList);
-        settingViewPager.setAdapter(settingViewPagerAdapter);
-
-        settingTabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-            @Override
-            public void onTabSelected(TabLayout.Tab tab) {
-                settingViewPager.setCurrentItem(tab.getPosition());
-            }
-            @Override public void onTabUnselected(TabLayout.Tab tab) {}
-            @Override public void onTabReselected(TabLayout.Tab tab) {}
-        });
-
-        settingViewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
-            @Override
-            public void onPageSelected(int position) {
-                super.onPageSelected(position);
-                if(settingTabLayout != null){
-                    settingTabLayout.getTabAt(position).select();
-                }
-            }
-        });
-
+        initPresenter();
+        initStartingValuesOfView();
+        initViewPager();
     }
 
     @Override
@@ -140,8 +96,14 @@ public class SettingsActivity extends AppCompatActivity implements ISettingsView
                 if(iUploadFileFragmentListener != null){
                     if(isReadyLocalCheckbox){
                         resultLocalCheckbox = iUploadFileFragmentListener.getLocalSaveCheckBoxState();
-                        Log.e("resultLocalCheckbox_iUploadFileFragmentListener", String.valueOf(resultLocalCheckbox));
                     }
+
+                    resultGlobalPath = iUploadFileFragmentListener.getGlobalPath();
+                    Log.e("resultGlobalPath", resultGlobalPath);
+                    resultUsername = iUploadFileFragmentListener.getUsername();
+                    Log.e("resultUsername", resultUsername);
+                    resultPassword = iUploadFileFragmentListener.getPassword();
+                    Log.e("resultPassword", resultPassword);
                 }
 
                 if(iGeneralFragmentListener != null){
@@ -177,13 +139,31 @@ public class SettingsActivity extends AppCompatActivity implements ISettingsView
                     }
                 }
 
-                if(iUploadFileFragmentListener != null){
-                    resultGlobalPath = iUploadFileFragmentListener.getGlobalPath();
+                if(originalFileSeparatorCharachter != null && resultFileSeparatorCharachter != null){
+                    if(originalFileSeparatorCharachter != resultFileSeparatorCharachter){
+                        originalFileSeparatorCharachter = resultFileSeparatorCharachter;
+                        programPresenter.saveStringValueToJSONFile("FileSeparatorCharacter", originalFileSeparatorCharachter);
+                    }
                 }
+
                 if(originalGlobalPath != null && resultGlobalPath != null){
                     if(!originalGlobalPath.equals(resultGlobalPath)){
                         originalGlobalPath = resultGlobalPath;
                         programPresenter.saveStringValueToJSONFile("GlobalSavePath", resultGlobalPath);
+                    }
+                }
+
+                if(originalUsername != null && resultUsername != null){
+                    if(!originalUsername.equals(resultUsername)){
+                        originalUsername = resultUsername;
+                        programPresenter.saveStringValueToJSONFile("Username", resultUsername);
+                    }
+                }
+
+                if(originalPassword != null && resultPassword != null){
+                    if(!originalPassword.equals(resultPassword)){
+                        originalPassword = resultPassword;
+                        programPresenter.saveStringValueToJSONFile("Password", resultPassword);
                     }
                 }
             });
@@ -202,6 +182,55 @@ public class SettingsActivity extends AppCompatActivity implements ISettingsView
 
         settingTabLayout = findViewById(R.id.settingTabLayout);
         settingViewPager = findViewById(R.id.settingViewPager);
+    }
+
+    private void initViewPager() {
+        settingViewPagerAdapter = new SettingViewPagerAdapter(this);
+        fragmentList = new ArrayList<>();
+        fragmentList.add(new UploadFileSettingsFragment());
+        fragmentList.add(new GeneralSettingsFragment());
+
+        settingViewPagerAdapter.setFragmentList(fragmentList);
+        settingViewPager.setAdapter(settingViewPagerAdapter);
+
+        settingTabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                settingViewPager.setCurrentItem(tab.getPosition());
+            }
+            @Override public void onTabUnselected(TabLayout.Tab tab) {}
+            @Override public void onTabReselected(TabLayout.Tab tab) {}
+        });
+
+        settingViewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
+            @Override
+            public void onPageSelected(int position) {
+                super.onPageSelected(position);
+                if(settingTabLayout != null){
+                    settingTabLayout.getTabAt(position).select();
+                }
+            }
+        });
+    }
+
+    private void initStartingValuesOfView() {
+        boolean isExist = JSONFileHelper.isExist(getApplicationContext(), "values.json");
+        if(isExist) {
+            originalGlobalPath = JSONFileHelper.getString(getApplicationContext(), "values.json", "GlobalSavePath");
+            originalLocalPath = JSONFileHelper.getString(getApplicationContext(), "values.json", "LocalSavePath");
+            originalFileSeparatorCharachter = JSONFileHelper.getString(getApplicationContext(), "values.json", "FileSeparatorCharacter");
+            originalUsername = JSONFileHelper.getString(getApplicationContext(), "values.json", "Username");
+            originalPassword = JSONFileHelper.getString(getApplicationContext(), "values.json", "Password");
+
+            originalBarcodeCheckbox = JSONFileHelper.getBoolean(getApplicationContext(), "values.json", "IsEnableBarcodeReaderMode");
+            originalLocalCheckbox = JSONFileHelper.getBoolean(getApplicationContext(), "values.json", "IsEnableSaveLocalStorage");
+            originalKeyBoardCheckbox = JSONFileHelper.getBoolean(getApplicationContext(), "values.json", "IsEnableKeyBoardOnTextBoxes");
+        }
+    }
+
+    private void initPresenter() {
+        programPresenter = new ProgramPresenter(this, getApplicationContext());
+        programPresenter.initTaskManager();
     }
 
     @Override
@@ -248,15 +277,23 @@ public class SettingsActivity extends AppCompatActivity implements ISettingsView
     }
 
     @Override
+    public void sendFileSeparatorCharachter(String charachter) {
+        resultFileSeparatorCharachter = charachter;
+    }
+
+    @Override
+    public String getFileSeparatorCharacter() {
+        if(originalFileSeparatorCharachter == null) return null;
+        return originalFileSeparatorCharachter;
+    }
+
+    @Override
     public void sendLocalSavePath(String path) {
         resultLocalPath = path;
     }
 
     @Override
     public void sendLocalSaveCheckbox(boolean state) {
-
-        Log.e("resultLocalCheckbox", String.valueOf(state));
-
         resultLocalCheckbox = state;
         isReadyLocalCheckbox = false;
     }

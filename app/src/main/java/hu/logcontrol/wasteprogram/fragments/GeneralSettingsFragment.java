@@ -10,7 +10,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.CheckBox;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import hu.logcontrol.wasteprogram.R;
@@ -28,6 +31,8 @@ public class GeneralSettingsFragment extends Fragment implements IGeneralSetting
     private CheckBox settingBarcodeNextCheckBox;
     private CheckBox settingKeyboardCheckBox;
 
+    private String resultFileSeparator;
+
     private ProgramPresenter programPresenter;
 
     private boolean resultBarcodeCheckbox;
@@ -35,20 +40,29 @@ public class GeneralSettingsFragment extends Fragment implements IGeneralSetting
 
     private GeneralListener generalListener;
 
+    private ArrayAdapter<String> arrayAdapter;
+    private AutoCompleteTextView fileSeparatorACTV;
+    private final String[] fileSeparators = new String[] {"vessző", "pontosvessző", "tabulátor"};
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_general, container, false);
 
-        initListeners();
-
         settingBarcodeNextCheckBox = view.findViewById(R.id.settingBarcodeNextCheckBox);
         settingKeyboardCheckBox = view.findViewById(R.id.settingKeyboardCheckBox);
+        fileSeparatorACTV = view.findViewById(R.id.fileSeparatorACTV);
 
-        programPresenter = new ProgramPresenter(this, getContext());
-        programPresenter.initTaskManager();
+        initListeners();
+        initPresenter();
+        initFileSeparatorsDropDownMenu();
+        initDefaultValues();
 
-        if(settingBarcodeNextCheckBox != null && settingKeyboardCheckBox != null){
+        return view;
+    }
+
+    private void initDefaultValues() {
+        if(settingBarcodeNextCheckBox != null && settingKeyboardCheckBox != null && fileSeparatorACTV != null && arrayAdapter != null){
 
             boolean isExist = JSONFileHelper.isExist(getContext(), "values.json");
             if(isExist) {
@@ -58,10 +72,65 @@ public class GeneralSettingsFragment extends Fragment implements IGeneralSetting
 
                 resultKeyBoardCheckbox = JSONFileHelper.getBoolean(getContext(), "values.json", "IsEnableKeyBoardOnTextBoxes");
                 settingKeyboardCheckBox.setChecked(resultKeyBoardCheckbox);
+
+                int resultPosition = -1;
+                resultFileSeparator = JSONFileHelper.getString(getContext(), "values.json", "FileSeparatorCharacter");
+
+                for (int i = 0; i < fileSeparators.length; i++) { if(fileSeparators[i].equals(resultFileSeparator)) resultPosition = i; }
+
+                if(resultPosition != -1){ fileSeparatorACTV.setText(arrayAdapter.getItem(resultPosition), false); }
             }
         }
 
-        return view;
+//        boolean isExist = JSONFileHelper.isExist(getContext(), "values.json");
+//        if(isExist) {
+//
+//            resultBarcodeCheckbox = JSONFileHelper.getBoolean(getContext(), "values.json", "IsEnableBarcodeReaderMode");
+//            settingBarcodeNextCheckBox.setChecked(resultBarcodeCheckbox);
+//
+//            resultKeyBoardCheckbox = JSONFileHelper.getBoolean(getContext(), "values.json", "IsEnableKeyBoardOnTextBoxes");
+//            settingKeyboardCheckBox.setChecked(resultKeyBoardCheckbox);
+//
+//            int resultPosition = -1;
+//            resultFileSeparator = JSONFileHelper.getString(getContext(), "values.json", "FileSeparatorCharacter");
+//            Log.e("resultFileSeparator", resultFileSeparator);
+//            for (int i = 0; i < fileSeparators.length; i++) {
+//                if(fileSeparators[i].equals(resultFileSeparator)) resultPosition = i;
+//            }
+//            Log.e("resultPosition", String.valueOf(resultPosition));
+//            if(resultPosition != -1) {
+//                fileSeparatorACTV.setText(arrayAdapter.getItem(resultPosition), false);
+//            }
+//        }
+    }
+
+    private void initPresenter() {
+        programPresenter = new ProgramPresenter(this, getContext());
+        programPresenter.initTaskManager();
+    }
+
+    private void initFileSeparatorsDropDownMenu() {
+
+        arrayAdapter = new ArrayAdapter<>(getContext(), R.layout.fileseparator_dropdownmenu_item, fileSeparators);
+
+        if(fileSeparatorACTV != null){
+            fileSeparatorACTV.setAdapter(arrayAdapter);
+
+            int resultPosition = -1;
+            String c = generalListener.getFileSeparatorCharacter();
+            for (int i = 0; i < fileSeparators.length; i++) {
+                if(fileSeparators[i].equals(c)) resultPosition = i;
+                break;
+            }
+
+            if(resultPosition != -1){
+                fileSeparatorACTV.setText(arrayAdapter.getItem(resultPosition), false);
+            }
+
+            fileSeparatorACTV.setOnItemClickListener((parent, view, position, id) -> {
+                generalListener.sendFileSeparatorCharachter(arrayAdapter.getItem(position));
+            });
+        }
     }
 
     public void initListeners(){

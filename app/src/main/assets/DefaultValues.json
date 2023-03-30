@@ -3,5 +3,8 @@
   "IsEnableBarcodeReaderMode": false,
   "IsEnableSaveLocalStorage": false,
   "IsEnableKeyBoardOnTextBoxes": false,
-  "LocalSavePath": "/sdcard/WasteProgram"
+  "LocalSavePath": "/sdcard/WasteProgram",
+  "FileSeparatorCharacter": "vessző",
+  "Username": "",
+  "Password": ""
 }

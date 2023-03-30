@@ -38,6 +38,8 @@ public class UploadFileSettingsFragment extends Fragment implements IUploadFileS
 
     private TextInputEditText settingsLocalSavePathTB;
     private TextInputEditText settingsGlobalSavePathTB;
+    private TextInputEditText usernameTIET;
+    private TextInputEditText passwordTIET;
     private ImageButton folderPickerButton;
     private CheckBox localSavePathCheckbox;
 
@@ -47,6 +49,8 @@ public class UploadFileSettingsFragment extends Fragment implements IUploadFileS
     private boolean resultLocalSaveBoolean;
     private String resultGlobalPath;
     private String resultLocalPath;
+    private String resultUsername;
+    private String resultPassword;
 
     private UploadFileListener uploadFileListener;
 
@@ -80,20 +84,23 @@ public class UploadFileSettingsFragment extends Fragment implements IUploadFileS
 
         view = inflater.inflate(R.layout.fragment_upload_file_settings, container, false);
 
-        initListeners();
-
         settingsLocalSavePathTB = view.findViewById(R.id.settingsLocalSavePathTB);
         settingsGlobalSavePathTB = view.findViewById(R.id.settingsGlobalSavePathTB);
+        usernameTIET = view.findViewById(R.id.usernameTIET);
+        passwordTIET = view.findViewById(R.id.passwordTIET);
         folderPickerButton = view.findViewById(R.id.folderPickerButton);
-
         localSavePathCheckbox = view.findViewById(R.id.localSavePathCheckbox);
-
         localSavePathCL = view.findViewById(R.id.localSavePathCL);
 
-        programPresenter = new ProgramPresenter(this, getContext());
-        programPresenter.initTaskManager();
+        initListeners();
+        initPresenter();
+        initDefaultValues();
 
-        if(settingsGlobalSavePathTB != null && settingsLocalSavePathTB != null && localSavePathCheckbox != null && localSavePathCL != null && folderPickerButton != null){
+        return view;
+    }
+
+    private void initDefaultValues() {
+        if(settingsGlobalSavePathTB != null && settingsLocalSavePathTB != null && localSavePathCheckbox != null && localSavePathCL != null && folderPickerButton != null && usernameTIET != null && passwordTIET != null){
 
             boolean isExist = JSONFileHelper.isExist(getContext(), "values.json");
             if(isExist) {
@@ -104,7 +111,11 @@ public class UploadFileSettingsFragment extends Fragment implements IUploadFileS
                 resultLocalPath = JSONFileHelper.getString(getContext(), "values.json", "LocalSavePath");
                 if(resultLocalPath != null) settingsLocalSavePathTB.setText(resultLocalPath);
 
-                settingsGlobalSavePathTB.setShowSoftInputOnFocus(false);
+                resultUsername = JSONFileHelper.getString(getContext(), "values.json", "Username");
+                if(resultUsername != null) usernameTIET.setText(resultUsername);
+
+                resultPassword = JSONFileHelper.getString(getContext(), "values.json", "Password");
+                if(resultPassword != null) passwordTIET.setText(resultPassword);
 
                 resultLocalSaveBoolean = JSONFileHelper.getBoolean(getContext(), "values.json", "IsEnableSaveLocalStorage");
                 localSavePathCheckbox.setChecked(resultLocalSaveBoolean);
@@ -117,15 +128,17 @@ public class UploadFileSettingsFragment extends Fragment implements IUploadFileS
                             programPresenter.openActivityByEnum(ActivityEnums.FOLDERPICKER_ACTIVITY);
                         });
                     }
-
                 }
                 else{
                     localSavePathCL.setVisibility(View.INVISIBLE);
                 }
             }
         }
+    }
 
-        return view;
+    private void initPresenter() {
+        programPresenter = new ProgramPresenter(this, getContext());
+        programPresenter.initTaskManager();
     }
 
     public void initListeners(){
@@ -181,8 +194,20 @@ public class UploadFileSettingsFragment extends Fragment implements IUploadFileS
 
     @Override
     public String getGlobalPath() {
-        if(settingsGlobalSavePathTB == null && !settingsGlobalSavePathTB.getText().toString().equals("")) return null;
+        if(settingsGlobalSavePathTB == null) return null;
         return settingsGlobalSavePathTB.getText().toString();
+    }
+
+    @Override
+    public String getUsername() {
+        if(usernameTIET == null) return null;
+        return usernameTIET.getText().toString();
+    }
+
+    @Override
+    public String getPassword() {
+        if(passwordTIET == null) return null;
+        return passwordTIET.getText().toString();
     }
 
     @Override

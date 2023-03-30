@@ -128,7 +128,7 @@ public class JSONFileHelper {
             if(file.exists()){
                 fileWriter = new FileWriter(file);
                 bufferedWriter = new BufferedWriter(fileWriter);
-                bufferedWriter.write(formatJSONObjectString(jsonObject.toString()));
+                bufferedWriter.write(jsonObject.toString(4).replace("\\", ""));
                 bufferedWriter.close();
             }
 
@@ -137,12 +137,13 @@ public class JSONFileHelper {
         }
     }
 
-    public static String formatJSONObjectString(String jsonObjectString){
-        return jsonObjectString
-                .replace("{", "{\n\t")
-                .replace("}", "\n}")
-                .replace(",", ",\n\t")
-                .replace(":", ": ")
-                .replace("\\", "");
-    }
+//    public static String formatJSONObjectString(String jsonObjectString){
+//
+//        return jsonObjectString
+//                .replace("{", "{\n\t")
+//                .replace("}", "\n}")
+//                .replace(",", ",\n\t")
+//                .replace(":", ": ")
+//                .replace("\\", "");
+//    }
 }
