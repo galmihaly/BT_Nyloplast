@@ -97,13 +97,44 @@ public class SettingsActivity extends AppCompatActivity implements ISettingsView
                     if(isReadyLocalCheckbox){
                         resultLocalCheckbox = iUploadFileFragmentListener.getLocalSaveCheckBoxState();
                     }
-
+                    Log.e("resultLocalCheckbox", String.valueOf(resultLocalCheckbox));
                     resultGlobalPath = iUploadFileFragmentListener.getGlobalPath();
-                    Log.e("resultGlobalPath", resultGlobalPath);
                     resultUsername = iUploadFileFragmentListener.getUsername();
-                    Log.e("resultUsername", resultUsername);
                     resultPassword = iUploadFileFragmentListener.getPassword();
-                    Log.e("resultPassword", resultPassword);
+
+                    if((originalLocalCheckbox || resultLocalCheckbox) && !(originalLocalCheckbox && resultLocalCheckbox)){
+                        originalLocalCheckbox = resultLocalCheckbox;
+                        programPresenter.saveBooleanValueToJSONFile("IsEnableSaveLocalStorage", originalLocalCheckbox);
+                    }
+
+                    if(resultLocalPath != null){
+                        if(!originalLocalPath.equals(resultLocalPath)){
+                            originalLocalPath = resultLocalPath;
+                            programPresenter.saveStringValueToJSONFile("LocalSavePath", resultLocalPath);
+                        }
+                    }
+
+                    if(resultGlobalPath != null){
+                        if(!originalGlobalPath.equals(resultGlobalPath)){
+                            originalGlobalPath = resultGlobalPath;
+                            programPresenter.saveStringValueToJSONFile("GlobalSavePath", originalGlobalPath);
+                        }
+                    }
+
+                    if(resultUsername != null){
+                        if(!originalUsername.equals(resultUsername)){
+                            originalUsername = resultUsername;
+                            programPresenter.saveStringValueToJSONFile("Username", originalUsername);
+                        }
+                    }
+
+                    if(resultPassword != null){
+                        if(!originalPassword.equals(resultPassword)){
+                            originalPassword = resultPassword;
+                            programPresenter.saveStringValueToJSONFile("Password", originalPassword);
+                        }
+                    }
+
                 }
 
                 if(iGeneralFragmentListener != null){
@@ -121,49 +152,15 @@ public class SettingsActivity extends AppCompatActivity implements ISettingsView
                     programPresenter.saveBooleanValueToJSONFile("IsEnableBarcodeReaderMode", originalBarcodeCheckbox);
                 }
 
-                if((originalLocalCheckbox || resultLocalCheckbox) && !(originalLocalCheckbox && resultLocalCheckbox)){
-                    originalLocalCheckbox = resultLocalCheckbox;
-                    Log.e("resultLocalCheckbox_programPresenter", String.valueOf(resultLocalCheckbox));
-                    programPresenter.saveBooleanValueToJSONFile("IsEnableSaveLocalStorage", originalLocalCheckbox);
-                }
-
                 if((originalKeyBoardCheckbox || resultKeyBoardCheckbox) && !(originalKeyBoardCheckbox && resultKeyBoardCheckbox)){
                     originalKeyBoardCheckbox = resultKeyBoardCheckbox;
                     programPresenter.saveBooleanValueToJSONFile("IsEnableKeyBoardOnTextBoxes", originalKeyBoardCheckbox);
                 }
 
-                if(originalLocalPath != null  && resultLocalPath != null){
-                    if(!originalLocalPath.equals(resultLocalPath)){
-                        originalLocalPath = resultLocalPath;
-                        programPresenter.saveStringValueToJSONFile("LocalSavePath", resultLocalPath);
-                    }
-                }
-
-                if(originalFileSeparatorCharachter != null && resultFileSeparatorCharachter != null){
-                    if(originalFileSeparatorCharachter != resultFileSeparatorCharachter){
+                if(resultFileSeparatorCharachter != null){
+                    if(!originalFileSeparatorCharachter.equals(resultFileSeparatorCharachter)){
                         originalFileSeparatorCharachter = resultFileSeparatorCharachter;
                         programPresenter.saveStringValueToJSONFile("FileSeparatorCharacter", originalFileSeparatorCharachter);
-                    }
-                }
-
-                if(originalGlobalPath != null && resultGlobalPath != null){
-                    if(!originalGlobalPath.equals(resultGlobalPath)){
-                        originalGlobalPath = resultGlobalPath;
-                        programPresenter.saveStringValueToJSONFile("GlobalSavePath", resultGlobalPath);
-                    }
-                }
-
-                if(originalUsername != null && resultUsername != null){
-                    if(!originalUsername.equals(resultUsername)){
-                        originalUsername = resultUsername;
-                        programPresenter.saveStringValueToJSONFile("Username", resultUsername);
-                    }
-                }
-
-                if(originalPassword != null && resultPassword != null){
-                    if(!originalPassword.equals(resultPassword)){
-                        originalPassword = resultPassword;
-                        programPresenter.saveStringValueToJSONFile("Password", resultPassword);
                     }
                 }
             });

@@ -38,11 +38,11 @@
             android:layout_margin="10dp"
             android:hint="Megjegyzés:"
             android:textColorHint="@color/black"
+            app:counterTextColor="@color/black"
             app:boxStrokeColor="@color/black"
+            app:hintTextColor="@color/black"
             app:boxStrokeWidth="2dp"
             app:boxStrokeWidthFocused="1dp"
-            app:counterTextColor="@color/black"
-            app:hintTextColor="@color/black"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toTopOf="parent">

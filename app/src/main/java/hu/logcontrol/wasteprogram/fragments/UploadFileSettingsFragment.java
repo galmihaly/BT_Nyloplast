@@ -65,7 +65,7 @@ public class UploadFileSettingsFragment extends Fragment implements IUploadFileS
                     if(intent == null) return;
 
                     path = Helper.formatPathString(intent.getData().getPathSegments());
-                    Log.e("ActivityResultLauncher -> path", path);
+
                     if(localSavePathCheckbox.isChecked()){
                         if(path != null){
                             uploadFileListener.sendLocalSavePath(path);

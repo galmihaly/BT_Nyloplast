@@ -63,7 +63,6 @@ public class JSONValueWriter implements Callable {
 
             if(!file.exists()){
                 boolean isCreated = file.createNewFile();
-
                 if(!isCreated) sendMessageToPresenterHandler(JSONWriterEnums.FILECREATE_FAILED);
             }
 

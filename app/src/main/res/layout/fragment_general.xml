@@ -41,6 +41,8 @@
                 android:layout_margin="10dp"
                 android:hint="Karakter:"
                 android:orientation="horizontal"
+                android:textColorHint="@color/black"
+                app:counterTextColor="@color/black"
                 app:boxStrokeColor="@color/black"
                 app:boxStrokeWidthFocused="1dp"
                 app:hintTextColor="@color/black"
