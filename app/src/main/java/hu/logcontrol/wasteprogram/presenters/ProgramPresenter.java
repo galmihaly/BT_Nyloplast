@@ -164,11 +164,6 @@ public class ProgramPresenter implements IProgramPresenter, PresenterThreadCallb
     }
 
     @Override
-    public void exitApplicationPresenter() {
-        if(iMainView != null) iMainView.exitApplication();
-    }
-
-    @Override
     public void addRawMaterialToAdapterList(RawMaterial rawMaterial) {
 
         try {
@@ -225,7 +220,7 @@ public class ProgramPresenter implements IProgramPresenter, PresenterThreadCallb
         try {
             ApplicationLogger.logging(LogLevel.INFORMATION, "A RawMaterial lista átmásolása csv fájlba elkezdődött.");
 
-            CreateFile callable = new CreateFile(context, CreateFile.RunModes.CREATE_RAWMATERIAL, RawMaterial.getCSVHeader(), "csv");
+            CreateFile callable = new CreateFile(context, CreateFile.RunModes.CREATE_RAWMATERIAL, RawMaterial.getCSVHeader(), "txt");
             callable.setCustomThreadPoolManager(mCustomThreadPoolManager);
             mCustomThreadPoolManager.addCallableMethod(callable);
 

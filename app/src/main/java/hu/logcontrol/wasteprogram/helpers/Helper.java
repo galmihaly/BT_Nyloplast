@@ -48,20 +48,24 @@ public class Helper {
 
         String[] pathSegmens = path.get(1).split(":");
 
-
-//        if(pathSegmens[0].equals("primary")){
         return sb
                 .append("/sdcard")
                 .append("/")
                 .append(pathSegmens[1])
                 .toString();
-//        }
+    }
 
-//        return sb
-//                .append(Environment.getExternalStoragePublicDirectory())
-////                .append("/storage/sdcard1")
-//                .append("/")
-//                .append(pathSegmens[1])
-//                .toString();
+    public static char getSeparator(String separatorFromJSON){
+        if(separatorFromJSON == null) return 0;
+
+        char c = 0;
+        switch (separatorFromJSON){
+            case "vessző":{ c = ','; break; }
+            case "pontosvessző":{ c = ';'; break; }
+            case "tabulátor":{ c = (char)9; break; }
+        }
+
+        if(c == 0) return 0;
+        return c;
     }
 }

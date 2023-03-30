@@ -16,7 +16,6 @@ import hu.logcontrol.wasteprogram.models.RecycledMaterial;
 public interface IProgramPresenter {
     void initTaskManager();
     void openActivityByEnum(ActivityEnums activityEnum);
-    void exitApplicationPresenter();
     void addRawMaterialToAdapterList(RawMaterial rawMaterial);
     void addRawMaterialTypeMassToAdapterList(RawMaterialTypeMass rawMaterialTypeMass);
     void addRecycledMaterialToAdapterList(RecycledMaterial recycledMaterial);

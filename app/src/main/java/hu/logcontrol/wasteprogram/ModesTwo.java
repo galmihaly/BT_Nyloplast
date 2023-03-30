@@ -26,6 +26,7 @@ import hu.logcontrol.wasteprogram.adapters.RawMaterialTypeMassAdapter;
 import hu.logcontrol.wasteprogram.enums.ActivityEnums;
 import hu.logcontrol.wasteprogram.enums.EditButtonEnums;
 import hu.logcontrol.wasteprogram.helpers.Helper;
+import hu.logcontrol.wasteprogram.helpers.JSONFileHelper;
 import hu.logcontrol.wasteprogram.interfaces.IModesTwoView;
 import hu.logcontrol.wasteprogram.logger.ApplicationLogger;
 import hu.logcontrol.wasteprogram.models.LocalRawMaterialTypeMassesStorage;
@@ -52,6 +53,8 @@ public class ModesTwo extends AppCompatActivity implements IModesTwoView {
     private RawMaterialTypeMassAdapter rawMaterialTypeMassAdapter;
     private List<RawMaterialTypeMass> rawMaterialTypeMassList;
 
+    private String separatorFromJSON;
+
     private final ActivityResultLauncher<Intent> activityResultLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             result -> {
@@ -67,6 +70,9 @@ public class ModesTwo extends AppCompatActivity implements IModesTwoView {
                     String commentDataTextBox = intent.getStringExtra("commentDataTextBox");
 
                     RawMaterialTypeMass rawMaterialTypeMass = new RawMaterialTypeMass(ApplicationLogger.getUTCDateTimeString(),typeMassCountTextBox, typeMassTypeTextBox, storageBoxIdentifierTextBox, massDataTextBox, commentDataTextBox);
+
+                    char c = Helper.getSeparator(separatorFromJSON);
+                    if(c != 0) rawMaterialTypeMass.setSeparator(c);
 
                     programPresenter.addRawMaterialTypeMassToAdapterList(rawMaterialTypeMass);
                 }
@@ -217,5 +223,7 @@ public class ModesTwo extends AppCompatActivity implements IModesTwoView {
 
         mainModesTwoCL = findViewById(R.id.mainModesTwoCL);
         swipeRefreshLayout = findViewById(R.id.swipeRefresLayoutModesTwoRV);
+
+        separatorFromJSON = JSONFileHelper.getString(getApplicationContext(), "values.json", "FileSeparatorCharacter");
     }
 }

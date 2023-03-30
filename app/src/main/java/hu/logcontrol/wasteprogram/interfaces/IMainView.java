@@ -6,5 +6,4 @@ import hu.logcontrol.wasteprogram.enums.EditButtonEnums;
 
 public interface IMainView {
     void openActivityByIntent(Intent intent);
-    void exitApplication();
 }

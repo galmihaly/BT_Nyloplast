@@ -7,6 +7,8 @@ public class RawMaterial {
     private String materialType;
     private String comment;
 
+    private static char separator;
+
     public RawMaterial(String timeStamp, String doseNumber, String materialType, String comment) {
         this.timeStamp = timeStamp;
         this.doseNumber = doseNumber;
@@ -30,10 +32,14 @@ public class RawMaterial {
         return comment;
     }
 
+    public void setSeparator(char separator) {
+        RawMaterial.separator = separator;
+    }
+
     @Override
-    public String toString() { return String.format("%s;%s;%s;%s", this.timeStamp, this.materialType, this.doseNumber, this.comment); }
+    public String toString() { return String.format("%s" + separator + "%s" + separator + "%s" + separator + "%s", this.timeStamp, this.materialType, this.doseNumber, this.comment); }
 
     public static String getCSVHeader(){
-        return "TimeStamp;RawMaterialType;RawMaterialCount;Comment";
+        return "TimeStamp" + separator + "RawMaterialType" + separator + "RawMaterialCount" + separator + "Comment";
     }
 }

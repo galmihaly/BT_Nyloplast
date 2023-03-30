@@ -97,11 +97,6 @@ public class MainActivity extends AppCompatActivity implements IMainView {
                 programPresenter.openActivityByEnum(ActivityEnums.MODES_ACTIVITY_THREE);
             });
         }
-        if(exitButton != null){
-            exitButton.setOnClickListener(view -> {
-                programPresenter.exitApplicationPresenter();
-            });
-        }
         if(settingsButton != null){
             settingsButton.setOnClickListener(view -> {
                 programPresenter.openActivityByEnum(ActivityEnums.SETTINGS_ACTIVITY);
@@ -146,18 +141,5 @@ public class MainActivity extends AppCompatActivity implements IMainView {
     @Override
     public void openActivityByIntent(Intent intent) {
         startActivity(intent);
-    }
-
-    @Override
-    public void exitApplication() {
-        onDestroy();
-    }
-
-    @Override
-    protected void onDestroy() {
-
-        finishAndRemoveTask();
-        System.exit(0);
-        super.onDestroy();
     }
 }

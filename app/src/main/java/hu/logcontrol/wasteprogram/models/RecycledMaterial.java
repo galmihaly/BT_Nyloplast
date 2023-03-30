@@ -8,6 +8,8 @@ public class RecycledMaterial {
     private String massData;
     private String comment;
 
+    private static char separator;
+
     public RecycledMaterial(String timeStamp, String materialType, String storageBoxIdentifier, String massData, String comment) {
         this.timeStamp = timeStamp;
         this.materialType = materialType;
@@ -36,10 +38,14 @@ public class RecycledMaterial {
         return comment;
     }
 
+    public void setSeparator(char separator) {
+        RecycledMaterial.separator = separator;
+    }
+
     @Override
-    public String toString() { return String.format("%s;%s;%s;%s", this.timeStamp, this.materialType, this.storageBoxIdentifier, this.massData); }
+    public String toString() { return String.format("%s" + separator + "%s" + separator + "%s" + separator + "%s" + separator + "%s", this.timeStamp, this.materialType, this.storageBoxIdentifier, this.massData, this.comment); }
 
     public static String getCSVHeader(){
-        return "TimeStamp;MaterialType;StorageBoxIdentifier;MassData";
+        return " TimeStamp" + separator + "MaterialType" + separator + "StorageBoxIdentifier" + separator + "MassData" + separator + "Comment";
     }
 }

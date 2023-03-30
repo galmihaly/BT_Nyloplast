@@ -32,6 +32,7 @@ import hu.logcontrol.wasteprogram.adapters.RawMaterialAdapter;
 import hu.logcontrol.wasteprogram.enums.ActivityEnums;
 import hu.logcontrol.wasteprogram.enums.EditButtonEnums;
 import hu.logcontrol.wasteprogram.helpers.Helper;
+import hu.logcontrol.wasteprogram.helpers.JSONFileHelper;
 import hu.logcontrol.wasteprogram.interfaces.IModesOneView;
 import hu.logcontrol.wasteprogram.logger.ApplicationLogger;
 import hu.logcontrol.wasteprogram.models.LocalRawMaterialsStorage;
@@ -56,6 +57,8 @@ public class ModesOne extends AppCompatActivity implements IModesOneView {
     private RawMaterialAdapter rawMaterialAdapter;
     private List<RawMaterial> rawMaterialList;
 
+    private String separatorFromJSON;
+
     private final ActivityResultLauncher<Intent> activityResultLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             result -> {
@@ -69,6 +72,9 @@ public class ModesOne extends AppCompatActivity implements IModesOneView {
                     String rawMatContentTextBox = intent.getStringExtra("rawMatContentTextBox");
 
                     RawMaterial rawMaterial = new RawMaterial(ApplicationLogger.getUTCDateTimeString(),rawMatTypeTextBox, rawMatCountTextBox, rawMatContentTextBox);
+
+                    char c = Helper.getSeparator(separatorFromJSON);
+                    if(c != 0) rawMaterial.setSeparator(c);
 
                     programPresenter.addRawMaterialToAdapterList(rawMaterial);
                 }
@@ -152,21 +158,6 @@ public class ModesOne extends AppCompatActivity implements IModesOneView {
         activityResultLauncher.launch(intent);
     }
 
-    private void initView() {
-
-        addButton = findViewById(R.id.addButton);
-        backButton = findViewById(R.id.backButton);
-
-        saveButton = findViewById(R.id.saveButton);
-        settingButton(EditButtonEnums.SAVE_BUTTON_DISABLED);
-
-        recycleViewModesOneRV = findViewById(R.id.recycleViewModesOneRV);
-        recycleViewModesOneRV.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
-
-        mainModesOneCL = findViewById(R.id.mainModesOneCL);
-        swipeRefreshLayout = findViewById(R.id.swipeRefresLayoutModesOneRV);
-    }
-
     @Override
     public void settingButton(EditButtonEnums editButtonEnum) {
         if(saveButton == null) return;
@@ -223,5 +214,22 @@ public class ModesOne extends AppCompatActivity implements IModesOneView {
             isHaveToClearList = true;
             onRefreshListener.onRefresh();
         });
+    }
+
+    private void initView() {
+
+        addButton = findViewById(R.id.addButton);
+        backButton = findViewById(R.id.backButton);
+
+        saveButton = findViewById(R.id.saveButton);
+        settingButton(EditButtonEnums.SAVE_BUTTON_DISABLED);
+
+        recycleViewModesOneRV = findViewById(R.id.recycleViewModesOneRV);
+        recycleViewModesOneRV.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+
+        mainModesOneCL = findViewById(R.id.mainModesOneCL);
+        swipeRefreshLayout = findViewById(R.id.swipeRefresLayoutModesOneRV);
+
+        separatorFromJSON = JSONFileHelper.getString(getApplicationContext(), "values.json", "FileSeparatorCharacter");
     }
 }

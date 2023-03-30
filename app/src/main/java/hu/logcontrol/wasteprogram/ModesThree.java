@@ -25,6 +25,7 @@ import hu.logcontrol.wasteprogram.adapters.RecycledMaterialAdapter;
 import hu.logcontrol.wasteprogram.enums.ActivityEnums;
 import hu.logcontrol.wasteprogram.enums.EditButtonEnums;
 import hu.logcontrol.wasteprogram.helpers.Helper;
+import hu.logcontrol.wasteprogram.helpers.JSONFileHelper;
 import hu.logcontrol.wasteprogram.interfaces.IModesThreeView;
 import hu.logcontrol.wasteprogram.logger.ApplicationLogger;
 import hu.logcontrol.wasteprogram.models.LocalRawMaterialsStorage;
@@ -50,6 +51,8 @@ public class ModesThree extends AppCompatActivity implements IModesThreeView {
     private RecycledMaterialAdapter recycledMaterialAdapter;
     private List<RecycledMaterial> recycledMaterialList;
 
+    private String separatorFromJSON;
+
     private final ActivityResultLauncher<Intent> activityResultLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             result -> {
@@ -64,6 +67,9 @@ public class ModesThree extends AppCompatActivity implements IModesThreeView {
                     String commentDataTextBox2 = intent.getStringExtra("commentDataTextBox2");
 
                     RecycledMaterial recycledMaterial = new RecycledMaterial(ApplicationLogger.getUTCDateTimeString(),typeRecMatTextBox, storageBoxIdentifierTextBox2, massDataTextBox2, commentDataTextBox2);
+
+                    char c = Helper.getSeparator(separatorFromJSON);
+                    if(c != 0) recycledMaterial.setSeparator(c);
 
                     programPresenter.addRecycledMaterialToAdapterList(recycledMaterial);
                 }
@@ -214,5 +220,7 @@ public class ModesThree extends AppCompatActivity implements IModesThreeView {
 
         mainModesThreeCL = findViewById(R.id.mainModesThreeCL);
         swipeRefreshLayout = findViewById(R.id.swipeRefresLayoutModesThreeRV);
+
+        separatorFromJSON = JSONFileHelper.getString(getApplicationContext(), "values.json", "FileSeparatorCharacter");
     }
 }
