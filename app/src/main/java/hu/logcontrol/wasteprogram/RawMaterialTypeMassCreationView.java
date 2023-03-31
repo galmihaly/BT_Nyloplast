@@ -514,7 +514,7 @@ public class RawMaterialTypeMassCreationView extends AppCompatActivity {
             }
         }
 
-        return super.onKeyUp(keyCode, event);
+        return super.onKeyDown(keyCode, event);
     }
 
     private void setStateFirstEdittext(){

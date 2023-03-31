@@ -150,7 +150,7 @@ public class ModesOne extends AppCompatActivity implements IModesOneView {
             }
         }
 
-        return super.onKeyUp(keyCode, event);
+        return super.onKeyDown(keyCode, event);
     }
 
     @Override

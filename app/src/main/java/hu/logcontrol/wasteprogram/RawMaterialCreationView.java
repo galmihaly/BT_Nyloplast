@@ -46,6 +46,8 @@ public class RawMaterialCreationView extends AppCompatActivity {
 
     private boolean isClickAddButton = false;
 
+    private boolean isEnterInEnterEvent = false;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

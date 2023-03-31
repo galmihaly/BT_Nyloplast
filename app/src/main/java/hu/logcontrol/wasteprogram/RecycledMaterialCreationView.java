@@ -10,6 +10,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.EditText;
@@ -130,7 +131,8 @@ public class RecycledMaterialCreationView extends AppCompatActivity {
                     }
                 }
 
-                @Override public void afterTextChanged(Editable s) {}
+                @Override public void afterTextChanged(Editable s) {
+                }
             });
         }
 
@@ -343,8 +345,7 @@ public class RecycledMaterialCreationView extends AppCompatActivity {
                     }
                 }
 
-                @Override public void afterTextChanged(Editable s) {
-                }
+                @Override public void afterTextChanged(Editable s) {}
             });
         }
 
@@ -378,7 +379,7 @@ public class RecycledMaterialCreationView extends AppCompatActivity {
             }
         }
 
-        return super.onKeyUp(keyCode, event);
+        return super.onKeyDown(keyCode, event);
     }
 
     private void setStateFirstEdittext(){

@@ -146,7 +146,7 @@ public class ModesTwo extends AppCompatActivity implements IModesTwoView {
             }
         }
 
-        return super.onKeyUp(keyCode, event);
+        return super.onKeyDown(keyCode, event);
     }
 
     @Override

@@ -143,7 +143,7 @@ public class ModesThree extends AppCompatActivity implements IModesThreeView {
             }
         }
 
-        return super.onKeyUp(keyCode, event);
+        return super.onKeyDown(keyCode, event);
     }
 
     @Override
