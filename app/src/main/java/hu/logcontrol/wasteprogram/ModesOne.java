@@ -218,10 +218,6 @@ public class ModesOne extends AppCompatActivity implements IModesOneView {
         saveButton = findViewById(R.id.saveButton);
         settingButton(EditButtonEnums.SAVE_BUTTON_DISABLED);
 
-        addButton.setFocusable(false);
-        saveButton.setFocusable(false);
-        backButton.setFocusable(false);
-
         recycleViewModesOneRV = findViewById(R.id.recycleViewModesOneRV);
         recycleViewModesOneRV.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
 
