@@ -4,5 +4,6 @@ public interface IUploadFileFragmentListener {
     String getGlobalPath();
     String getUsername();
     String getPassword();
+    String getLocalPath();
     boolean getLocalSaveCheckBoxState();
 }

@@ -52,6 +52,7 @@ public class ModesThree extends AppCompatActivity implements IModesThreeView {
     private List<RecycledMaterial> recycledMaterialList;
 
     private String separatorFromJSON;
+    private boolean isEnableBarcodeReaderMode;
 
     private final ActivityResultLauncher<Intent> activityResultLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
@@ -136,9 +137,8 @@ public class ModesThree extends AppCompatActivity implements IModesThreeView {
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-
-        if(keyCode == KeyEvent.KEYCODE_BUTTON_R1 || keyCode == KeyEvent.KEYCODE_BUTTON_L1){
-            if(event.getAction() == KeyEvent.ACTION_DOWN){
+        if(isEnableBarcodeReaderMode){
+            if(keyCode == KeyEvent.KEYCODE_BUTTON_R1 || keyCode == KeyEvent.KEYCODE_BUTTON_L1){
                 addButton_3.callOnClick();
             }
         }
@@ -215,12 +215,17 @@ public class ModesThree extends AppCompatActivity implements IModesThreeView {
         saveButton_3 = findViewById(R.id.saveButton_3);
         settingButton(EditButtonEnums.SAVE_BUTTON_DISABLED);
 
+        addButton_3.setFocusable(false);
+        saveButton_3.setFocusable(false);
+        backButton_3.setFocusable(false);
+
         recycleViewModesThreeRV = findViewById(R.id.recycleViewModesThreeRV);
         recycleViewModesThreeRV.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
 
         mainModesThreeCL = findViewById(R.id.mainModesThreeCL);
         swipeRefreshLayout = findViewById(R.id.swipeRefresLayoutModesThreeRV);
 
+        isEnableBarcodeReaderMode = JSONFileHelper.getBoolean(getApplicationContext(), "values.json", "IsEnableBarcodeReaderMode");
         separatorFromJSON = JSONFileHelper.getString(getApplicationContext(), "values.json", "FileSeparatorCharacter");
     }
 }

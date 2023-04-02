@@ -15,7 +15,7 @@ import hu.logcontrol.wasteprogram.fragments.UploadFileSettingsFragment;
 public class SettingViewPagerAdapter extends FragmentStateAdapter {
 
     private List<Fragment> fragments;
-    private List<String> fragmentTitles;
+    private int currentPage;
 
     public SettingViewPagerAdapter(@NonNull FragmentActivity fragmentActivity) {
         super(fragmentActivity);
@@ -25,8 +25,14 @@ public class SettingViewPagerAdapter extends FragmentStateAdapter {
     @Override
     public Fragment createFragment(int position) {
         switch (position){
-            case 0: { return new GeneralSettingsFragment(); }
-            case 1: { return new UploadFileSettingsFragment(); }
+            case 0: {
+                currentPage = position;
+                return new GeneralSettingsFragment();
+            }
+            case 1: {
+                currentPage = position;
+                return new UploadFileSettingsFragment();
+            }
             default: return null;
         }
     }
@@ -40,7 +46,7 @@ public class SettingViewPagerAdapter extends FragmentStateAdapter {
         this.fragments = fragments;
     }
 
-    public void setFragmentTitleList(List<String> fragmentTitles){
-        this.fragmentTitles = fragmentTitles;
+    public int getCurrentPage() {
+        return this.currentPage;
     }
 }

@@ -64,6 +64,8 @@ public class RecycledMaterialAdapter extends RecyclerView.Adapter<RecycledMateri
                     holder.getMassDataInput_3().setText(recycledMaterialList.get(position).getMassData());
                     holder.getCommentDataInput_3().setText(recycledMaterialList.get(position).getComment());
 
+                    holder.getDeleteItemButton_3().setFocusable(false);
+
                     if(recycledMaterialList.size() == preferences.getIntValueByKey("listvalue")){
                         modesThreeWeakReference.get().settingButton(EditButtonEnums.ADD_BUTTON_DISABLED);
                     }

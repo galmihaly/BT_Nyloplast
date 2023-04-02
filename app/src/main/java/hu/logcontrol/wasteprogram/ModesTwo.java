@@ -54,6 +54,7 @@ public class ModesTwo extends AppCompatActivity implements IModesTwoView {
     private List<RawMaterialTypeMass> rawMaterialTypeMassList;
 
     private String separatorFromJSON;
+    private boolean isEnableBarcodeReaderMode;
 
     private final ActivityResultLauncher<Intent> activityResultLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
@@ -128,7 +129,6 @@ public class ModesTwo extends AppCompatActivity implements IModesTwoView {
             }
 
             rawMaterialTypeMassList = LocalRawMaterialTypeMassesStorage.getInstance().getRawMaterialTypeMassList();
-
             swipeRefreshLayout.setRefreshing(false);
         };
         swipeRefreshLayout.setOnRefreshListener(onRefreshListener);
@@ -139,9 +139,8 @@ public class ModesTwo extends AppCompatActivity implements IModesTwoView {
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-
-        if(keyCode == KeyEvent.KEYCODE_BUTTON_R1 || keyCode == KeyEvent.KEYCODE_BUTTON_L1){
-            if(event.getAction() == KeyEvent.ACTION_DOWN){
+        if(isEnableBarcodeReaderMode){
+            if(keyCode == KeyEvent.KEYCODE_BUTTON_R1 || keyCode == KeyEvent.KEYCODE_BUTTON_L1){
                 addButton_2.callOnClick();
             }
         }
@@ -218,12 +217,17 @@ public class ModesTwo extends AppCompatActivity implements IModesTwoView {
         saveButton_2 = findViewById(R.id.saveButton_2);
         settingButton(EditButtonEnums.SAVE_BUTTON_DISABLED);
 
+        addButton_2.setFocusable(false);
+        saveButton_2.setFocusable(false);
+        backButton_2.setFocusable(false);
+
         recycleViewModesTwoRV = findViewById(R.id.recycleViewModesTwoRV);
         recycleViewModesTwoRV.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
 
         mainModesTwoCL = findViewById(R.id.mainModesTwoCL);
         swipeRefreshLayout = findViewById(R.id.swipeRefresLayoutModesTwoRV);
 
+        isEnableBarcodeReaderMode = JSONFileHelper.getBoolean(getApplicationContext(), "values.json", "IsEnableBarcodeReaderMode");
         separatorFromJSON = JSONFileHelper.getString(getApplicationContext(), "values.json", "FileSeparatorCharacter");
     }
 }

@@ -10,7 +10,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -20,13 +19,7 @@ import android.view.KeyEvent;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
-import java.util.Observable;
-import java.util.Observer;
-import java.util.Random;
 
 import hu.logcontrol.wasteprogram.adapters.RawMaterialAdapter;
 import hu.logcontrol.wasteprogram.enums.ActivityEnums;
@@ -58,6 +51,7 @@ public class ModesOne extends AppCompatActivity implements IModesOneView {
     private List<RawMaterial> rawMaterialList;
 
     private String separatorFromJSON;
+    private boolean isEnableBarcodeReaderMode;
 
     private final ActivityResultLauncher<Intent> activityResultLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
@@ -132,7 +126,6 @@ public class ModesOne extends AppCompatActivity implements IModesOneView {
             }
 
             rawMaterialList = LocalRawMaterialsStorage.getInstance().getRawMaterialList();
-
             swipeRefreshLayout.setRefreshing(false);
         };
         swipeRefreshLayout.setOnRefreshListener(onRefreshListener);
@@ -143,9 +136,8 @@ public class ModesOne extends AppCompatActivity implements IModesOneView {
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-
-        if(keyCode == KeyEvent.KEYCODE_BUTTON_R1 || keyCode == KeyEvent.KEYCODE_BUTTON_L1){
-            if(event.getAction() == KeyEvent.ACTION_DOWN){
+        if(isEnableBarcodeReaderMode){
+            if(keyCode == KeyEvent.KEYCODE_BUTTON_R1 || keyCode == KeyEvent.KEYCODE_BUTTON_L1){
                 addButton.callOnClick();
             }
         }
@@ -168,12 +160,16 @@ public class ModesOne extends AppCompatActivity implements IModesOneView {
                 saveButton.setEnabled(true);
                 saveButton.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.save_button_background));
 
+                Log.e("SAVE_BUTTON_ENABLED", String.valueOf(saveButton.isEnabled()));
+
                 break;
             }
             case SAVE_BUTTON_DISABLED:{
 
                 saveButton.setEnabled(false);
                 saveButton.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.disable_button_background_circle));
+
+                Log.e("SAVE_BUTTON_DISABLED", String.valueOf(saveButton.isEnabled()));
 
                 break;
             }
@@ -200,7 +196,6 @@ public class ModesOne extends AppCompatActivity implements IModesOneView {
         new Handler(Looper.getMainLooper()).post(() -> { Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show(); });
     }
 
-    @SuppressLint("NotifyDataSetChanged")
     @Override
     public void clearRawMaterialList(String message) {
         if(message == null) return;
@@ -217,12 +212,15 @@ public class ModesOne extends AppCompatActivity implements IModesOneView {
     }
 
     private void initView() {
-
         addButton = findViewById(R.id.addButton);
         backButton = findViewById(R.id.backButton);
 
         saveButton = findViewById(R.id.saveButton);
         settingButton(EditButtonEnums.SAVE_BUTTON_DISABLED);
+
+        addButton.setFocusable(false);
+        saveButton.setFocusable(false);
+        backButton.setFocusable(false);
 
         recycleViewModesOneRV = findViewById(R.id.recycleViewModesOneRV);
         recycleViewModesOneRV.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
@@ -230,6 +228,7 @@ public class ModesOne extends AppCompatActivity implements IModesOneView {
         mainModesOneCL = findViewById(R.id.mainModesOneCL);
         swipeRefreshLayout = findViewById(R.id.swipeRefresLayoutModesOneRV);
 
+        isEnableBarcodeReaderMode = JSONFileHelper.getBoolean(getApplicationContext(), "values.json", "IsEnableBarcodeReaderMode");
         separatorFromJSON = JSONFileHelper.getString(getApplicationContext(), "values.json", "FileSeparatorCharacter");
     }
 }

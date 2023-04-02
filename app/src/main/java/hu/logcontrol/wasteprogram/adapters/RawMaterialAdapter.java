@@ -64,6 +64,8 @@ public class RawMaterialAdapter extends RecyclerView.Adapter<RawMaterialAdapter.
                     holder.getRawMaterialCountInput().setText(rawMaterialList.get(position).getDoseNumber());
                     holder.getComment().setText(rawMaterialList.get(position).getComment());
 
+                    holder.getDeleteItemButton().setFocusable(false);
+
                     if(rawMaterialList.size() == preferences.getIntValueByKey("listvalue")){
                         modesOneWeakReference.get().settingButton(EditButtonEnums.ADD_BUTTON_DISABLED);
                     }
@@ -113,9 +115,6 @@ public class RawMaterialAdapter extends RecyclerView.Adapter<RawMaterialAdapter.
 
         public RawMaterialItemViewHolder(@NonNull View itemView) {
             super(itemView);
-
-
-            // TODO: meg kell nézni az elemek sorrendjét, nem jól íródik ki
 
             rawMaterialTypeInput = itemView.findViewById(R.id.rawMaterialTypeInput_1);
             rawMaterialCountInput = itemView.findViewById(R.id.rawMaterialCountInput_1);

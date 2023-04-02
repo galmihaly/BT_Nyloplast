@@ -2,12 +2,10 @@ package hu.logcontrol.wasteprogram.presenters;
 
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
-import android.util.Log;
 
 import java.lang.ref.WeakReference;
 
@@ -39,7 +37,7 @@ import hu.logcontrol.wasteprogram.models.RecycledMaterial;
 import hu.logcontrol.wasteprogram.taskmanager.CustomThreadPoolManager;
 import hu.logcontrol.wasteprogram.taskmanager.PresenterThreadCallback;
 import hu.logcontrol.wasteprogram.tasks.AddElementToList;
-import hu.logcontrol.wasteprogram.tasks.CreateFile;
+import hu.logcontrol.wasteprogram.tasks.SaveToDeviceStorage;
 import hu.logcontrol.wasteprogram.tasks.JSONValueWriter;
 
 public class ProgramPresenter implements IProgramPresenter, PresenterThreadCallback {
@@ -167,13 +165,9 @@ public class ProgramPresenter implements IProgramPresenter, PresenterThreadCallb
     public void addRawMaterialToAdapterList(RawMaterial rawMaterial) {
 
         try {
-            ApplicationLogger.logging(LogLevel.INFORMATION, "A RawMaterial objetum hozzáadása a RawMaterialAdapter listájához elkezdődött.");
-
             AddElementToList callable = new AddElementToList(AddElementToList.RunModes.ADD_RAWMATERIAL, rawMaterial);
             callable.setCustomThreadPoolManager(mCustomThreadPoolManager);
             mCustomThreadPoolManager.addCallableMethod(callable);
-
-            ApplicationLogger.logging(LogLevel.INFORMATION, "A RawMaterial objetum hozzáadása az Adapter listájához befejeződött.");
         }
         catch (Exception e){
             e.printStackTrace();
@@ -184,13 +178,9 @@ public class ProgramPresenter implements IProgramPresenter, PresenterThreadCallb
     @Override
     public void addRawMaterialTypeMassToAdapterList(RawMaterialTypeMass rawMaterialTypeMass) {
         try {
-            ApplicationLogger.logging(LogLevel.INFORMATION, "A RawMaterialTypeMass objetum hozzáadása a RawMaterialTypeMassAdapter listájához elkezdődött.");
-
             AddElementToList callable = new AddElementToList(AddElementToList.RunModes.ADD_RAWMATERIALTYPEMASS, rawMaterialTypeMass);
             callable.setCustomThreadPoolManager(mCustomThreadPoolManager);
             mCustomThreadPoolManager.addCallableMethod(callable);
-
-            ApplicationLogger.logging(LogLevel.INFORMATION, "A RawMaterialTypeMass objetum hozzáadása az Adapter listájához befejeződött.");
         }
         catch (Exception e){
             e.printStackTrace();
@@ -201,13 +191,9 @@ public class ProgramPresenter implements IProgramPresenter, PresenterThreadCallb
     @Override
     public void addRecycledMaterialToAdapterList(RecycledMaterial recycledMaterial) {
         try {
-            ApplicationLogger.logging(LogLevel.INFORMATION, "A RecycledMaterial objetum hozzáadása a RecycledMaterialAdapter listájához elkezdődött.");
-
             AddElementToList callable = new AddElementToList(AddElementToList.RunModes.ADD_RECYCLEDMATERIAL, recycledMaterial);
             callable.setCustomThreadPoolManager(mCustomThreadPoolManager);
             mCustomThreadPoolManager.addCallableMethod(callable);
-
-            ApplicationLogger.logging(LogLevel.INFORMATION, "A RecycledMaterial objetum hozzáadása az Adapter listájához befejeződött.");
         }
         catch (Exception e){
             e.printStackTrace();
@@ -218,13 +204,9 @@ public class ProgramPresenter implements IProgramPresenter, PresenterThreadCallb
     @Override
     public void createFileFromRawMaterialList() {
         try {
-            ApplicationLogger.logging(LogLevel.INFORMATION, "A RawMaterial lista átmásolása csv fájlba elkezdődött.");
-
-            CreateFile callable = new CreateFile(context, CreateFile.RunModes.CREATE_RAWMATERIAL, RawMaterial.getCSVHeader(), "txt");
+            SaveToDeviceStorage callable = new SaveToDeviceStorage(context, SaveToDeviceStorage.RunModes.CREATE_RAWMATERIAL, RawMaterial.getCSVHeader(), "txt");
             callable.setCustomThreadPoolManager(mCustomThreadPoolManager);
             mCustomThreadPoolManager.addCallableMethod(callable);
-
-            ApplicationLogger.logging(LogLevel.INFORMATION, "A RawMaterial lista átmásolása csv fájlba befejeződött.");
         }
         catch (Exception e){
             e.printStackTrace();
@@ -235,13 +217,9 @@ public class ProgramPresenter implements IProgramPresenter, PresenterThreadCallb
     @Override
     public void createFileFromRawMaterialTypeMassList() {
         try {
-            ApplicationLogger.logging(LogLevel.INFORMATION, "A RawMaterial lista átmásolása csv fájlba elkezdődött.");
-
-            CreateFile callable = new CreateFile(context, CreateFile.RunModes.CREATE_RAWMATERIALTYPEMASS, RawMaterialTypeMass.getCSVHeader(), "csv");
+            SaveToDeviceStorage callable = new SaveToDeviceStorage(context, SaveToDeviceStorage.RunModes.CREATE_RAWMATERIALTYPEMASS, RawMaterialTypeMass.getCSVHeader(), "txt");
             callable.setCustomThreadPoolManager(mCustomThreadPoolManager);
             mCustomThreadPoolManager.addCallableMethod(callable);
-
-            ApplicationLogger.logging(LogLevel.INFORMATION, "A RawMaterial lista átmásolása txt fájlba befejeződött.");
         }
         catch (Exception e){
             e.printStackTrace();
@@ -252,13 +230,9 @@ public class ProgramPresenter implements IProgramPresenter, PresenterThreadCallb
     @Override
     public void createFileFromRecycledMaterialTypeMassList() {
         try {
-            ApplicationLogger.logging(LogLevel.INFORMATION, "A RecycledMaterial lista átmásolása csv fájlba elkezdődött.");
-
-            CreateFile callable = new CreateFile(context, CreateFile.RunModes.CREATE_RECYCLEDMATERIAL, RecycledMaterial.getCSVHeader(), "csv");
+            SaveToDeviceStorage callable = new SaveToDeviceStorage(context, SaveToDeviceStorage.RunModes.CREATE_RECYCLEDMATERIAL, RecycledMaterial.getCSVHeader(), "txt");
             callable.setCustomThreadPoolManager(mCustomThreadPoolManager);
             mCustomThreadPoolManager.addCallableMethod(callable);
-
-            ApplicationLogger.logging(LogLevel.INFORMATION, "A RecycledMaterial lista átmásolása csv fájlba befejeződött.");
         }
         catch (Exception e){
             e.printStackTrace();
@@ -274,6 +248,7 @@ public class ProgramPresenter implements IProgramPresenter, PresenterThreadCallb
     @Override
     public void setSaveButtonState(EditButtonEnums editButtonEnum) {
         if(editButtonEnum == null) return;
+
         if(iModesOneView != null) iModesOneView.settingButton(editButtonEnum);
         if(iModesTwoView != null) iModesTwoView.settingButton(editButtonEnum);
         if(iModesThreeView != null) iModesThreeView.settingButton(editButtonEnum);
@@ -294,13 +269,9 @@ public class ProgramPresenter implements IProgramPresenter, PresenterThreadCallb
     @Override
     public void saveBooleanValueToJSONFile(String jsonIdValue, boolean booleanValue) {
         try {
-            ApplicationLogger.logging(LogLevel.INFORMATION, "A boolean érték elmentése JSON fáljba elkezdődött.");
-
             JSONValueWriter callable = new JSONValueWriter(context, jsonIdValue, booleanValue, JSONValueWriter.MODE.WRITE_BOOLEAN);
             callable.setCustomThreadPoolManager(mCustomThreadPoolManager);
             mCustomThreadPoolManager.addCallableMethod(callable);
-
-            ApplicationLogger.logging(LogLevel.INFORMATION, "A boolean érték elmentése JSON fáljba befejeződött.");
         }
         catch (Exception e){
             e.printStackTrace();
@@ -311,13 +282,9 @@ public class ProgramPresenter implements IProgramPresenter, PresenterThreadCallb
     @Override
     public void saveStringValueToJSONFile(String jsonIdValue, String value) {
         try {
-            ApplicationLogger.logging(LogLevel.INFORMATION, "A String érték elmentése JSON fáljba elkezdődött.");
-
             JSONValueWriter callable = new JSONValueWriter(context, jsonIdValue, value, JSONValueWriter.MODE.WRITE_STRING);
             callable.setCustomThreadPoolManager(mCustomThreadPoolManager);
             mCustomThreadPoolManager.addCallableMethod(callable);
-
-            ApplicationLogger.logging(LogLevel.INFORMATION, "A String érték elmentése JSON fáljba befejeződött.");
         }
         catch (Exception e){
             e.printStackTrace();

@@ -1,22 +1,33 @@
 package hu.logcontrol.wasteprogram;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager2.widget.ViewPager2;
 
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
+import com.google.android.material.button.MaterialButton;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.tabs.TabLayout;
 
 import java.util.ArrayList;
@@ -39,6 +50,9 @@ public class SettingsActivity extends AppCompatActivity implements ISettingsView
 
     private ImageButton settingsSaveButton;
     private ImageButton settingsBackButton;
+
+    private MaterialButton backDialogButton;
+    private MaterialButton enterDialogButton;
 
     private ProgramPresenter programPresenter;
 
@@ -84,11 +98,10 @@ public class SettingsActivity extends AppCompatActivity implements ISettingsView
         initPresenter();
         initStartingValuesOfView();
         initViewPager();
+        initButtonsListeners();
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
+    private void initButtonsListeners() {
 
         if(settingsSaveButton != null){
             settingsSaveButton.setOnClickListener(v -> {
@@ -97,7 +110,7 @@ public class SettingsActivity extends AppCompatActivity implements ISettingsView
                     if(isReadyLocalCheckbox){
                         resultLocalCheckbox = iUploadFileFragmentListener.getLocalSaveCheckBoxState();
                     }
-                    Log.e("resultLocalCheckbox", String.valueOf(resultLocalCheckbox));
+
                     resultGlobalPath = iUploadFileFragmentListener.getGlobalPath();
                     resultUsername = iUploadFileFragmentListener.getUsername();
                     resultPassword = iUploadFileFragmentListener.getPassword();
@@ -134,7 +147,6 @@ public class SettingsActivity extends AppCompatActivity implements ISettingsView
                             programPresenter.saveStringValueToJSONFile("Password", originalPassword);
                         }
                     }
-
                 }
 
                 if(iGeneralFragmentListener != null){
@@ -163,14 +175,81 @@ public class SettingsActivity extends AppCompatActivity implements ISettingsView
                         programPresenter.saveStringValueToJSONFile("FileSeparatorCharacter", originalFileSeparatorCharachter);
                     }
                 }
+
+                programPresenter.openActivityByEnum(ActivityEnums.MAIN_ACTIVITY);
             });
         }
 
         if(settingsBackButton != null){
             settingsBackButton.setOnClickListener(v -> {
-                programPresenter.openActivityByEnum(ActivityEnums.MAIN_ACTIVITY);
+                checkDataChangesInStorage();
             });
         }
+    }
+
+    private void checkDataChangesInStorage() {
+
+        boolean a = false;
+        String b = null;
+        String c = null;
+        String d = null;
+        boolean e = false;
+        boolean f = false;
+        String g = null;
+        String h = null;
+
+        boolean isEnabled = true;
+        int currentPage = settingViewPagerAdapter.getCurrentPage();
+
+        e = iGeneralFragmentListener.getBarcodeCheckBoxState();
+        f = iGeneralFragmentListener.getKeyBoardCheckBoxState();
+        g = iGeneralFragmentListener.getFileSeparatorCharachter();
+
+        if(iGeneralFragmentListener != null){
+            if(originalBarcodeCheckbox == e && originalKeyBoardCheckbox == f && originalFileSeparatorCharachter.equals(g)){
+                isEnabled = true;
+            }
+            else {
+                isEnabled = false;
+            }
+        }
+
+        if(iUploadFileFragmentListener != null){
+            if(isReadyLocalCheckbox){
+                a = iUploadFileFragmentListener.getLocalSaveCheckBoxState();
+            }
+
+            b = iUploadFileFragmentListener.getGlobalPath();
+            h = iUploadFileFragmentListener.getLocalPath();
+            c = iUploadFileFragmentListener.getUsername();
+            d = iUploadFileFragmentListener.getPassword();
+
+            if(originalLocalPath.equals(h) && originalLocalCheckbox == a && originalGlobalPath.equals(b) && originalUsername.equals(c) && originalPassword.equals(d) && isEnabled){
+                isEnabled = true;
+            }
+            else {
+                isEnabled = false;
+            }
+        }
+
+        if(!isEnabled) { openSaveAlertDialog(); }
+        else { programPresenter.openActivityByEnum(ActivityEnums.MAIN_ACTIVITY); }
+    }
+
+    private void openSaveAlertDialog() {
+        Dialog dialog = new Dialog(this);
+
+        dialog.setContentView(R.layout.alertdialog_view);
+        dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        dialog.setCancelable(false);
+
+        backDialogButton = dialog.findViewById(R.id.backDialogButton);
+        enterDialogButton = dialog.findViewById(R.id.enterDialogButton);
+
+        backDialogButton.setOnClickListener(v -> { dialog.dismiss(); });
+        enterDialogButton.setOnClickListener(v -> { programPresenter.openActivityByEnum(ActivityEnums.MAIN_ACTIVITY); });
+
+        dialog.show();
     }
 
     private void initView(){
@@ -275,6 +354,7 @@ public class SettingsActivity extends AppCompatActivity implements ISettingsView
 
     @Override
     public void sendFileSeparatorCharachter(String charachter) {
+        if(charachter == null) return;
         resultFileSeparatorCharachter = charachter;
     }
 

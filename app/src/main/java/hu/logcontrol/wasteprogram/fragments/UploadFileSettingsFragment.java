@@ -194,20 +194,26 @@ public class UploadFileSettingsFragment extends Fragment implements IUploadFileS
 
     @Override
     public String getGlobalPath() {
-        if(settingsGlobalSavePathTB == null) return null;
+//        if(settingsGlobalSavePathTB == null) return null;
         return settingsGlobalSavePathTB.getText().toString();
     }
 
     @Override
     public String getUsername() {
-        if(usernameTIET == null) return null;
+//        if(usernameTIET == null) return null;
         return usernameTIET.getText().toString();
     }
 
     @Override
     public String getPassword() {
-        if(passwordTIET == null) return null;
+//        if(passwordTIET == null) return null;
         return passwordTIET.getText().toString();
+    }
+
+    @Override
+    public String getLocalPath() {
+//        if(settingsLocalSavePathTB == null) return null;
+        return settingsLocalSavePathTB.getText().toString();
     }
 
     @Override

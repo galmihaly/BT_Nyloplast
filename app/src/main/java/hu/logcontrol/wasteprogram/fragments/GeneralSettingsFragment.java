@@ -57,8 +57,39 @@ public class GeneralSettingsFragment extends Fragment implements IGeneralSetting
         initPresenter();
         initFileSeparatorsDropDownMenu();
         initDefaultValues();
+        isCheckingCheckboxes();
 
         return view;
+    }
+
+    private void isCheckingCheckboxes() {
+        if(settingKeyboardCheckBox != null){
+            settingKeyboardCheckBox.setOnClickListener(v -> {
+                if(settingKeyboardCheckBox.isChecked()){
+
+                    settingKeyboardCheckBox.setChecked(true);
+                    generalListener.sendKeyboardCheckBox(true);
+                }
+                else {
+                    settingKeyboardCheckBox.setChecked(false);
+                    generalListener.sendKeyboardCheckBox(false);
+                }
+            });
+        }
+
+        if(settingBarcodeNextCheckBox != null){
+            settingBarcodeNextCheckBox.setOnClickListener(v -> {
+                if(settingBarcodeNextCheckBox.isChecked()){
+
+                    settingBarcodeNextCheckBox.setChecked(true);
+                    generalListener.sendBarcodeNextCheckBoxState(true);
+                }
+                else {
+                    settingBarcodeNextCheckBox.setChecked(false);
+                    generalListener.sendBarcodeNextCheckBoxState(false);
+                }
+            });
+        }
     }
 
     private void initDefaultValues() {
@@ -76,32 +107,13 @@ public class GeneralSettingsFragment extends Fragment implements IGeneralSetting
                 int resultPosition = -1;
                 resultFileSeparator = JSONFileHelper.getString(getContext(), "values.json", "FileSeparatorCharacter");
 
-                for (int i = 0; i < fileSeparators.length; i++) { if(fileSeparators[i].equals(resultFileSeparator)) resultPosition = i; }
+                for (int i = 0; i < fileSeparators.length; i++) {
+                    if(fileSeparators[i].equals(resultFileSeparator)) resultPosition = i;
+                }
 
                 if(resultPosition != -1){ fileSeparatorACTV.setText(arrayAdapter.getItem(resultPosition), false); }
             }
         }
-
-//        boolean isExist = JSONFileHelper.isExist(getContext(), "values.json");
-//        if(isExist) {
-//
-//            resultBarcodeCheckbox = JSONFileHelper.getBoolean(getContext(), "values.json", "IsEnableBarcodeReaderMode");
-//            settingBarcodeNextCheckBox.setChecked(resultBarcodeCheckbox);
-//
-//            resultKeyBoardCheckbox = JSONFileHelper.getBoolean(getContext(), "values.json", "IsEnableKeyBoardOnTextBoxes");
-//            settingKeyboardCheckBox.setChecked(resultKeyBoardCheckbox);
-//
-//            int resultPosition = -1;
-//            resultFileSeparator = JSONFileHelper.getString(getContext(), "values.json", "FileSeparatorCharacter");
-//            Log.e("resultFileSeparator", resultFileSeparator);
-//            for (int i = 0; i < fileSeparators.length; i++) {
-//                if(fileSeparators[i].equals(resultFileSeparator)) resultPosition = i;
-//            }
-//            Log.e("resultPosition", String.valueOf(resultPosition));
-//            if(resultPosition != -1) {
-//                fileSeparatorACTV.setText(arrayAdapter.getItem(resultPosition), false);
-//            }
-//        }
     }
 
     private void initPresenter() {
@@ -144,53 +156,6 @@ public class GeneralSettingsFragment extends Fragment implements IGeneralSetting
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-
-        if(settingBarcodeNextCheckBox != null && settingKeyboardCheckBox != null){
-
-            boolean isExist = JSONFileHelper.isExist(getContext(), "values.json");
-            if(isExist) {
-
-                resultBarcodeCheckbox = JSONFileHelper.getBoolean(getContext(), "values.json", "IsEnableBarcodeReaderMode");
-                settingBarcodeNextCheckBox.setChecked(resultBarcodeCheckbox);
-
-                resultKeyBoardCheckbox = JSONFileHelper.getBoolean(getContext(), "values.json", "IsEnableKeyBoardOnTextBoxes");
-                settingKeyboardCheckBox.setChecked(resultKeyBoardCheckbox);
-
-            }
-        }
-
-        if(settingKeyboardCheckBox != null){
-            settingKeyboardCheckBox.setOnClickListener(v -> {
-                if(settingKeyboardCheckBox.isChecked()){
-
-                    settingKeyboardCheckBox.setChecked(true);
-                    generalListener.sendKeyboardCheckBox(true);
-                }
-                else {
-                    settingKeyboardCheckBox.setChecked(false);
-                    generalListener.sendKeyboardCheckBox(false);
-                }
-            });
-        }
-
-        if(settingBarcodeNextCheckBox != null){
-            settingBarcodeNextCheckBox.setOnClickListener(v -> {
-                if(settingBarcodeNextCheckBox.isChecked()){
-
-                    settingBarcodeNextCheckBox.setChecked(true);
-                    generalListener.sendBarcodeNextCheckBoxState(true);
-                }
-                else {
-                    settingBarcodeNextCheckBox.setChecked(false);
-                    generalListener.sendBarcodeNextCheckBoxState(false);
-                }
-            });
-        }
-    }
-
-    @Override
     public void getMessageFromPresenter(String message) {
         if(message == null) return;
         new Handler(Looper.getMainLooper()).post(() -> { Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show(); });
@@ -206,5 +171,11 @@ public class GeneralSettingsFragment extends Fragment implements IGeneralSetting
     public boolean getKeyBoardCheckBoxState() {
         if(settingKeyboardCheckBox.isChecked()) { return true; }
         return false;
+    }
+
+    @Override
+    public String getFileSeparatorCharachter() {
+//        if(fileSeparatorACTV == null) return null;
+        return fileSeparatorACTV.getText().toString();
     }
 }
