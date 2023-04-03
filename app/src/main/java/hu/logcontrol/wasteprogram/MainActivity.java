@@ -29,8 +29,7 @@ import hu.logcontrol.wasteprogram.helpers.Helper;
 import hu.logcontrol.wasteprogram.helpers.JSONFileHelper;
 import hu.logcontrol.wasteprogram.interfaces.IMainView;
 import hu.logcontrol.wasteprogram.presenters.ProgramPresenter;
-import jcifs.smb.NtlmPasswordAuthentication;
-import jcifs.smb.SmbFile;
+import java.time.Duration;
 
 public class MainActivity extends AppCompatActivity implements IMainView {
 
@@ -56,42 +55,44 @@ public class MainActivity extends AppCompatActivity implements IMainView {
             programPresenter.initBaseJSONFile("values.json");
         }
 
-        Executor executor = Executors.newSingleThreadExecutor();
+//        programPresenter.initBaseJSONFile("values.json");
 
-        executor.execute(() -> {
-            FTPClient client = new FTPClient();
-            FileInputStream fis = null;
-            try {
-                // ftp://172.16.1.30:21/teszt1/root.txt
-                // ftp://172.16.1.30/teszt1/ - ez itt működött
-                client.connect("172.16.1.5", 21);
-
-                boolean b = client.login("Galmihaly", "Kutyaszar123!");
-                Log.e("b", String.valueOf(b));
-                client.setFileType(FTP.ASCII_FILE_TYPE);
-                client.enterLocalPassiveMode();
-                client.sendCommand("OPTS UTF8 ON");
-                String filename = "/sdcard/root.txt";
-                fis = new FileInputStream(filename);
-                client.storeFile("OZS/data/root.txt", fis);
-                fis.close();
-                client.logout();
-//                client.connect("172.16.1.30", 21);
+//        Executor executor = Executors.newSingleThreadExecutor();
+//
+//        executor.execute(() -> {
+//            FTPClient client = new FTPClient();
+//            FileInputStream fis = null;
+//            try {
+//                // ftp://172.16.1.30:21/teszt1/root.txt
+//                // ftp://172.16.1.30/teszt1/ - ez itt működött
+//                client.connect("192.168.1.141", 21);
 //
 //                boolean b = client.login("raspberry", "pi");
 //                Log.e("b", String.valueOf(b));
 //                client.setFileType(FTP.ASCII_FILE_TYPE);
 //                client.enterLocalPassiveMode();
 //                client.sendCommand("OPTS UTF8 ON");
-//                String filename = "/sdcard/root.txt";
+//                String filename = "/sdcard/Music/2023_04_03_22_16_RawMaterialList.txt";
 //                fis = new FileInputStream(filename);
-//                client.storeFile("teszt1/root.txt", fis);
+//                client.storeFile("/teszt1/2023_04_03_22_16_RawMaterialList.txt", fis);
 //                fis.close();
 //                client.logout();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        });
+////                client.connect("172.16.1.30", 21);
+////
+////                boolean b = client.login("raspberry", "pi");
+////                Log.e("b", String.valueOf(b));
+////                client.setFileType(FTP.ASCII_FILE_TYPE);
+////                client.enterLocalPassiveMode();
+////                client.sendCommand("OPTS UTF8 ON");
+////                String filename = "/sdcard/root.txt";
+////                fis = new FileInputStream(filename);
+////                client.storeFile("teszt1/root.txt", fis);
+////                fis.close();
+////                client.logout();
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//        });
 
 //        programPresenter.initBaseJSONFile("values.json");
 

@@ -4,7 +4,11 @@ import android.content.Context;
 import android.os.Message;
 import android.util.Log;
 
+import org.apache.commons.net.ftp.FTP;
+import org.apache.commons.net.ftp.FTPClient;
+
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -13,6 +17,7 @@ import java.util.List;
 import java.util.concurrent.Callable;
 
 import hu.logcontrol.wasteprogram.enums.HandlerMessageIdentifiers;
+import hu.logcontrol.wasteprogram.helpers.FileHelper;
 import hu.logcontrol.wasteprogram.helpers.Helper;
 import hu.logcontrol.wasteprogram.helpers.JSONFileHelper;
 import hu.logcontrol.wasteprogram.logger.ApplicationLogger;
@@ -40,14 +45,17 @@ public class SaveToDeviceStorage implements Callable {
     private String header;
     private String fileExtension;
 
-    private String fileName;
-
     private FileOutputStream fos;
     private FileWriter writer;
     private File file;
-    private String path;
 
-    private boolean isSucces;
+    private boolean isSuccesWriteToLocalStorage = false;
+    private boolean isSuccesWriteToGlobalStorage = false;
+
+    private boolean isEnabledWriteToLocalStorage;
+
+    private String[] globalPathElements;
+    private String[] localPathElements;
 
     public SaveToDeviceStorage(Context context, RunModes runMode, String header, String fileExtension) {
         this.context = context;
@@ -66,44 +74,54 @@ public class SaveToDeviceStorage implements Callable {
         try {
             if (Thread.interrupted()) throw new InterruptedException();
 
-            path = JSONFileHelper.getString(context, "values.json", "LocalSavePath");
+            isEnabledWriteToLocalStorage = JSONFileHelper.getBoolean(context.getApplicationContext(), "values.json", "IsEnableSaveLocalStorage");
 
             switch (runMode){
                 case CREATE_RAWMATERIAL:{
 
                     rawMaterialList = LocalRawMaterialsStorage.getInstance().getRawMaterialList();
-                    fileName = ApplicationLogger.getDateTimeString() + "_RawMaterialList" + "." + fileExtension;
-                    file = new File(path + File.separator + fileName);
 
-                    isSucces = saveToFile(file, rawMaterialList);
+                    localPathElements = FileHelper.getSaveLocalFullPath(context.getApplicationContext(), "_RawMaterialList", fileExtension);
+                    if(localPathElements != null){
+                        file = new File(localPathElements[0] + File.separator + localPathElements[1]);
+                        if(isEnabledWriteToLocalStorage) isSuccesWriteToLocalStorage = saveToLocalFile(file, rawMaterialList);
+                    }
+
+                    globalPathElements = FileHelper.getSaveGlobalFullPath(context.getApplicationContext());
+                    if(globalPathElements != null && localPathElements != null){
+                        file = new File(localPathElements[1]);
+                        isSuccesWriteToGlobalStorage = saveToGlobalFile(file, rawMaterialList, globalPathElements);
+                    }
 
                     break;
                 }
                 case CREATE_RAWMATERIALTYPEMASS:{
 
-                    rawMaterialTypeMassList = LocalRawMaterialTypeMassesStorage.getInstance().getRawMaterialTypeMassList();
-                    fileName = ApplicationLogger.getDateTimeString() + "_RawMaterialTypeMassList" + "." + fileExtension;
-                    file = new File(path + File.separator + fileName);
-
-                    isSucces = saveToFile(file, rawMaterialTypeMassList);
+//                    rawMaterialTypeMassList = LocalRawMaterialTypeMassesStorage.getInstance().getRawMaterialTypeMassList();
+//                    fullPathName = FileHelper.getSaveLocalFullPath(context.getApplicationContext(), "_RawMaterialTypeMassList", fileExtension);
+//                    file = new File(fullPathName);
+//                    if(isEnabledWriteToLocalStorage) isSuccesWriteToLocalStorage = saveToLocalFile(file, rawMaterialTypeMassList);
 
                     break;
                 }
                 case CREATE_RECYCLEDMATERIAL:{
 
-                    recycledMaterialList = LocalRecycLedMaterialsStorage.getInstance().getRecycledMaterialList();
-                    fileName = ApplicationLogger.getDateTimeString() + "_RecycledMaterialList" + "." + fileExtension;
-                    file = new File(path + File.separator + fileName);
-
-                    isSucces = saveToFile(file, recycledMaterialList);
+//                    recycledMaterialList = LocalRecycLedMaterialsStorage.getInstance().getRecycledMaterialList();
+//                    fullPathName = FileHelper.getSaveLocalFullPath(context.getApplicationContext(), "_RecycledMaterialList", fileExtension);
+//                    file = new File(fullPathName);
+//                    if(isEnabledWriteToLocalStorage) isSuccesWriteToLocalStorage = saveToLocalFile(file, recycledMaterialList);
 
                     break;
                 }
             }
 
-            if(isSucces){
+            if(isSuccesWriteToLocalStorage && isSuccesWriteToGlobalStorage || !isSuccesWriteToLocalStorage && isSuccesWriteToGlobalStorage){
                 ApplicationLogger.logging(LogLevel.INFORMATION, "Az fájl létrehozása és hozzádadása a mappaútvonalhoz sikerült!");
                 sendMessageToPresenterHandler(CreateFileEnums.CREATEFILE_SUCCES);
+            }
+            else {
+                ApplicationLogger.logging(LogLevel.INFORMATION, "Az fájl létrehozása és hozzádadása a mappaútvonalhoz nem sikerült!");
+                sendMessageToPresenterHandler(CreateFileEnums.CREATEFILE_FAILED);
             }
         }
         catch (InterruptedException e) {
@@ -117,7 +135,77 @@ public class SaveToDeviceStorage implements Callable {
         return null;
     }
 
-    public <T> boolean saveToFile(File file, List<T> list) {
+    private <T> boolean saveToGlobalFile(File file, List<T> list, String[] globalPathElements) {
+        boolean isSucces = true;
+
+        for (int i = 0; i < globalPathElements.length; i++) {
+            Log.e("glob", globalPathElements[i]);
+        }
+
+//        String ipAddress = null;
+//        String portNumber = null;
+//        String username = null;
+//        String password = null;
+//
+//        if(globalPathElements[0].contains(":")){
+//            ipAddress = globalPathElements[0].split(":")[0];
+//            portNumber = globalPathElements[0].split(":")[1];
+//        }
+//        else {
+//            ipAddress = globalPathElements[0].split(":")[0];
+//        }
+//
+//        FTPClient client = new FTPClient();
+//        FileInputStream fis = null;
+//        try {
+//            fos = new FileOutputStream(file);
+//            if(list != null) {
+//
+//                writer = new FileWriter(fos.getFD());
+//                writer.write(header + "\n\n");
+//                for (int i = 0; i < list.size(); i++) {
+//                    writer.write(list.get(i).toString() + "\n");
+//                }
+//                writer.flush();
+//
+//                client.connect("192.168.1.141", 21);
+//
+//                boolean b = client.login("raspberry", "pi");
+//                Log.e("b", String.valueOf(b));
+//                client.setFileType(FTP.ASCII_FILE_TYPE);
+//                client.enterLocalPassiveMode();
+//                client.sendCommand("OPTS UTF8 ON");
+//                String filename = "/sdcard/Music/2023_04_03_22_16_RawMaterialList.txt";
+//                fis = new FileInputStream(filename);
+//                client.storeFile("/teszt1/2023_04_03_22_16_RawMaterialList.txt", fis);
+//                fis.close();
+//                client.logout();
+//            }
+//        }
+//        catch (IOException ex){
+//
+//            ApplicationLogger.logging(LogLevel.FATAL, ex.getMessage());
+//            sendMessageToPresenterHandler(CreateFileEnums.CREATEFILE_FAILED);
+//
+//            isSucces = false;
+//            return isSucces;
+//        }
+//
+//        try {
+//            writer.close();
+//        } catch (IOException e) {
+//
+//            ApplicationLogger.logging(LogLevel.FATAL, e.getMessage());
+//            sendMessageToPresenterHandler(CreateFileEnums.CREATEFILE_FAILED);
+//
+//            isSucces = false;
+//            return isSucces;
+//        }
+
+        return isSucces;
+    }
+
+    public <T> boolean saveToLocalFile(File file, List<T> list) {
 
         boolean isSucces = true;
 
@@ -176,6 +264,10 @@ public class SaveToDeviceStorage implements Callable {
         if(customThreadPoolManagerWeakReference != null && customThreadPoolManagerWeakReference.get() != null) {
             if(message != null) { customThreadPoolManagerWeakReference.get().sendResultToPresenter(message); }
         }
+    }
+
+    public boolean getIsEnableWriteToLocalStorage(){
+        return JSONFileHelper.getBoolean(context, "values.json", "IsEnableSaveLocalStorage");
     }
 
     private enum  CreateFileEnums{

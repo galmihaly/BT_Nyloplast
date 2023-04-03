@@ -71,7 +71,6 @@ public class JSONValueWriter implements Callable {
                 JSONObject jsonObject = JSONFileHelper.getJSONObject(context, FILE_NAME);
 
                 if(jsonObject != null) {
-
                     jsonObject.remove(jsonIdValue);
 
                     switch (mode) {
@@ -87,7 +86,8 @@ public class JSONValueWriter implements Callable {
 
                     fileWriter = new FileWriter(file);
                     bufferedWriter = new BufferedWriter(fileWriter);
-                    bufferedWriter.write(jsonObject.toString(4).replace("\\", ""));
+//                    bufferedWriter.write(jsonObject.toString(4).replace("\\", ""));
+                    bufferedWriter.append(jsonObject.toString(4).replace("\\", ""));
                 }
             }
         }

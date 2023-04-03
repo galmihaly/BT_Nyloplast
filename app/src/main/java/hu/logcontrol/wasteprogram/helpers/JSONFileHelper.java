@@ -128,7 +128,7 @@ public class JSONFileHelper {
             if(file.exists()){
                 fileWriter = new FileWriter(file);
                 bufferedWriter = new BufferedWriter(fileWriter);
-                bufferedWriter.write(jsonObject.toString(4).replace("\\", ""));
+                bufferedWriter.write(jsonObject.toString(4));
                 bufferedWriter.close();
             }
 

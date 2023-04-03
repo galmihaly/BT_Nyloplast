@@ -134,8 +134,12 @@ public class SettingsActivity extends AppCompatActivity implements ISettingsView
                         }
                     }
 
+                    Log.e("resultUsername", resultUsername);
+                    Log.e("resultPassword", resultPassword);
+
                     if(resultUsername != null){
                         if(!originalUsername.equals(resultUsername)){
+                            Log.e("resultUsername_", resultUsername);
                             originalUsername = resultUsername;
                             programPresenter.saveStringValueToJSONFile("Username", originalUsername);
                         }
@@ -143,6 +147,7 @@ public class SettingsActivity extends AppCompatActivity implements ISettingsView
 
                     if(resultPassword != null){
                         if(!originalPassword.equals(resultPassword)){
+                            Log.e("resultPassword_", resultPassword);
                             originalPassword = resultPassword;
                             programPresenter.saveStringValueToJSONFile("Password", originalPassword);
                         }
@@ -199,7 +204,6 @@ public class SettingsActivity extends AppCompatActivity implements ISettingsView
         String h = null;
 
         boolean isEnabled = true;
-        int currentPage = settingViewPagerAdapter.getCurrentPage();
 
         e = iGeneralFragmentListener.getBarcodeCheckBoxState();
         f = iGeneralFragmentListener.getKeyBoardCheckBoxState();
