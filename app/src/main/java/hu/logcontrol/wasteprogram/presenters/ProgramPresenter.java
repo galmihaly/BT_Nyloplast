@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
+import android.util.Log;
 
 import java.lang.ref.WeakReference;
 
@@ -249,9 +250,9 @@ public class ProgramPresenter implements IProgramPresenter, PresenterThreadCallb
     public void setSaveButtonState(EditButtonEnums editButtonEnum) {
         if(editButtonEnum == null) return;
 
-        if(iModesOneView != null) iModesOneView.settingButton(editButtonEnum);
-        if(iModesTwoView != null) iModesTwoView.settingButton(editButtonEnum);
-        if(iModesThreeView != null) iModesThreeView.settingButton(editButtonEnum);
+        if(iModesOneView != null) { iModesOneView.settingButton(editButtonEnum); }
+        if(iModesTwoView != null) { iModesTwoView.settingButton(editButtonEnum); }
+        if(iModesThreeView != null) { iModesThreeView.settingButton(editButtonEnum); }
     }
 
     @Override
@@ -323,6 +324,8 @@ public class ProgramPresenter implements IProgramPresenter, PresenterThreadCallb
             switch (msg.what){
                 case HandlerMessageIdentifiers.RAWMATERIAL_LIST_ADD_ELEMENT_SUCCESS:{
                     ApplicationLogger.logging(LogLevel.INFORMATION, getWeakReferenceNotification(msg));
+
+                    //iProgramPresenterWeakReference.get().setSaveButtonState(EditButtonEnums.SAVE_BUTTON_ENABLED);
                     break;
                 }
                 case HandlerMessageIdentifiers.RAWMATERIAL_LIST_ADD_ELEMENT_FAILED:

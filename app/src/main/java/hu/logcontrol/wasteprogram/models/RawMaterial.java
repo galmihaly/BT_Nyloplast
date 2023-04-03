@@ -37,9 +37,17 @@ public class RawMaterial {
     }
 
     @Override
-    public String toString() { return String.format("%s" + separator + "%s" + separator + "%s" + separator + "%s", this.timeStamp, this.materialType, this.doseNumber, this.comment); }
+    public String toString() {
+        if(separator == (char)9){
+            return String.format("%s " + separator + "%s " + separator + "%s " + separator + "%s", this.timeStamp, this.materialType, this.doseNumber, this.comment);
+        }
+        return String.format("%s" + separator + "%s" + separator + "%s" + separator + "%s", this.timeStamp, this.materialType, this.doseNumber, this.comment);
+    }
 
     public static String getCSVHeader(){
+        if(separator == (char)9){
+            return "TimeStamp " + separator + "RawMaterialType " + separator + "RawMaterialCount " + separator + "Comment";
+        }
         return "TimeStamp" + separator + "RawMaterialType" + separator + "RawMaterialCount" + separator + "Comment";
     }
 }

@@ -21,6 +21,7 @@ import android.widget.Toast;
 
 import java.util.List;
 
+import hu.logcontrol.wasteprogram.adapters.RawMaterialTypeMassAdapter;
 import hu.logcontrol.wasteprogram.adapters.RecycledMaterialAdapter;
 import hu.logcontrol.wasteprogram.enums.ActivityEnums;
 import hu.logcontrol.wasteprogram.enums.EditButtonEnums;
@@ -28,6 +29,7 @@ import hu.logcontrol.wasteprogram.helpers.Helper;
 import hu.logcontrol.wasteprogram.helpers.JSONFileHelper;
 import hu.logcontrol.wasteprogram.interfaces.IModesThreeView;
 import hu.logcontrol.wasteprogram.logger.ApplicationLogger;
+import hu.logcontrol.wasteprogram.models.LocalRawMaterialTypeMassesStorage;
 import hu.logcontrol.wasteprogram.models.LocalRawMaterialsStorage;
 import hu.logcontrol.wasteprogram.models.LocalRecycLedMaterialsStorage;
 import hu.logcontrol.wasteprogram.models.RecycledMaterial;
@@ -72,7 +74,18 @@ public class ModesThree extends AppCompatActivity implements IModesThreeView {
                     char c = Helper.getSeparator(separatorFromJSON);
                     if(c != 0) recycledMaterial.setSeparator(c);
 
-                    programPresenter.addRecycledMaterialToAdapterList(recycledMaterial);
+                    if(recycledMaterialList != null) recycledMaterialList.add(recycledMaterial);
+
+                    if(saveButton_3 != null){
+                        settingButton(EditButtonEnums.SAVE_BUTTON_ENABLED);
+
+                        saveButton_3.setOnClickListener(view -> {
+                            programPresenter.createFileFromRecycledMaterialTypeMassList();
+                        });
+                    }
+
+                    recycledMaterialAdapter = new RecycledMaterialAdapter(getApplicationContext(), recycledMaterialList, this);
+                    recycleViewModesThreeRV.setAdapter(recycledMaterialAdapter);
                 }
             }
     );
@@ -82,29 +95,12 @@ public class ModesThree extends AppCompatActivity implements IModesThreeView {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_modes_three);
         initView();
-
-        programPresenter = new ProgramPresenter(this, getApplicationContext());
-        programPresenter.initTaskManager();
-
-        recycledMaterialList = LocalRecycLedMaterialsStorage.getInstance().getRecycledMaterialList();
+        initPresenter();
+        initButtons();
+        initRefreshListener();
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-
-        if(saveButton_3 != null && recycledMaterialList != null){
-            int sizeOfRawMaterialList = LocalRecycLedMaterialsStorage.getInstance().getRecycLedMaterialListSize();
-
-            if(sizeOfRawMaterialList > 0){
-                settingButton(EditButtonEnums.SAVE_BUTTON_ENABLED);
-
-                saveButton_3.setOnClickListener(view -> {
-                    programPresenter.createFileFromRecycledMaterialTypeMassList();
-                });
-            }
-        }
-
+    private void initButtons() {
         if(programPresenter != null){
             if(addButton_3 != null){
                 addButton_3.setOnClickListener(view -> {
@@ -118,6 +114,25 @@ public class ModesThree extends AppCompatActivity implements IModesThreeView {
             }
         }
 
+        recycledMaterialList = LocalRecycLedMaterialsStorage.getInstance().getRecycledMaterialList();
+
+        if(saveButton_3 != null){
+            int sizeOfRawMaterialList = recycledMaterialList.size();
+            Log.e("sizeOfRawMaterialList", String.valueOf(sizeOfRawMaterialList));
+            if(sizeOfRawMaterialList > 0){
+                settingButton(EditButtonEnums.SAVE_BUTTON_ENABLED);
+
+                saveButton_3.setOnClickListener(view -> {
+                    programPresenter.createFileFromRecycledMaterialTypeMassList();
+                });
+            }
+        }
+
+        recycledMaterialAdapter = new RecycledMaterialAdapter(getApplicationContext(), recycledMaterialList,  this);
+        recycleViewModesThreeRV.setAdapter(recycledMaterialAdapter);
+    }
+
+    private void initRefreshListener() {
         onRefreshListener = () -> {
             if(isHaveToClearList){
                 recycledMaterialAdapter.clearRawMaterialList();
@@ -126,13 +141,17 @@ public class ModesThree extends AppCompatActivity implements IModesThreeView {
             }
 
             recycledMaterialList = LocalRecycLedMaterialsStorage.getInstance().getRecycledMaterialList();
+            recycledMaterialAdapter = new RecycledMaterialAdapter(getApplicationContext(), recycledMaterialList, this);
+            recycleViewModesThreeRV.setAdapter(recycledMaterialAdapter);
+
             swipeRefreshLayout.setRefreshing(false);
         };
         swipeRefreshLayout.setOnRefreshListener(onRefreshListener);
+    }
 
-
-        recycledMaterialAdapter = new RecycledMaterialAdapter(getApplicationContext(), recycledMaterialList, this);
-        recycleViewModesThreeRV.setAdapter(recycledMaterialAdapter);
+    private void initPresenter() {
+        programPresenter = new ProgramPresenter(this, getApplicationContext());
+        programPresenter.initTaskManager();
     }
 
     @Override

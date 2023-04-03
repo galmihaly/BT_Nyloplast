@@ -6,7 +6,7 @@ import java.util.List;
 public class LocalRawMaterialTypeMassesStorage {
 
     private static LocalRawMaterialTypeMassesStorage mInstance;
-    private List<RawMaterialTypeMass> rawMaterialTypeMassList = new ArrayList<>();
+    private final List<RawMaterialTypeMass> rawMaterialTypeMassList = new ArrayList<>();
 
     public static synchronized LocalRawMaterialTypeMassesStorage getInstance(){
         if(mInstance == null){

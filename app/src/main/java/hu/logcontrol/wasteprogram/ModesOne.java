@@ -70,7 +70,20 @@ public class ModesOne extends AppCompatActivity implements IModesOneView {
                     char c = Helper.getSeparator(separatorFromJSON);
                     if(c != 0) rawMaterial.setSeparator(c);
 
-                    programPresenter.addRawMaterialToAdapterList(rawMaterial);
+                    if(rawMaterialList != null) rawMaterialList.add(rawMaterial);
+
+                    if(saveButton != null){
+                        settingButton(EditButtonEnums.SAVE_BUTTON_ENABLED);
+
+                        if(saveButton != null){
+                            saveButton.setOnClickListener(view -> {
+                                programPresenter.createFileFromRawMaterialList();
+                            });
+                        }
+                    }
+
+                    rawMaterialAdapter = new RawMaterialAdapter(getApplicationContext(), rawMaterialList,  this);
+                    recycleViewModesOneRV.setAdapter(rawMaterialAdapter);
                 }
             }
     );
@@ -80,17 +93,29 @@ public class ModesOne extends AppCompatActivity implements IModesOneView {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_modes_one);
         initView();
-
-        programPresenter = new ProgramPresenter(this, getApplicationContext());
-        programPresenter.initTaskManager();
-
-        rawMaterialList = LocalRawMaterialsStorage.getInstance().getRawMaterialList();
+        initPresenter();
+        initButtons();
+        initRefreshListener();
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
+    private void initRefreshListener() {
+        onRefreshListener = () -> {
+            if(isHaveToClearList){
+                rawMaterialAdapter.clearRawMaterialList();
+                settingButton(EditButtonEnums.SAVE_BUTTON_DISABLED);
+                isHaveToClearList = false;
+            }
 
+            rawMaterialList = LocalRawMaterialsStorage.getInstance().getRawMaterialList();
+            rawMaterialAdapter = new RawMaterialAdapter(getApplicationContext(), rawMaterialList,  this);
+            recycleViewModesOneRV.setAdapter(rawMaterialAdapter);
+
+            swipeRefreshLayout.setRefreshing(false);
+        };
+        swipeRefreshLayout.setOnRefreshListener(onRefreshListener);
+    }
+
+    private void initButtons() {
         if(programPresenter != null){
             if(addButton != null){
                 addButton.setOnClickListener(view -> {
@@ -103,35 +128,27 @@ public class ModesOne extends AppCompatActivity implements IModesOneView {
                     programPresenter.openActivityByEnum(ActivityEnums.MAIN_ACTIVITY);
                 });
             }
+        }
 
-            if(saveButton != null){
+        rawMaterialList = LocalRawMaterialsStorage.getInstance().getRawMaterialList();
+        if(saveButton != null){
 
-                int sizeOfRawMaterialList = LocalRawMaterialsStorage.getInstance().getRawMaterialListSize();
+            if(rawMaterialList.size() > 0){
+                settingButton(EditButtonEnums.SAVE_BUTTON_ENABLED);
 
-                if(sizeOfRawMaterialList > 0){
-                    settingButton(EditButtonEnums.SAVE_BUTTON_ENABLED);
-
-                    saveButton.setOnClickListener(view -> {
-                        programPresenter.createFileFromRawMaterialList();
-                    });
-                }
+                saveButton.setOnClickListener(view -> {
+                    programPresenter.createFileFromRawMaterialList();
+                });
             }
         }
 
-        onRefreshListener = () -> {
-            if(isHaveToClearList){
-                rawMaterialAdapter.clearRawMaterialList();
-                settingButton(EditButtonEnums.SAVE_BUTTON_DISABLED);
-                isHaveToClearList = false;
-            }
-
-            rawMaterialList = LocalRawMaterialsStorage.getInstance().getRawMaterialList();
-            swipeRefreshLayout.setRefreshing(false);
-        };
-        swipeRefreshLayout.setOnRefreshListener(onRefreshListener);
-
         rawMaterialAdapter = new RawMaterialAdapter(getApplicationContext(), rawMaterialList,  this);
         recycleViewModesOneRV.setAdapter(rawMaterialAdapter);
+    }
+
+    private void initPresenter() {
+        programPresenter = new ProgramPresenter(this, getApplicationContext());
+        programPresenter.initTaskManager();
     }
 
     @Override
@@ -160,16 +177,12 @@ public class ModesOne extends AppCompatActivity implements IModesOneView {
                 saveButton.setEnabled(true);
                 saveButton.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.save_button_background));
 
-                Log.e("SAVE_BUTTON_ENABLED", String.valueOf(saveButton.isEnabled()));
-
                 break;
             }
             case SAVE_BUTTON_DISABLED:{
 
                 saveButton.setEnabled(false);
                 saveButton.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.disable_button_background_circle));
-
-                Log.e("SAVE_BUTTON_DISABLED", String.valueOf(saveButton.isEnabled()));
 
                 break;
             }

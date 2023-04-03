@@ -43,9 +43,17 @@ public class RecycledMaterial {
     }
 
     @Override
-    public String toString() { return String.format("%s" + separator + "%s" + separator + "%s" + separator + "%s" + separator + "%s", this.timeStamp, this.materialType, this.storageBoxIdentifier, this.massData, this.comment); }
+    public String toString() {
+        if(separator == (char)9){
+            return String.format("%s " + separator + "%s " + separator + "%s " + separator + "%s " + separator + "%s", this.timeStamp, this.materialType, this.storageBoxIdentifier, this.massData, this.comment);
+        }
+        return String.format("%s" + separator + "%s" + separator + "%s" + separator + "%s" + separator + "%s", this.timeStamp, this.materialType, this.storageBoxIdentifier, this.massData, this.comment);
+    }
 
     public static String getCSVHeader(){
-        return " TimeStamp" + separator + "MaterialType" + separator + "StorageBoxIdentifier" + separator + "MassData" + separator + "Comment";
+        if(separator == (char)9){
+            return "TimeStamp " + separator + "MaterialType " + separator + "StorageBoxIdentifier " + separator + "MassData " + separator + "Comment";
+        }
+        return "TimeStamp" + separator + "MaterialType" + separator + "StorageBoxIdentifier" + separator + "MassData" + separator + "Comment";
     }
 }

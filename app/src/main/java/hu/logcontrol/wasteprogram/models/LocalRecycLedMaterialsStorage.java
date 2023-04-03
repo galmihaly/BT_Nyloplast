@@ -6,7 +6,7 @@ import java.util.List;
 public class LocalRecycLedMaterialsStorage {
 
     private static LocalRecycLedMaterialsStorage mInstance;
-    private List<RecycledMaterial> recycledMaterialList = new ArrayList<>();
+    private final List<RecycledMaterial> recycledMaterialList = new ArrayList<>();
 
     public static synchronized LocalRecycLedMaterialsStorage getInstance(){
         if(mInstance == null){

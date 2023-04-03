@@ -66,7 +66,9 @@ public class RawMaterialAdapter extends RecyclerView.Adapter<RawMaterialAdapter.
 
                     holder.getDeleteItemButton().setFocusable(false);
 
-                    modesOneWeakReference.get().settingButton(EditButtonEnums.ADD_BUTTON_ENABLED);
+//                    modesOneWeakReference.get().settingButton(EditButtonEnums.SAVE_BUTTON_ENABLED);
+
+                    //modesOneWeakReference.get().settingButton(EditButtonEnums.ADD_BUTTON_ENABLED);
 
 //                    if(rawMaterialList.size() == preferences.getIntValueByKey("listvalue")){
 //                        modesOneWeakReference.get().settingButton(EditButtonEnums.ADD_BUTTON_DISABLED);

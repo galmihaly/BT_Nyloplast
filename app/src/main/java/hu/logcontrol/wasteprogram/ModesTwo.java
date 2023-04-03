@@ -75,7 +75,19 @@ public class ModesTwo extends AppCompatActivity implements IModesTwoView {
                     char c = Helper.getSeparator(separatorFromJSON);
                     if(c != 0) rawMaterialTypeMass.setSeparator(c);
 
-                    programPresenter.addRawMaterialTypeMassToAdapterList(rawMaterialTypeMass);
+                    if(rawMaterialTypeMassList != null) rawMaterialTypeMassList.add(rawMaterialTypeMass);
+
+                    if(saveButton_2 != null){
+                        settingButton(EditButtonEnums.SAVE_BUTTON_ENABLED);
+
+                        saveButton_2.setOnClickListener(view -> {
+                            programPresenter.createFileFromRawMaterialTypeMassList();
+                        });
+
+                    }
+
+                    rawMaterialTypeMassAdapter = new RawMaterialTypeMassAdapter(getApplicationContext(), rawMaterialTypeMassList, this);
+                    recycleViewModesTwoRV.setAdapter(rawMaterialTypeMassAdapter);
                 }
             }
     );
@@ -85,29 +97,12 @@ public class ModesTwo extends AppCompatActivity implements IModesTwoView {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_modes_two);
         initView();
-
-        programPresenter = new ProgramPresenter(this, getApplicationContext());
-        programPresenter.initTaskManager();
-
-        rawMaterialTypeMassList = LocalRawMaterialTypeMassesStorage.getInstance().getRawMaterialTypeMassList();
+        initPresenter();
+        initButtons();
+        initRefreshListener();
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-
-        if(saveButton_2 != null && rawMaterialTypeMassList != null){
-            int sizeOfRawMaterialList = LocalRawMaterialTypeMassesStorage.getInstance().getRawMaterialTypeMassListSize();
-
-            if(sizeOfRawMaterialList > 0){
-                settingButton(EditButtonEnums.SAVE_BUTTON_ENABLED);
-
-                saveButton_2.setOnClickListener(view -> {
-                    programPresenter.createFileFromRawMaterialTypeMassList();
-                });
-            }
-        }
-
+    private void initButtons() {
         if(programPresenter != null){
             if(addButton_2 != null){
                 addButton_2.setOnClickListener(view -> {
@@ -121,6 +116,25 @@ public class ModesTwo extends AppCompatActivity implements IModesTwoView {
             }
         }
 
+        rawMaterialTypeMassList = LocalRawMaterialTypeMassesStorage.getInstance().getRawMaterialTypeMassList();
+
+        if(saveButton_2 != null){
+            int sizeOfRawMaterialList = rawMaterialTypeMassList.size();
+            Log.e("sizeOfRawMaterialList", String.valueOf(sizeOfRawMaterialList));
+            if(sizeOfRawMaterialList > 0){
+                settingButton(EditButtonEnums.SAVE_BUTTON_ENABLED);
+
+                saveButton_2.setOnClickListener(view -> {
+                    programPresenter.createFileFromRecycledMaterialTypeMassList();
+                });
+            }
+        }
+
+        rawMaterialTypeMassAdapter = new RawMaterialTypeMassAdapter(getApplicationContext(), rawMaterialTypeMassList,  this);
+        recycleViewModesTwoRV.setAdapter(rawMaterialTypeMassAdapter);
+    }
+
+    private void initRefreshListener() {
         onRefreshListener = () -> {
             if(isHaveToClearList){
                 rawMaterialTypeMassAdapter.clearRawMaterialList();
@@ -129,12 +143,17 @@ public class ModesTwo extends AppCompatActivity implements IModesTwoView {
             }
 
             rawMaterialTypeMassList = LocalRawMaterialTypeMassesStorage.getInstance().getRawMaterialTypeMassList();
+            rawMaterialTypeMassAdapter = new RawMaterialTypeMassAdapter(getApplicationContext(), rawMaterialTypeMassList, this);
+            recycleViewModesTwoRV.setAdapter(rawMaterialTypeMassAdapter);
+
             swipeRefreshLayout.setRefreshing(false);
         };
         swipeRefreshLayout.setOnRefreshListener(onRefreshListener);
+    }
 
-        rawMaterialTypeMassAdapter = new RawMaterialTypeMassAdapter(getApplicationContext(), rawMaterialTypeMassList, this);
-        recycleViewModesTwoRV.setAdapter(rawMaterialTypeMassAdapter);
+    private void initPresenter() {
+        programPresenter = new ProgramPresenter(this, getApplicationContext());
+        programPresenter.initTaskManager();
     }
 
     @Override

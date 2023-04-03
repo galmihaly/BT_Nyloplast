@@ -14,6 +14,13 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
+import org.apache.commons.net.ftp.FTP;
+import org.apache.commons.net.ftp.FTPClient;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.net.SocketException;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
@@ -48,6 +55,43 @@ public class MainActivity extends AppCompatActivity implements IMainView {
         if(!JSONFileHelper.isExist(getApplicationContext(), "values.json")) {
             programPresenter.initBaseJSONFile("values.json");
         }
+
+        Executor executor = Executors.newSingleThreadExecutor();
+
+        executor.execute(() -> {
+            FTPClient client = new FTPClient();
+            FileInputStream fis = null;
+            try {
+                // ftp://172.16.1.30:21/teszt1/root.txt
+                // ftp://172.16.1.30/teszt1/ - ez itt működött
+                client.connect("172.16.1.5", 21);
+
+                boolean b = client.login("Galmihaly", "Kutyaszar123!");
+                Log.e("b", String.valueOf(b));
+                client.setFileType(FTP.ASCII_FILE_TYPE);
+                client.enterLocalPassiveMode();
+                client.sendCommand("OPTS UTF8 ON");
+                String filename = "/sdcard/root.txt";
+                fis = new FileInputStream(filename);
+                client.storeFile("OZS/data/root.txt", fis);
+                fis.close();
+                client.logout();
+//                client.connect("172.16.1.30", 21);
+//
+//                boolean b = client.login("raspberry", "pi");
+//                Log.e("b", String.valueOf(b));
+//                client.setFileType(FTP.ASCII_FILE_TYPE);
+//                client.enterLocalPassiveMode();
+//                client.sendCommand("OPTS UTF8 ON");
+//                String filename = "/sdcard/root.txt";
+//                fis = new FileInputStream(filename);
+//                client.storeFile("teszt1/root.txt", fis);
+//                fis.close();
+//                client.logout();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
 
 //        programPresenter.initBaseJSONFile("values.json");
 
