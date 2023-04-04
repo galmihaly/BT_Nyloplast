@@ -22,7 +22,6 @@ import java.util.concurrent.Callable;
 import hu.logcontrol.wasteprogram.enums.HandlerMessageIdentifiers;
 import hu.logcontrol.wasteprogram.helpers.FileHelper;
 import hu.logcontrol.wasteprogram.helpers.Helper;
-import hu.logcontrol.wasteprogram.helpers.JSONFileHelper;
 import hu.logcontrol.wasteprogram.logger.ApplicationLogger;
 import hu.logcontrol.wasteprogram.logger.LogLevel;
 import hu.logcontrol.wasteprogram.models.LocalEncryptedPreferences;
@@ -53,8 +52,8 @@ public class SaveToDeviceStorage implements Callable {
     private FileWriter writer;
     private File file;
 
-    private boolean isSuccesWriteToLocalStorage = false;
-    private boolean isSuccesWriteToGlobalStorage = false;
+    private int isSuccesWriteToLocalStorage;
+    private int isSuccesWriteToGlobalStorage;
 
     private boolean isEnabledWriteToLocalStorage;
 
@@ -103,8 +102,7 @@ public class SaveToDeviceStorage implements Callable {
 
                     globalPathElements = FileHelper.getSavedGlobalFullPath(context.getApplicationContext());
                     if(globalPathElements != null && localPathElements != null){
-                        file = new File(localPathElements[1]);
-                        isSuccesWriteToGlobalStorage = saveToGlobalFile(file, rawMaterialList, globalPathElements, localPathElements[1]);
+                        isSuccesWriteToGlobalStorage = saveToGlobalFile(rawMaterialList, globalPathElements, localPathElements[1]);
                     }
 
                     break;
@@ -121,8 +119,7 @@ public class SaveToDeviceStorage implements Callable {
 
                     globalPathElements = FileHelper.getSavedGlobalFullPath(context.getApplicationContext());
                     if(globalPathElements != null && localPathElements != null){
-                        file = new File(localPathElements[1]);
-                        isSuccesWriteToGlobalStorage = saveToGlobalFile(file, rawMaterialTypeMassList, globalPathElements, localPathElements[1]);
+                        isSuccesWriteToGlobalStorage = saveToGlobalFile(rawMaterialTypeMassList, globalPathElements, localPathElements[1]);
                     }
 
                     break;
@@ -139,22 +136,15 @@ public class SaveToDeviceStorage implements Callable {
 
                     globalPathElements = FileHelper.getSavedGlobalFullPath(context.getApplicationContext());
                     if(globalPathElements != null && localPathElements != null){
-                        file = new File(localPathElements[1]);
-                        isSuccesWriteToGlobalStorage = saveToGlobalFile(file, recycledMaterialList, globalPathElements, localPathElements[1]);
+                        isSuccesWriteToGlobalStorage = saveToGlobalFile(recycledMaterialList, globalPathElements, localPathElements[1]);
                     }
 
                     break;
                 }
             }
 
-            if(isSuccesWriteToLocalStorage && isSuccesWriteToGlobalStorage || !isSuccesWriteToLocalStorage && isSuccesWriteToGlobalStorage){
-                ApplicationLogger.logging(LogLevel.INFORMATION, "Az fájl létrehozása és hozzádadása a mappaútvonalhoz sikerült!");
-                sendMessageToPresenterHandler(CreateFileEnums.CREATEFILE_SUCCES);
-            }
-            else {
-                ApplicationLogger.logging(LogLevel.INFORMATION, "Az fájl létrehozása és hozzádadása a mappaútvonalhoz nem sikerült!");
-                sendMessageToPresenterHandler(CreateFileEnums.CREATEFILE_FAILED);
-            }
+            savingGlobalMessageHandling(isSuccesWriteToGlobalStorage);
+
         }
         catch (InterruptedException e) {
 
@@ -167,8 +157,8 @@ public class SaveToDeviceStorage implements Callable {
         return null;
     }
 
-    private <T> boolean saveToGlobalFile(File file, List<T> list, String[] globalPathElements, String fileName) {
-        boolean isSucces = true;
+    private <T> int saveToGlobalFile(List<T> list, String[] globalPathElements, String fileName) {
+        int isSucces = 0;
 
         String ipAddress = globalPathElements[0];
         String portNumber = globalPathElements[1];
@@ -195,49 +185,57 @@ public class SaveToDeviceStorage implements Callable {
                 if(list != null) {
 
                     writer = new FileWriter(fos.getFD());
-                    writer.write(header + "\n\n");
+                    writer.write(header + "\n");
                     for (int i = 0; i < list.size(); i++) {
                         writer.write(list.get(i).toString() + "\n");
                     }
                     writer.flush();
 
+                    if(ipAddress.equals("")) return -1;
+                    if(portNumber.equals("")) return -2;
+
                     client.connect(ipAddress, Integer.parseInt(portNumber));
 
-                    boolean b = client.login(userName, password);
-                    Log.e("b", String.valueOf(b));
-                    client.setFileType(FTP.ASCII_FILE_TYPE);
-                    client.enterLocalPassiveMode();
-                    client.sendCommand("OPTS UTF8 ON");
-                    fis = new FileInputStream(file1);
-                    String fileNameWithPath = path + File.separator + fileName;
-                    Log.e("fileNameWithPath", fileNameWithPath);
-                    boolean isUpload = client.storeFile(fileNameWithPath, fis);
+                    if(userName.equals("")) return -3;
+                    if(password.equals("")) return -4;
 
-                    if(isUpload){
-                        if(file1.exists()){
-                            if(file1.delete()){
-                                ApplicationLogger.logging(LogLevel.FATAL, "A fájl sikeresen tötölve lett a lokális mappából!");
+                    boolean isConnected = client.login(userName, password);
+
+                    if(isConnected){
+                        client.setFileType(FTP.ASCII_FILE_TYPE);
+                        client.enterLocalPassiveMode();
+                        client.sendCommand("OPTS UTF8 ON");
+                        fis = new FileInputStream(file1);
+
+                        if(path.equals("")){ return -5; }
+
+                        String fileNameWithPath = path + File.separator + fileName;
+                        Log.e("fileNameWithPath", fileNameWithPath);
+
+                        boolean isUpload = client.storeFile(fileNameWithPath, fis);
+                        if(isUpload){
+                            if(file1.exists()){
+                                if(file1.delete()){
+                                    ApplicationLogger.logging(LogLevel.FATAL, "Nincs beállítva a kiszolgáló neve a beállításokban!");
+                                }
                             }
                         }
-                        isSucces = true;
-                    }
-                    else {
-                        ApplicationLogger.logging(LogLevel.FATAL, "Nem sikerült feltölteni a fájlt az FTP szerverre!");
-                        sendMessageToPresenterHandler(CreateFileEnums.CREATEFILE_FAILED);
-                    }
+                        else {
+                            return -6;
+                        }
 
-                    fis.close();
-                    client.logout();
+                        fis.close();
+                        client.logout();
+                    }
+                    else{
+                        return -7;
+                    }
                 }
             }
         }
         catch (IOException ex){
-
             ApplicationLogger.logging(LogLevel.FATAL, ex.getMessage());
-            sendMessageToPresenterHandler(CreateFileEnums.CREATEFILE_FAILED);
-
-            isSucces = false;
-            return isSucces;
+            return -8;
         }
 
         try {
@@ -245,18 +243,15 @@ public class SaveToDeviceStorage implements Callable {
         } catch (IOException e) {
 
             ApplicationLogger.logging(LogLevel.FATAL, e.getMessage());
-            sendMessageToPresenterHandler(CreateFileEnums.CREATEFILE_FAILED);
-
-            isSucces = false;
-            return isSucces;
+            return -9;
         }
 
         return isSucces;
     }
 
-    public <T> boolean saveToLocalFile(File file, List<T> list) {
+    public <T> int saveToLocalFile(File file, List<T> list) {
 
-        boolean isSucces = true;
+        int isSucces = 1;
 
         try {
             if(!file.exists()){ file.createNewFile(); }
@@ -266,7 +261,7 @@ public class SaveToDeviceStorage implements Callable {
                 if(list != null) {
 
                     writer = new FileWriter(fos.getFD());
-                    writer.write(header + "\n\n");
+                    writer.write(header + "\n");
                     for (int i = 0; i < list.size(); i++) {
                         writer.write(list.get(i).toString() + "\n");
                     }
@@ -279,7 +274,7 @@ public class SaveToDeviceStorage implements Callable {
             ApplicationLogger.logging(LogLevel.FATAL, ex.getMessage());
             sendMessageToPresenterHandler(CreateFileEnums.CREATEFILE_FAILED);
 
-            isSucces = false;
+            isSucces = 0;
             return isSucces;
         }
 
@@ -290,11 +285,66 @@ public class SaveToDeviceStorage implements Callable {
             ApplicationLogger.logging(LogLevel.FATAL, e.getMessage());
             sendMessageToPresenterHandler(CreateFileEnums.CREATEFILE_FAILED);
 
-            isSucces = false;
+            isSucces = 0;
             return isSucces;
         }
 
         return isSucces;
+    }
+
+    private void savingGlobalMessageHandling(int isSuccesWriteToGlobalStorage) {
+        switch (isSuccesWriteToGlobalStorage){
+            case 0:{
+                ApplicationLogger.logging(LogLevel.INFORMATION, "Az fájl létrehozása és hozzádadása a mappaútvonalhoz sikerült!");
+                sendMessageToPresenterHandler(CreateFileEnums.CREATEFILE_SUCCES);
+                break;
+            }
+            case -1:{
+                ApplicationLogger.logging(LogLevel.FATAL, "Nincs beállítva a kiszolgáló neve a beállításokban!");
+                sendMessageToPresenterHandler(CreateFileEnums.CREATEFILE_FAILED);
+                break;
+            }
+            case -2:{
+                ApplicationLogger.logging(LogLevel.INFORMATION, "Nincs beállítva portszám a beállításokban!");
+                sendMessageToPresenterHandler(CreateFileEnums.CREATEFILE_FAILED);
+                break;
+            }
+            case -3: {
+                ApplicationLogger.logging(LogLevel.FATAL, "Nincs beállítva felhasználónév a beállításokban!");
+                sendMessageToPresenterHandler(CreateFileEnums.CREATEFILE_FAILED);
+                break;
+            }
+            case -4:{
+                ApplicationLogger.logging(LogLevel.INFORMATION, "Nincs beállítva jelszó a beállításokban!");
+                sendMessageToPresenterHandler(CreateFileEnums.CREATEFILE_FAILED);
+                break;
+            }
+            case -5:{
+                ApplicationLogger.logging(LogLevel.INFORMATION, "Nincs beállítva elérési útvonal a beállításokban!");
+                sendMessageToPresenterHandler(CreateFileEnums.CREATEFILE_FAILED);
+                break;
+            }
+            case -6: {
+                ApplicationLogger.logging(LogLevel.FATAL, "Nem sikerült feltölteni a fájlt az FTP szerverre!");
+                sendMessageToPresenterHandler(CreateFileEnums.CREATEFILE_FAILED);
+                break;
+            }
+            case -7:{
+                ApplicationLogger.logging(LogLevel.FATAL, "Nem sikerült bejelentkezni az FTP szerverbe!!");
+                sendMessageToPresenterHandler(CreateFileEnums.CREATEFILE_FAILED);
+                break;
+            }
+            case -8:{
+                ApplicationLogger.logging(LogLevel.FATAL, "A szerverhez való csatlakozás közben hiba keletkezett!!");
+                sendMessageToPresenterHandler(CreateFileEnums.CREATEFILE_FAILED);
+                break;
+            }
+            case -9:{
+                ApplicationLogger.logging(LogLevel.FATAL, "A fájlíró bezárásakor hiba lépett fel!!");
+                sendMessageToPresenterHandler(CreateFileEnums.CREATEFILE_FAILED);
+                break;
+            }
+        }
     }
 
     private void sendMessageToPresenterHandler(CreateFileEnums createFileEnum){
