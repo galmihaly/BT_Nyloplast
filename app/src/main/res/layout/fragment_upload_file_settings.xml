@@ -12,60 +12,41 @@
 
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/passwordCL"
+            android:id="@+id/pathCL"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/usernameCL">
 
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/constraintLayout12"
-                android:layout_width="150dp"
-                android:layout_height="0dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
-
-                <TextView
-                    android:id="@+id/passwordTV"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="15dp"
-                    android:text="Jelszó:"
-                    android:textSize="16sp"
-                    android:textStyle="bold"
-                    android:textColor="#000000"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/passwordTL"
+                android:id="@+id/textLayout_globalPathSettings"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
-                android:hint="Jelszó"
+                android:hint="Elérési útvonal"
                 android:textColorHint="@color/black"
-                app:counterTextColor="@color/black"
                 app:boxStrokeColor="@color/black"
                 app:boxStrokeWidthFocused="1dp"
+                app:counterTextColor="@color/black"
                 app:hintTextColor="@color/black"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/constraintLayout12"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/passwordTIET"
+                    android:id="@+id/settingsGlobalPathTB"
                     android:layout_width="match_parent"
                     android:layout_height="55dp"
-                    android:textColor="#000000"
                     android:singleLine="true"
+                    android:textColor="#000000"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
                     app:textInputLayoutFocusedRectEnabled="true" />
-
             </com.google.android.material.textfield.TextInputLayout>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
@@ -78,39 +59,17 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/constraintLayout4">
 
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/constraintLayout11"
-                android:layout_width="150dp"
-                android:layout_height="0dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
-
-                <TextView
-                    android:id="@+id/usernameTV"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="15dp"
-                    android:text="Felhasználónév:"
-                    android:textSize="16sp"
-                    android:textStyle="bold"
-                    android:textColor="#000000"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/usernameTL"
+                android:id="@+id/passwordTL"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
-                android:hint="Felhasználónév"
+                android:hint="Jelszó"
                 android:textColorHint="@color/black"
-                app:counterTextColor="@color/black"
                 app:boxStrokeColor="@color/black"
                 app:boxStrokeWidthFocused="1dp"
+                app:counterTextColor="@color/black"
                 app:hintTextColor="@color/black"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -118,14 +77,50 @@
                 app:layout_constraintTop_toTopOf="parent">
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/usernameTIET"
+                    android:id="@+id/passwordTIET"
                     android:layout_width="match_parent"
                     android:layout_height="55dp"
-                    android:textColor="#000000"
                     android:singleLine="true"
+                    android:textColor="#000000"
                     app:textInputLayoutFocusedRectEnabled="true" />
 
             </com.google.android.material.textfield.TextInputLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/constraintLayout11"
+                android:layout_width="180dp"
+                android:layout_height="match_parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/usernameTL"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:hint="Felhasználónév"
+                    android:textColorHint="@color/black"
+                    app:boxStrokeColor="@color/black"
+                    app:boxStrokeWidthFocused="1dp"
+                    app:counterTextColor="@color/black"
+                    app:hintTextColor="@color/black"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/usernameTIET"
+                        android:layout_width="match_parent"
+                        android:layout_height="55dp"
+                        android:singleLine="true"
+                        android:textColor="#000000"
+                        app:textInputLayoutFocusedRectEnabled="true" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -136,7 +131,7 @@
             android:layout_marginTop="10dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/passwordCL">
+            app:layout_constraintTop_toBottomOf="@+id/imageView">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/constraintLayout9"
@@ -166,9 +161,9 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="15dp"
                 android:text="Mentés lokális helyre:"
+                android:textColor="#000000"
                 android:textSize="16sp"
                 android:textStyle="bold"
-                android:textColor="#000000"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/constraintLayout9"
                 app:layout_constraintStart_toStartOf="parent"
@@ -212,10 +207,10 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
                 android:hint="Lokális mentési útvonal"
-                app:boxStrokeColor="@color/black"
                 android:textColorHint="@color/black"
-                app:counterTextColor="@color/black"
+                app:boxStrokeColor="@color/black"
                 app:boxStrokeWidthFocused="1dp"
+                app:counterTextColor="@color/black"
                 app:hintTextColor="@color/black"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/constraintLayout10"
@@ -226,8 +221,8 @@
                     android:id="@+id/settingsLocalSavePathTB"
                     android:layout_width="match_parent"
                     android:layout_height="55dp"
-                    android:textColor="#000000"
                     android:singleLine="true"
+                    android:textColor="#000000"
                     app:textInputLayoutFocusedRectEnabled="true" />
 
             </com.google.android.material.textfield.TextInputLayout>
@@ -242,46 +237,93 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
-            <TextView
-                android:id="@+id/settingsTV3"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="15dp"
-                android:layout_marginTop="10dp"
-                android:text="Globális mentési útvonal:"
-                android:textSize="16sp"
-                android:textStyle="bold"
-                android:textColor="#000000"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/textLayout_settings"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_margin="10dp"
-                android:hint="Globális mentési útvonal"
-                android:textColorHint="@color/black"
-                app:counterTextColor="@color/black"
-                app:boxStrokeColor="@color/black"
-                app:boxStrokeWidthFocused="1dp"
-                app:hintTextColor="@color/black"
+                android:layout_height="0dp"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/constraintLayout13"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/textLayout_portNumbersettings"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:hint="Vezérlőportszám"
+                    android:textColorHint="@color/black"
+                    app:boxStrokeColor="@color/black"
+                    app:boxStrokeWidthFocused="1dp"
+                    app:counterTextColor="@color/black"
+                    app:hintTextColor="@color/black"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/settingsPortNumberTB"
+                        android:layout_width="match_parent"
+                        android:layout_height="55dp"
+                        android:singleLine="true"
+                        android:textColor="#000000"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:textInputLayoutFocusedRectEnabled="true" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/constraintLayout13"
+                android:layout_width="180dp"
+                android:layout_height="match_parent"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/settingsTV3">
+                app:layout_constraintTop_toTopOf="parent">
 
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/settingsGlobalSavePathTB"
-                    android:layout_width="match_parent"
-                    android:layout_height="55dp"
-                    android:textColor="#000000"
-                    android:singleLine="true"
-                    app:textInputLayoutFocusedRectEnabled="true" />
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/textLayout_settings"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:hint="Kiszolgáló neve"
+                    android:textColorHint="@color/black"
+                    app:boxStrokeColor="@color/black"
+                    app:boxStrokeWidthFocused="1dp"
+                    app:counterTextColor="@color/black"
+                    app:hintTextColor="@color/black"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
 
-            </com.google.android.material.textfield.TextInputLayout>
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/settingsHostNameTB"
+                        android:layout_width="match_parent"
+                        android:layout_height="55dp"
+                        android:singleLine="true"
+                        android:textColor="#000000"
+                        app:textInputLayoutFocusedRectEnabled="true" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="325dp"
+            android:layout_height="2dp"
+            android:layout_marginTop="5dp"
+            android:src="@drawable/separator_line"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/pathCL" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </FrameLayout>

@@ -9,6 +9,8 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
+import androidx.security.crypto.EncryptedSharedPreferences;
+import androidx.security.crypto.MasterKeys;
 
 import android.os.Handler;
 import android.os.Looper;
@@ -26,10 +28,10 @@ import hu.logcontrol.wasteprogram.R;
 import hu.logcontrol.wasteprogram.SettingsActivity;
 import hu.logcontrol.wasteprogram.enums.ActivityEnums;
 import hu.logcontrol.wasteprogram.helpers.Helper;
-import hu.logcontrol.wasteprogram.helpers.JSONFileHelper;
 import hu.logcontrol.wasteprogram.interfaces.IUploadFileFragmentListener;
 import hu.logcontrol.wasteprogram.interfaces.IUploadFileSettingsFragment;
 import hu.logcontrol.wasteprogram.interfaces.UploadFileListener;
+import hu.logcontrol.wasteprogram.models.LocalEncryptedPreferences;
 import hu.logcontrol.wasteprogram.presenters.ProgramPresenter;
 
 public class UploadFileSettingsFragment extends Fragment implements IUploadFileSettingsFragment, IUploadFileFragmentListener {
@@ -37,7 +39,9 @@ public class UploadFileSettingsFragment extends Fragment implements IUploadFileS
     private View view;
 
     private TextInputEditText settingsLocalSavePathTB;
-    private TextInputEditText settingsGlobalSavePathTB;
+    private TextInputEditText settingsGlobalPathTB;
+    private TextInputEditText settingsPortNumberTB;
+    private TextInputEditText settingsHostNameTB;
     private TextInputEditText usernameTIET;
     private TextInputEditText passwordTIET;
     private ImageButton folderPickerButton;
@@ -51,8 +55,12 @@ public class UploadFileSettingsFragment extends Fragment implements IUploadFileS
     private String resultLocalPath;
     private String resultUsername;
     private String resultPassword;
+    private String resultPortNumber;
+    private String resultHostName;
 
     private UploadFileListener uploadFileListener;
+
+    private LocalEncryptedPreferences preferences;
 
     private String path = null;
 
@@ -85,39 +93,82 @@ public class UploadFileSettingsFragment extends Fragment implements IUploadFileS
         view = inflater.inflate(R.layout.fragment_upload_file_settings, container, false);
 
         settingsLocalSavePathTB = view.findViewById(R.id.settingsLocalSavePathTB);
-        settingsGlobalSavePathTB = view.findViewById(R.id.settingsGlobalSavePathTB);
+        settingsGlobalPathTB = view.findViewById(R.id.settingsGlobalPathTB);
+        settingsPortNumberTB = view.findViewById(R.id.settingsPortNumberTB);
+        settingsHostNameTB = view.findViewById(R.id.settingsHostNameTB);
+
         usernameTIET = view.findViewById(R.id.usernameTIET);
         passwordTIET = view.findViewById(R.id.passwordTIET);
         folderPickerButton = view.findViewById(R.id.folderPickerButton);
         localSavePathCheckbox = view.findViewById(R.id.localSavePathCheckbox);
         localSavePathCL = view.findViewById(R.id.localSavePathCL);
 
+        if(settingsLocalSavePathTB != null){ settingsLocalSavePathTB.setShowSoftInputOnFocus(false); }
+
+        initLocalPreferences();
         initListeners();
         initPresenter();
         initDefaultValues();
+        isCheckingCheckboxes();
 
         return view;
     }
 
+    private void isCheckingCheckboxes() {
+        if(localSavePathCheckbox != null){
+            localSavePathCheckbox.setOnClickListener(v -> {
+                if(localSavePathCheckbox.isChecked()){
+
+                    localSavePathCL.setVisibility(View.VISIBLE);
+                    folderPickerButton.setEnabled(true);
+                    uploadFileListener.sendLocalSaveCheckbox(true);
+
+                    if(folderPickerButton != null){
+                        if(localSavePathCheckbox.isChecked()){
+                            folderPickerButton.setOnClickListener(view -> {
+                                programPresenter.openActivityByEnum(ActivityEnums.FOLDERPICKER_ACTIVITY);
+                            });
+                        }
+                    }
+                }
+                if(!localSavePathCheckbox.isChecked()){
+
+                    localSavePathCL.setVisibility(View.INVISIBLE);
+                    folderPickerButton.setEnabled(false);
+                    uploadFileListener.sendLocalSaveCheckbox(false);
+                }
+            });
+        }
+    }
+
     private void initDefaultValues() {
-        if(settingsGlobalSavePathTB != null && settingsLocalSavePathTB != null && localSavePathCheckbox != null && localSavePathCL != null && folderPickerButton != null && usernameTIET != null && passwordTIET != null){
+        Log.e("initDefaultValues", "initDefaultValues");
 
-            boolean isExist = JSONFileHelper.isExist(getContext(), "values.json");
-            if(isExist) {
+        if(settingsGlobalPathTB != null && settingsLocalSavePathTB != null && settingsHostNameTB != null && settingsPortNumberTB != null && localSavePathCheckbox != null && localSavePathCL != null && folderPickerButton != null && usernameTIET != null && passwordTIET != null){
 
-                resultGlobalPath = JSONFileHelper.getString(getContext(), "values.json", "GlobalSavePath");
-                if(resultGlobalPath != null) settingsGlobalSavePathTB.setText(resultGlobalPath);
+            Log.e("preferences", "preferences");
 
-                resultLocalPath = JSONFileHelper.getString(getContext(), "values.json", "LocalSavePath");
+            if(preferences != null) {
+
+                resultGlobalPath = preferences.getStringValueByKey("GlobalSavePath");
+                if(resultGlobalPath != null) settingsGlobalPathTB.setText(resultGlobalPath);
+
+                resultLocalPath = preferences.getStringValueByKey("LocalSavePath");
                 if(resultLocalPath != null) settingsLocalSavePathTB.setText(resultLocalPath);
 
-                resultUsername = JSONFileHelper.getString(getContext(), "values.json", "Username");
+                resultUsername = preferences.getStringValueByKey("Username");
                 if(resultUsername != null) usernameTIET.setText(resultUsername);
 
-                resultPassword = JSONFileHelper.getString(getContext(), "values.json", "Password");
+                resultPassword = preferences.getStringValueByKey("Password");
                 if(resultPassword != null) passwordTIET.setText(resultPassword);
 
-                resultLocalSaveBoolean = JSONFileHelper.getBoolean(getContext(), "values.json", "IsEnableSaveLocalStorage");
+                resultPortNumber = preferences.getStringValueByKey("PortNumber");
+                if(resultPortNumber != null) settingsPortNumberTB.setText(resultPortNumber);
+
+                resultHostName = preferences.getStringValueByKey("HostName");
+                if(resultHostName != null) settingsHostNameTB.setText(resultHostName);
+
+                resultLocalSaveBoolean = preferences.getBooleanValueByKey("IsEnableSaveLocalStorage");
                 localSavePathCheckbox.setChecked(resultLocalSaveBoolean);
 
                 if(localSavePathCheckbox.isChecked()){
@@ -151,34 +202,14 @@ public class UploadFileSettingsFragment extends Fragment implements IUploadFileS
         }
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-
-        if(localSavePathCheckbox != null){
-            localSavePathCheckbox.setOnClickListener(v -> {
-                if(localSavePathCheckbox.isChecked()){
-
-                    localSavePathCL.setVisibility(View.VISIBLE);
-                    folderPickerButton.setEnabled(true);
-                    uploadFileListener.sendLocalSaveCheckbox(true);
-
-                    if(folderPickerButton != null){
-                        if(localSavePathCheckbox.isChecked()){
-                            folderPickerButton.setOnClickListener(view -> {
-                                programPresenter.openActivityByEnum(ActivityEnums.FOLDERPICKER_ACTIVITY);
-                            });
-                        }
-                    }
-                }
-                if(!localSavePathCheckbox.isChecked()){
-
-                    localSavePathCL.setVisibility(View.INVISIBLE);
-                    folderPickerButton.setEnabled(false);
-                    uploadFileListener.sendLocalSaveCheckbox(false);
-                }
-            });
-        }
+    private void initLocalPreferences() {
+        preferences = LocalEncryptedPreferences.getInstance(
+                "values",
+                MasterKeys.AES256_GCM_SPEC,
+                getContext(),
+                EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
+                EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
+        );
     }
 
     @Override
@@ -194,8 +225,8 @@ public class UploadFileSettingsFragment extends Fragment implements IUploadFileS
 
     @Override
     public String getGlobalPath() {
-        if(settingsGlobalSavePathTB == null) return null;
-        return settingsGlobalSavePathTB.getText().toString();
+        if(settingsGlobalPathTB == null) return null;
+        return settingsGlobalPathTB.getText().toString();
     }
 
     @Override
@@ -212,9 +243,20 @@ public class UploadFileSettingsFragment extends Fragment implements IUploadFileS
 
     @Override
     public String getLocalPath() {
-//        if(settingsLocalSavePathTB == null) return null;
-        Log.e("settingsLocalSavePathTB", settingsLocalSavePathTB.getText().toString());
+        if(settingsLocalSavePathTB == null) return null;
         return settingsLocalSavePathTB.getText().toString();
+    }
+
+    @Override
+    public String getPortNumber() {
+        if(settingsPortNumberTB == null) return null;
+        return settingsPortNumberTB.getText().toString();
+    }
+
+    @Override
+    public String getHostName() {
+        if(settingsHostNameTB == null) return null;
+        return settingsHostNameTB.getText().toString();
     }
 
     @Override

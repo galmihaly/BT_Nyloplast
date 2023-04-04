@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
-import android.util.Log;
 
 import java.lang.ref.WeakReference;
 
@@ -39,7 +38,7 @@ import hu.logcontrol.wasteprogram.taskmanager.CustomThreadPoolManager;
 import hu.logcontrol.wasteprogram.taskmanager.PresenterThreadCallback;
 import hu.logcontrol.wasteprogram.tasks.AddElementToList;
 import hu.logcontrol.wasteprogram.tasks.SaveToDeviceStorage;
-import hu.logcontrol.wasteprogram.tasks.JSONValueWriter;
+import hu.logcontrol.wasteprogram.tasks.SharedPreferencesValueWriter;
 
 public class ProgramPresenter implements IProgramPresenter, PresenterThreadCallback {
 
@@ -205,7 +204,7 @@ public class ProgramPresenter implements IProgramPresenter, PresenterThreadCallb
     @Override
     public void createFileFromRawMaterialList() {
         try {
-            SaveToDeviceStorage callable = new SaveToDeviceStorage(context, SaveToDeviceStorage.RunModes.CREATE_RAWMATERIAL, RawMaterial.getCSVHeader(), "txt");
+            SaveToDeviceStorage callable = new SaveToDeviceStorage(context, SaveToDeviceStorage.RunModes.CREATE_RAWMATERIAL, RawMaterial.getCSVHeader(), "csv");
             callable.setCustomThreadPoolManager(mCustomThreadPoolManager);
             mCustomThreadPoolManager.addCallableMethod(callable);
         }
@@ -218,7 +217,7 @@ public class ProgramPresenter implements IProgramPresenter, PresenterThreadCallb
     @Override
     public void createFileFromRawMaterialTypeMassList() {
         try {
-            SaveToDeviceStorage callable = new SaveToDeviceStorage(context, SaveToDeviceStorage.RunModes.CREATE_RAWMATERIALTYPEMASS, RawMaterialTypeMass.getCSVHeader(), "txt");
+            SaveToDeviceStorage callable = new SaveToDeviceStorage(context, SaveToDeviceStorage.RunModes.CREATE_RAWMATERIALTYPEMASS, RawMaterialTypeMass.getCSVHeader(), "csv");
             callable.setCustomThreadPoolManager(mCustomThreadPoolManager);
             mCustomThreadPoolManager.addCallableMethod(callable);
         }
@@ -231,7 +230,7 @@ public class ProgramPresenter implements IProgramPresenter, PresenterThreadCallb
     @Override
     public void createFileFromRecycledMaterialTypeMassList() {
         try {
-            SaveToDeviceStorage callable = new SaveToDeviceStorage(context, SaveToDeviceStorage.RunModes.CREATE_RECYCLEDMATERIAL, RecycledMaterial.getCSVHeader(), "txt");
+            SaveToDeviceStorage callable = new SaveToDeviceStorage(context, SaveToDeviceStorage.RunModes.CREATE_RECYCLEDMATERIAL, RecycledMaterial.getCSVHeader(), "csv");
             callable.setCustomThreadPoolManager(mCustomThreadPoolManager);
             mCustomThreadPoolManager.addCallableMethod(callable);
         }
@@ -239,11 +238,6 @@ public class ProgramPresenter implements IProgramPresenter, PresenterThreadCallb
             e.printStackTrace();
             ApplicationLogger.logging(LogLevel.FATAL, e.getMessage());
         }
-    }
-
-    @Override
-    public void initBaseJSONFile(String localNewFileName) {
-        JSONFileHelper.initBaseJSONFile(context, "DefaultValues.json", localNewFileName);
     }
 
     @Override
@@ -268,9 +262,9 @@ public class ProgramPresenter implements IProgramPresenter, PresenterThreadCallb
     }
 
     @Override
-    public void saveBooleanValueToJSONFile(String jsonIdValue, boolean booleanValue) {
+    public void saveBooleanValueToSharedPreferencesFile(String jsonIdValue, boolean booleanValue) {
         try {
-            JSONValueWriter callable = new JSONValueWriter(context, jsonIdValue, booleanValue, JSONValueWriter.MODE.WRITE_BOOLEAN);
+            SharedPreferencesValueWriter callable = new SharedPreferencesValueWriter(context, jsonIdValue, booleanValue, SharedPreferencesValueWriter.MODE.WRITE_BOOLEAN);
             callable.setCustomThreadPoolManager(mCustomThreadPoolManager);
             mCustomThreadPoolManager.addCallableMethod(callable);
         }
@@ -281,9 +275,9 @@ public class ProgramPresenter implements IProgramPresenter, PresenterThreadCallb
     }
 
     @Override
-    public void saveStringValueToJSONFile(String jsonIdValue, String value) {
+    public void saveStringValueToSharedPreferencesFile(String jsonIdValue, String value) {
         try {
-            JSONValueWriter callable = new JSONValueWriter(context, jsonIdValue, value, JSONValueWriter.MODE.WRITE_STRING);
+            SharedPreferencesValueWriter callable = new SharedPreferencesValueWriter(context, jsonIdValue, value, SharedPreferencesValueWriter.MODE.WRITE_STRING);
             callable.setCustomThreadPoolManager(mCustomThreadPoolManager);
             mCustomThreadPoolManager.addCallableMethod(callable);
         }
@@ -354,7 +348,7 @@ public class ProgramPresenter implements IProgramPresenter, PresenterThreadCallb
                 case HandlerMessageIdentifiers.FILECREATE_FAILED:{
                     ApplicationLogger.logging(LogLevel.FATAL, getWeakReferenceNotification(msg));
 
-                    iProgramPresenterWeakReference.get().sendMessageToView("A fájl nem jött létre a megadott útvonalon!");
+                    iProgramPresenterWeakReference.get().sendMessageToView(getWeakReferenceNotification(msg));
                     break;
                 }
             }

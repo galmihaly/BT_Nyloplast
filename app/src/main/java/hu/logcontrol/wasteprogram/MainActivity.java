@@ -4,6 +4,8 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.security.crypto.EncryptedSharedPreferences;
+import androidx.security.crypto.MasterKeys;
 
 import android.Manifest;
 import android.content.Intent;
@@ -28,6 +30,7 @@ import hu.logcontrol.wasteprogram.enums.ActivityEnums;
 import hu.logcontrol.wasteprogram.helpers.Helper;
 import hu.logcontrol.wasteprogram.helpers.JSONFileHelper;
 import hu.logcontrol.wasteprogram.interfaces.IMainView;
+import hu.logcontrol.wasteprogram.models.LocalEncryptedPreferences;
 import hu.logcontrol.wasteprogram.presenters.ProgramPresenter;
 import java.time.Duration;
 
@@ -42,18 +45,17 @@ public class MainActivity extends AppCompatActivity implements IMainView {
     private ImageButton exitButton;
     private ImageButton settingsButton;
 
+    private LocalEncryptedPreferences preferences;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         initView();
         startWrite();
-
+        initSharedPreferenceFile();
+        initButtons();
         programPresenter = new ProgramPresenter(this, getApplicationContext());
-
-        if(!JSONFileHelper.isExist(getApplicationContext(), "values.json")) {
-            programPresenter.initBaseJSONFile("values.json");
-        }
 
 //        programPresenter.initBaseJSONFile("values.json");
 
@@ -123,10 +125,7 @@ public class MainActivity extends AppCompatActivity implements IMainView {
 //        });
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-
+    private void initButtons() {
         if(mode1 != null){
             mode1.setOnClickListener(view -> {
                 programPresenter.openActivityByEnum(ActivityEnums.MODES_ACTIVITY_ONE);
@@ -181,6 +180,28 @@ public class MainActivity extends AppCompatActivity implements IMainView {
 
         exitButton = findViewById(R.id.exitButton);
         settingsButton = findViewById(R.id.settingsButton);
+    }
+
+    private void initSharedPreferenceFile() {
+        preferences = LocalEncryptedPreferences.getInstance(
+                "values",
+                MasterKeys.AES256_GCM_SPEC,
+                getApplicationContext(),
+                EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
+                EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
+        );
+
+        preferences.putString("GlobalSavePath", "");
+        preferences.putString("LocalSavePath", "");
+        preferences.putString("FileSeparatorCharacter", "");
+        preferences.putString("Username", "");
+        preferences.putString("Password", "");
+        preferences.putString("HostName", "");
+        preferences.putString("PortNumber", "21");
+
+        preferences.putBoolean("IsEnableBarcodeReaderMode", false);
+        preferences.putBoolean("IsEnableSaveLocalStorage", false);
+        preferences.putBoolean("IsEnableKeyBoardOnTextBoxes", false);
     }
 
     @Override

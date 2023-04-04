@@ -3,21 +3,19 @@ package hu.logcontrol.wasteprogram.tasks;
 import android.content.Context;
 import android.os.Message;
 
-import org.json.JSONObject;
+import androidx.security.crypto.EncryptedSharedPreferences;
+import androidx.security.crypto.MasterKeys;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.util.concurrent.Callable;
 
 import hu.logcontrol.wasteprogram.enums.HandlerMessageIdentifiers;
 import hu.logcontrol.wasteprogram.helpers.Helper;
-import hu.logcontrol.wasteprogram.helpers.JSONFileHelper;
+import hu.logcontrol.wasteprogram.models.LocalEncryptedPreferences;
 import hu.logcontrol.wasteprogram.taskmanager.CustomThreadPoolManager;
 
-public class JSONValueWriter implements Callable {
+public class SharedPreferencesValueWriter implements Callable {
 
     private WeakReference<CustomThreadPoolManager> customThreadPoolManagerWeakReference;
 
@@ -25,28 +23,26 @@ public class JSONValueWriter implements Callable {
     private static final String DEFAULT_FILE_NAME = "DefaultValues.json";
 
     private Context context;
-    private String jsonIdValue;
+    private String sharedPreferencesKeyValue;
     private boolean valueBoolean;
     private String valueString;
-    private JSONValueWriter.MODE mode;
+    private SharedPreferencesValueWriter.MODE mode;
 
     private Message message;
 
-    private File file;
-    private FileWriter fileWriter;
-    private BufferedWriter bufferedWriter;
+    private LocalEncryptedPreferences preferences;
 
-    public JSONValueWriter(Context context, String jsonIdValue, String valueString, MODE mode) {
+    public SharedPreferencesValueWriter(Context context, String sharedPreferencesKeyValue, String valueString, MODE mode) {
         this.context = context;
-        this.jsonIdValue = jsonIdValue;
+        this.sharedPreferencesKeyValue = sharedPreferencesKeyValue;
         this.valueString = valueString;
         this.mode = mode;
     }
 
-    public JSONValueWriter(Context context, String jsonIdValue, boolean valueBoolean, MODE mode) {
+    public SharedPreferencesValueWriter(Context context, String sharedPreferencesKeyValue, boolean valueBoolean, MODE mode) {
         this.context = context;
         this.valueBoolean = valueBoolean;
-        this.jsonIdValue = jsonIdValue;
+        this.sharedPreferencesKeyValue = sharedPreferencesKeyValue;
         this.mode = mode;
     }
 
@@ -55,39 +51,29 @@ public class JSONValueWriter implements Callable {
     }
 
     @Override
-    public Object call() throws Exception {
+    public Object call() {
 
         try {
             if (Thread.interrupted()) throw new InterruptedException();
-            file = new File(context.getFilesDir() + File.separator + FILE_NAME);
 
-            if(!file.exists()){
-                boolean isCreated = file.createNewFile();
-                if(!isCreated) sendMessageToPresenterHandler(JSONWriterEnums.FILECREATE_FAILED);
-            }
+            preferences = LocalEncryptedPreferences.getInstance(
+                    "values",
+                    MasterKeys.AES256_GCM_SPEC,
+                    context.getApplicationContext(),
+                    EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
+                    EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
+            );
 
-            if(file.exists()){
-
-                JSONObject jsonObject = JSONFileHelper.getJSONObject(context, FILE_NAME);
-
-                if(jsonObject != null) {
-
-                    jsonObject.remove(jsonIdValue);
-
-                    switch (mode) {
-                        case WRITE_STRING: {
-                            jsonObject.put(jsonIdValue, valueString);
-                            break;
-                        }
-                        case WRITE_BOOLEAN: {
-                            jsonObject.put(jsonIdValue, valueBoolean);
-                            break;
-                        }
-                    }
-
-                    fileWriter = new FileWriter(file);
-                    bufferedWriter = new BufferedWriter(fileWriter);
-                    bufferedWriter.write(jsonObject.toString(4).replace("\\", ""));
+            switch (mode) {
+                case WRITE_STRING: {
+                    preferences.replaceString(sharedPreferencesKeyValue, valueString);
+                    sendMessageToPresenterHandler(JSONWriterEnums.WRITE_SUCCES);
+                    break;
+                }
+                case WRITE_BOOLEAN: {
+                    preferences.replaceBoolean(sharedPreferencesKeyValue, valueBoolean);
+                    sendMessageToPresenterHandler(JSONWriterEnums.WRITE_SUCCES);
+                    break;
                 }
             }
         }
@@ -95,15 +81,6 @@ public class JSONValueWriter implements Callable {
 
             e.printStackTrace();
             sendMessageToPresenterHandler(JSONWriterEnums.THREAD_INTERRUPTED);
-        }
-        catch (IOException e){
-
-            e.printStackTrace();
-            sendMessageToPresenterHandler(JSONWriterEnums.IOEXCEPTION);
-        }
-        finally {
-            if(bufferedWriter != null) bufferedWriter.close();
-            sendMessageToPresenterHandler(JSONWriterEnums.WRITE_SUCCES);
         }
 
         return null;

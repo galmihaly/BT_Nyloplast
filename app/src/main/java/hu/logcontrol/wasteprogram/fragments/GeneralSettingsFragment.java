@@ -3,6 +3,8 @@ package hu.logcontrol.wasteprogram.fragments;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.security.crypto.EncryptedSharedPreferences;
+import androidx.security.crypto.MasterKeys;
 
 import android.os.Handler;
 import android.os.Looper;
@@ -22,6 +24,7 @@ import hu.logcontrol.wasteprogram.helpers.JSONFileHelper;
 import hu.logcontrol.wasteprogram.interfaces.GeneralListener;
 import hu.logcontrol.wasteprogram.interfaces.IGeneralFragmentListener;
 import hu.logcontrol.wasteprogram.interfaces.IGeneralSettingFragment;
+import hu.logcontrol.wasteprogram.models.LocalEncryptedPreferences;
 import hu.logcontrol.wasteprogram.presenters.ProgramPresenter;
 
 public class GeneralSettingsFragment extends Fragment implements IGeneralSettingFragment, IGeneralFragmentListener {
@@ -44,6 +47,8 @@ public class GeneralSettingsFragment extends Fragment implements IGeneralSetting
     private AutoCompleteTextView fileSeparatorACTV;
     private final String[] fileSeparators = new String[] {"vessző", "pontosvessző", "tabulátor"};
 
+    private LocalEncryptedPreferences preferences;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -54,6 +59,7 @@ public class GeneralSettingsFragment extends Fragment implements IGeneralSetting
         fileSeparatorACTV = view.findViewById(R.id.fileSeparatorACTV);
 
         initListeners();
+        initLocalPreferences();
         initPresenter();
         initFileSeparatorsDropDownMenu();
         initDefaultValues();
@@ -95,17 +101,19 @@ public class GeneralSettingsFragment extends Fragment implements IGeneralSetting
     private void initDefaultValues() {
         if(settingBarcodeNextCheckBox != null && settingKeyboardCheckBox != null && fileSeparatorACTV != null && arrayAdapter != null){
 
-            boolean isExist = JSONFileHelper.isExist(getContext(), "values.json");
-            if(isExist) {
+            if(preferences != null) {
 
-                resultBarcodeCheckbox = JSONFileHelper.getBoolean(getContext(), "values.json", "IsEnableBarcodeReaderMode");
+                resultBarcodeCheckbox = preferences.getBooleanValueByKey("IsEnableBarcodeReaderMode");
+                Log.e("resultBarcodeCheckbox", String.valueOf(resultBarcodeCheckbox));
                 settingBarcodeNextCheckBox.setChecked(resultBarcodeCheckbox);
 
-                resultKeyBoardCheckbox = JSONFileHelper.getBoolean(getContext(), "values.json", "IsEnableKeyBoardOnTextBoxes");
+                resultKeyBoardCheckbox = preferences.getBooleanValueByKey("IsEnableKeyBoardOnTextBoxes");
+                Log.e("resultKeyBoardCheckbox", String.valueOf(resultKeyBoardCheckbox));
                 settingKeyboardCheckBox.setChecked(resultKeyBoardCheckbox);
 
                 int resultPosition = -1;
-                resultFileSeparator = JSONFileHelper.getString(getContext(), "values.json", "FileSeparatorCharacter");
+                resultFileSeparator = preferences.getStringValueByKey("FileSeparatorCharacter");
+                Log.e("resultFileSeparator", String.valueOf(resultFileSeparator));
 
                 for (int i = 0; i < fileSeparators.length; i++) {
                     if(fileSeparators[i].equals(resultFileSeparator)) resultPosition = i;
@@ -143,6 +151,15 @@ public class GeneralSettingsFragment extends Fragment implements IGeneralSetting
                 generalListener.sendFileSeparatorCharachter(arrayAdapter.getItem(position));
             });
         }
+    }
+    private void initLocalPreferences() {
+        preferences = LocalEncryptedPreferences.getInstance(
+                "values",
+                MasterKeys.AES256_GCM_SPEC,
+                getContext(),
+                EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
+                EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
+        );
     }
 
     public void initListeners(){

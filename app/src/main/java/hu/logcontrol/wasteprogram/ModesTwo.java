@@ -7,9 +7,10 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.security.crypto.EncryptedSharedPreferences;
+import androidx.security.crypto.MasterKeys;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -21,7 +22,6 @@ import android.widget.Toast;
 
 import java.util.List;
 
-import hu.logcontrol.wasteprogram.adapters.RawMaterialAdapter;
 import hu.logcontrol.wasteprogram.adapters.RawMaterialTypeMassAdapter;
 import hu.logcontrol.wasteprogram.enums.ActivityEnums;
 import hu.logcontrol.wasteprogram.enums.EditButtonEnums;
@@ -29,9 +29,8 @@ import hu.logcontrol.wasteprogram.helpers.Helper;
 import hu.logcontrol.wasteprogram.helpers.JSONFileHelper;
 import hu.logcontrol.wasteprogram.interfaces.IModesTwoView;
 import hu.logcontrol.wasteprogram.logger.ApplicationLogger;
+import hu.logcontrol.wasteprogram.models.LocalEncryptedPreferences;
 import hu.logcontrol.wasteprogram.models.LocalRawMaterialTypeMassesStorage;
-import hu.logcontrol.wasteprogram.models.LocalRawMaterialsStorage;
-import hu.logcontrol.wasteprogram.models.LocalRecycLedMaterialsStorage;
 import hu.logcontrol.wasteprogram.models.RawMaterialTypeMass;
 import hu.logcontrol.wasteprogram.presenters.ProgramPresenter;
 
@@ -53,8 +52,10 @@ public class ModesTwo extends AppCompatActivity implements IModesTwoView {
     private RawMaterialTypeMassAdapter rawMaterialTypeMassAdapter;
     private List<RawMaterialTypeMass> rawMaterialTypeMassList;
 
-    private String separatorFromJSON;
+    private String separatorFromSharedPreferences;
     private boolean isEnableBarcodeReaderMode;
+
+    private LocalEncryptedPreferences preferences;
 
     private final ActivityResultLauncher<Intent> activityResultLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
@@ -70,9 +71,9 @@ public class ModesTwo extends AppCompatActivity implements IModesTwoView {
                     String massDataTextBox = intent.getStringExtra("massDataTextBox");
                     String commentDataTextBox = intent.getStringExtra("commentDataTextBox");
 
-                    RawMaterialTypeMass rawMaterialTypeMass = new RawMaterialTypeMass(ApplicationLogger.getUTCDateTimeString(),typeMassCountTextBox, typeMassTypeTextBox, storageBoxIdentifierTextBox, massDataTextBox, commentDataTextBox);
+                    RawMaterialTypeMass rawMaterialTypeMass = new RawMaterialTypeMass(ApplicationLogger.getDateTimeString(),typeMassCountTextBox, typeMassTypeTextBox, storageBoxIdentifierTextBox, massDataTextBox, commentDataTextBox);
 
-                    char c = Helper.getSeparator(separatorFromJSON);
+                    char c = Helper.getSeparator(separatorFromSharedPreferences);
                     if(c != 0) rawMaterialTypeMass.setSeparator(c);
 
                     if(rawMaterialTypeMassList != null) rawMaterialTypeMassList.add(rawMaterialTypeMass);
@@ -96,6 +97,7 @@ public class ModesTwo extends AppCompatActivity implements IModesTwoView {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_modes_two);
+        initLocalPreferences();
         initView();
         initPresenter();
         initButtons();
@@ -246,7 +248,19 @@ public class ModesTwo extends AppCompatActivity implements IModesTwoView {
         mainModesTwoCL = findViewById(R.id.mainModesTwoCL);
         swipeRefreshLayout = findViewById(R.id.swipeRefresLayoutModesTwoRV);
 
-        isEnableBarcodeReaderMode = JSONFileHelper.getBoolean(getApplicationContext(), "values.json", "IsEnableBarcodeReaderMode");
-        separatorFromJSON = JSONFileHelper.getString(getApplicationContext(), "values.json", "FileSeparatorCharacter");
+        if(preferences != null){
+            isEnableBarcodeReaderMode = preferences.getBooleanValueByKey("IsEnableBarcodeReaderMode");
+            separatorFromSharedPreferences = preferences.getStringValueByKey("FileSeparatorCharacter");
+        }
+    }
+
+    private void initLocalPreferences() {
+        preferences = LocalEncryptedPreferences.getInstance(
+                "values",
+                MasterKeys.AES256_GCM_SPEC,
+                getApplicationContext(),
+                EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
+                EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
+        );
     }
 }

@@ -101,6 +101,46 @@ public class LocalEncryptedPreferences {
         }
     }
 
+    @SuppressLint("CommitPrefEdits")
+    public void replaceString(String key, String value){
+        SharedPreferences.Editor editor;
+        editor = this.sharedPreferences.edit();
+        editor.putString(key, value);
+        editor.apply();
+    }
+
+    @SuppressLint("CommitPrefEdits")
+    public void replaceBoolean(String key, boolean value){
+        SharedPreferences.Editor editor;
+        editor = this.sharedPreferences.edit();
+        editor.putBoolean(key, value);
+        editor.apply();
+    }
+
+    @SuppressLint("CommitPrefEdits")
+    public void replaceFloat(String key, float value){
+        SharedPreferences.Editor editor;
+        editor = this.sharedPreferences.edit();
+        editor.putFloat(key, value);
+        editor.apply();
+    }
+
+    @SuppressLint("CommitPrefEdits")
+    public void replaceInt(String key, int value){
+        SharedPreferences.Editor editor;
+        editor = this.sharedPreferences.edit();
+        editor.putInt(key, value);
+        editor.apply();
+    }
+
+    @SuppressLint("CommitPrefEdits")
+    public void replaceLong(String key, long value){
+        SharedPreferences.Editor editor;
+        editor = this.sharedPreferences.edit();
+        editor.putLong(key, value);
+        editor.apply();
+    }
+
     public void removeItemByKey(String key){
         if(sharedPreferences.contains(key)){
             SharedPreferences.Editor editor;
@@ -176,8 +216,8 @@ public class LocalEncryptedPreferences {
     }
 
     public String getStringValueByKey(String key){
-        if(!sharedPreferences.contains(key)){
-            return sharedPreferences.getString(key, null);
+        if(sharedPreferences.contains(key)){
+            return sharedPreferences.getString(key, "");
         };
         return null;
     }

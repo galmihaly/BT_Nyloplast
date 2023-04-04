@@ -50,16 +50,10 @@ public class RawMaterialTypeMass {
 
     @Override
     public String toString() {
-        if(separator == (char)9){
-            return String.format("%s " + separator + "%s " + separator + "%s " + separator + "%s " + separator + "%s " + separator +"%s", this.timeStamp, this.wasteCode, this.materialType, this.storageBoxIdentifier, this.massData, this.comment);
-        }
         return String.format("%s" + separator + "%s" + separator + "%s" + separator + "%s" + separator + "%s" + separator +"%s", this.timeStamp, this.wasteCode, this.materialType, this.storageBoxIdentifier, this.massData, this.comment);
     }
 
     public static String getCSVHeader() {
-        if(separator == (char)9){
-            return "TimeStamp " + separator + "WasteCode " + separator + "MaterialType " + separator + "StorageBoxIdentifier " + separator + "MassData " + separator + "Comment";
-        }
         return "TimeStamp" + separator + "WasteCode" + separator + "MaterialType" + separator + "StorageBoxIdentifier" + separator + "MassData" + separator + "Comment";
     }
 }

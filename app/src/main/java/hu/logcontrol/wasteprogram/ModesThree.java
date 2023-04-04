@@ -7,9 +7,10 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.security.crypto.EncryptedSharedPreferences;
+import androidx.security.crypto.MasterKeys;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -21,7 +22,6 @@ import android.widget.Toast;
 
 import java.util.List;
 
-import hu.logcontrol.wasteprogram.adapters.RawMaterialTypeMassAdapter;
 import hu.logcontrol.wasteprogram.adapters.RecycledMaterialAdapter;
 import hu.logcontrol.wasteprogram.enums.ActivityEnums;
 import hu.logcontrol.wasteprogram.enums.EditButtonEnums;
@@ -29,8 +29,7 @@ import hu.logcontrol.wasteprogram.helpers.Helper;
 import hu.logcontrol.wasteprogram.helpers.JSONFileHelper;
 import hu.logcontrol.wasteprogram.interfaces.IModesThreeView;
 import hu.logcontrol.wasteprogram.logger.ApplicationLogger;
-import hu.logcontrol.wasteprogram.models.LocalRawMaterialTypeMassesStorage;
-import hu.logcontrol.wasteprogram.models.LocalRawMaterialsStorage;
+import hu.logcontrol.wasteprogram.models.LocalEncryptedPreferences;
 import hu.logcontrol.wasteprogram.models.LocalRecycLedMaterialsStorage;
 import hu.logcontrol.wasteprogram.models.RecycledMaterial;
 import hu.logcontrol.wasteprogram.presenters.ProgramPresenter;
@@ -53,8 +52,10 @@ public class ModesThree extends AppCompatActivity implements IModesThreeView {
     private RecycledMaterialAdapter recycledMaterialAdapter;
     private List<RecycledMaterial> recycledMaterialList;
 
-    private String separatorFromJSON;
+    private String separatorFromSharedPreferences;
     private boolean isEnableBarcodeReaderMode;
+
+    private LocalEncryptedPreferences preferences;
 
     private final ActivityResultLauncher<Intent> activityResultLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
@@ -69,9 +70,9 @@ public class ModesThree extends AppCompatActivity implements IModesThreeView {
                     String massDataTextBox2 = intent.getStringExtra("massDataTextBox2");
                     String commentDataTextBox2 = intent.getStringExtra("commentDataTextBox2");
 
-                    RecycledMaterial recycledMaterial = new RecycledMaterial(ApplicationLogger.getUTCDateTimeString(),typeRecMatTextBox, storageBoxIdentifierTextBox2, massDataTextBox2, commentDataTextBox2);
+                    RecycledMaterial recycledMaterial = new RecycledMaterial(ApplicationLogger.getDateTimeString(),typeRecMatTextBox, storageBoxIdentifierTextBox2, massDataTextBox2, commentDataTextBox2);
 
-                    char c = Helper.getSeparator(separatorFromJSON);
+                    char c = Helper.getSeparator(separatorFromSharedPreferences);
                     if(c != 0) recycledMaterial.setSeparator(c);
 
                     if(recycledMaterialList != null) recycledMaterialList.add(recycledMaterial);
@@ -94,6 +95,7 @@ public class ModesThree extends AppCompatActivity implements IModesThreeView {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_modes_three);
+        initLocalPreferences();
         initView();
         initPresenter();
         initButtons();
@@ -244,7 +246,19 @@ public class ModesThree extends AppCompatActivity implements IModesThreeView {
         mainModesThreeCL = findViewById(R.id.mainModesThreeCL);
         swipeRefreshLayout = findViewById(R.id.swipeRefresLayoutModesThreeRV);
 
-        isEnableBarcodeReaderMode = JSONFileHelper.getBoolean(getApplicationContext(), "values.json", "IsEnableBarcodeReaderMode");
-        separatorFromJSON = JSONFileHelper.getString(getApplicationContext(), "values.json", "FileSeparatorCharacter");
+        if(preferences != null){
+            isEnableBarcodeReaderMode = preferences.getBooleanValueByKey("IsEnableBarcodeReaderMode");
+            separatorFromSharedPreferences = preferences.getStringValueByKey("FileSeparatorCharacter");
+        }
+    }
+
+    private void initLocalPreferences() {
+        preferences = LocalEncryptedPreferences.getInstance(
+                "values",
+                MasterKeys.AES256_GCM_SPEC,
+                getApplicationContext(),
+                EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
+                EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
+        );
     }
 }

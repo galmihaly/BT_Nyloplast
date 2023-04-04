@@ -27,9 +27,8 @@ public interface IProgramPresenter {
     void setSaveButtonState(EditButtonEnums editButtonEnum);
     void sendMessageToView(String message);
 
-    void saveBooleanValueToJSONFile(String jsonIdValue, boolean value);
-    void saveStringValueToJSONFile(String jsonIdValue, String value);
+    void saveBooleanValueToSharedPreferencesFile(String jsonIdValue, boolean value);
+    void saveStringValueToSharedPreferencesFile(String jsonIdValue, String value);
 
     void clearRawMaterialList(String message);
-    void initBaseJSONFile(String fileName);
 }

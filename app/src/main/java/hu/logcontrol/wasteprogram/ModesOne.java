@@ -7,14 +7,14 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.security.crypto.EncryptedSharedPreferences;
+import androidx.security.crypto.MasterKeys;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.widget.ImageButton;
 import android.widget.Toast;
@@ -28,6 +28,7 @@ import hu.logcontrol.wasteprogram.helpers.Helper;
 import hu.logcontrol.wasteprogram.helpers.JSONFileHelper;
 import hu.logcontrol.wasteprogram.interfaces.IModesOneView;
 import hu.logcontrol.wasteprogram.logger.ApplicationLogger;
+import hu.logcontrol.wasteprogram.models.LocalEncryptedPreferences;
 import hu.logcontrol.wasteprogram.models.LocalRawMaterialsStorage;
 import hu.logcontrol.wasteprogram.models.RawMaterial;
 import hu.logcontrol.wasteprogram.presenters.ProgramPresenter;
@@ -50,8 +51,10 @@ public class ModesOne extends AppCompatActivity implements IModesOneView {
     private RawMaterialAdapter rawMaterialAdapter;
     private List<RawMaterial> rawMaterialList;
 
-    private String separatorFromJSON;
+    private String separatorFromSharedPreferences;
     private boolean isEnableBarcodeReaderMode;
+
+    private LocalEncryptedPreferences preferences;
 
     private final ActivityResultLauncher<Intent> activityResultLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
@@ -65,9 +68,9 @@ public class ModesOne extends AppCompatActivity implements IModesOneView {
                     String rawMatCountTextBox = intent.getStringExtra("rawMatCountTextBox");
                     String rawMatContentTextBox = intent.getStringExtra("rawMatContentTextBox");
 
-                    RawMaterial rawMaterial = new RawMaterial(ApplicationLogger.getUTCDateTimeString(),rawMatTypeTextBox, rawMatCountTextBox, rawMatContentTextBox);
+                    RawMaterial rawMaterial = new RawMaterial(ApplicationLogger.getDateTimeString(),rawMatTypeTextBox, rawMatCountTextBox, rawMatContentTextBox);
 
-                    char c = Helper.getSeparator(separatorFromJSON);
+                    char c = Helper.getSeparator(separatorFromSharedPreferences);
                     if(c != 0) rawMaterial.setSeparator(c);
 
                     if(rawMaterialList != null) rawMaterialList.add(rawMaterial);
@@ -92,6 +95,7 @@ public class ModesOne extends AppCompatActivity implements IModesOneView {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_modes_one);
+        initLocalPreferences();
         initView();
         initPresenter();
         initButtons();
@@ -237,7 +241,19 @@ public class ModesOne extends AppCompatActivity implements IModesOneView {
         mainModesOneCL = findViewById(R.id.mainModesOneCL);
         swipeRefreshLayout = findViewById(R.id.swipeRefresLayoutModesOneRV);
 
-        isEnableBarcodeReaderMode = JSONFileHelper.getBoolean(getApplicationContext(), "values.json", "IsEnableBarcodeReaderMode");
-        separatorFromJSON = JSONFileHelper.getString(getApplicationContext(), "values.json", "FileSeparatorCharacter");
+        if(preferences != null){
+            isEnableBarcodeReaderMode = preferences.getBooleanValueByKey("IsEnableBarcodeReaderMode");
+            separatorFromSharedPreferences = preferences.getStringValueByKey("FileSeparatorCharacter");
+        }
+    }
+
+    private void initLocalPreferences() {
+        preferences = LocalEncryptedPreferences.getInstance(
+                "values",
+                MasterKeys.AES256_GCM_SPEC,
+                getApplicationContext(),
+                EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
+                EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
+        );
     }
 }

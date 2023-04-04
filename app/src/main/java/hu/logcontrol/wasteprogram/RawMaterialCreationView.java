@@ -3,6 +3,8 @@ package hu.logcontrol.wasteprogram;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
+import androidx.security.crypto.EncryptedSharedPreferences;
+import androidx.security.crypto.MasterKeys;
 
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
@@ -16,6 +18,7 @@ import android.widget.ImageButton;
 
 import hu.logcontrol.wasteprogram.helpers.JSONFileHelper;
 import hu.logcontrol.wasteprogram.helpers.TextWatcherHelper;
+import hu.logcontrol.wasteprogram.models.LocalEncryptedPreferences;
 
 public class RawMaterialCreationView extends AppCompatActivity {
 
@@ -53,10 +56,14 @@ public class RawMaterialCreationView extends AppCompatActivity {
 
     private boolean isEnableBarcodeReaderMode;
 
+    private LocalEncryptedPreferences preferences;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_raw_material_creation);
+
+        initLocalPreferences();
         initView();
         initDrawables();
         initTextWatcher();
@@ -274,8 +281,10 @@ public class RawMaterialCreationView extends AppCompatActivity {
 
         textBox_1.requestFocus();
 
-        isEnableBarcodeReaderMode = JSONFileHelper.getBoolean(getApplicationContext(), "values.json", "IsEnableBarcodeReaderMode");
-        isEnableKeyBoardOnTextBoxes = JSONFileHelper.getBoolean(getApplicationContext(), "values.json", "IsEnableKeyBoardOnTextBoxes");
+        if(preferences != null){
+            isEnableBarcodeReaderMode = preferences.getBooleanValueByKey("IsEnableBarcodeReaderMode");
+            isEnableKeyBoardOnTextBoxes = preferences.getBooleanValueByKey("IsEnableKeyBoardOnTextBoxes");
+        }
 
         if(isEnableKeyBoardOnTextBoxes){
             if(textBox_1 != null){ textBox_1.setShowSoftInputOnFocus(true); }
@@ -308,5 +317,15 @@ public class RawMaterialCreationView extends AppCompatActivity {
         clDisableBackground = ContextCompat.getDrawable(getApplicationContext(), R.drawable.constraint_red_background);
         addEnableBackground = ContextCompat.getDrawable(getApplicationContext(), R.drawable.add_button_background);
         disableBackground = ContextCompat.getDrawable(getApplicationContext(), R.drawable.disable_button_background_circle);
+    }
+
+    private void initLocalPreferences() {
+        preferences = LocalEncryptedPreferences.getInstance(
+                "values",
+                MasterKeys.AES256_GCM_SPEC,
+                getApplicationContext(),
+                EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
+                EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
+        );
     }
 }

@@ -1,33 +1,23 @@
 package hu.logcontrol.wasteprogram;
 
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.security.crypto.EncryptedSharedPreferences;
+import androidx.security.crypto.MasterKeys;
 import androidx.viewpager2.widget.ViewPager2;
 
 import android.app.Dialog;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.ActivityInfo;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
-import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
-import android.view.WindowManager;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.AutoCompleteTextView;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
 import com.google.android.material.button.MaterialButton;
-import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.tabs.TabLayout;
 
 import java.util.ArrayList;
@@ -38,12 +28,12 @@ import hu.logcontrol.wasteprogram.enums.ActivityEnums;
 import hu.logcontrol.wasteprogram.enums.EditButtonEnums;
 import hu.logcontrol.wasteprogram.fragments.GeneralSettingsFragment;
 import hu.logcontrol.wasteprogram.fragments.UploadFileSettingsFragment;
-import hu.logcontrol.wasteprogram.helpers.JSONFileHelper;
 import hu.logcontrol.wasteprogram.interfaces.GeneralListener;
 import hu.logcontrol.wasteprogram.interfaces.IGeneralFragmentListener;
 import hu.logcontrol.wasteprogram.interfaces.ISettingsView;
 import hu.logcontrol.wasteprogram.interfaces.IUploadFileFragmentListener;
 import hu.logcontrol.wasteprogram.interfaces.UploadFileListener;
+import hu.logcontrol.wasteprogram.models.LocalEncryptedPreferences;
 import hu.logcontrol.wasteprogram.presenters.ProgramPresenter;
 
 public class SettingsActivity extends AppCompatActivity implements ISettingsView, GeneralListener, UploadFileListener {
@@ -61,6 +51,8 @@ public class SettingsActivity extends AppCompatActivity implements ISettingsView
     private String resultFileSeparatorCharachter;
     private String resultUsername;
     private String resultPassword;
+    private String resultHostName;
+    private String resultPortNumber;
 
     private boolean resultLocalCheckbox;
     private boolean isReadyLocalCheckbox = true;
@@ -76,6 +68,8 @@ public class SettingsActivity extends AppCompatActivity implements ISettingsView
     private String originalFileSeparatorCharachter = null;
     private String originalUsername = null;
     private String originalPassword = null;
+    private String originalHostName = null;
+    private String originalPortNumber = null;
 
     private boolean originalLocalCheckbox;
     private boolean originalBarcodeCheckbox;
@@ -89,12 +83,15 @@ public class SettingsActivity extends AppCompatActivity implements ISettingsView
     private IUploadFileFragmentListener iUploadFileFragmentListener;
     private IGeneralFragmentListener iGeneralFragmentListener;
 
+    private LocalEncryptedPreferences preferences;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
 
         initView();
+        initLocalPreferences();
         initPresenter();
         initStartingValuesOfView();
         initViewPager();
@@ -114,42 +111,62 @@ public class SettingsActivity extends AppCompatActivity implements ISettingsView
                     resultGlobalPath = iUploadFileFragmentListener.getGlobalPath();
                     resultUsername = iUploadFileFragmentListener.getUsername();
                     resultPassword = iUploadFileFragmentListener.getPassword();
+                    resultHostName = iUploadFileFragmentListener.getHostName();
+                    resultPortNumber = iUploadFileFragmentListener.getPortNumber();
 
                     if((originalLocalCheckbox || resultLocalCheckbox) && !(originalLocalCheckbox && resultLocalCheckbox)){
+
                         originalLocalCheckbox = resultLocalCheckbox;
-                        programPresenter.saveBooleanValueToJSONFile("IsEnableSaveLocalStorage", originalLocalCheckbox);
+                        programPresenter.saveBooleanValueToSharedPreferencesFile("IsEnableSaveLocalStorage", originalLocalCheckbox);
                     }
 
                     if(resultLocalPath != null){
                         if(!originalLocalPath.equals(resultLocalPath)){
+
                             originalLocalPath = resultLocalPath;
-                            programPresenter.saveStringValueToJSONFile("LocalSavePath", resultLocalPath);
+                            programPresenter.saveStringValueToSharedPreferencesFile("LocalSavePath", resultLocalPath);
                         }
                     }
 
                     if(resultGlobalPath != null){
                         if(!originalGlobalPath.equals(resultGlobalPath)){
+
                             originalGlobalPath = resultGlobalPath;
-                            programPresenter.saveStringValueToJSONFile("GlobalSavePath", originalGlobalPath);
+                            programPresenter.saveStringValueToSharedPreferencesFile("GlobalSavePath", originalGlobalPath);
                         }
                     }
 
-                    Log.e("resultUsername", resultUsername);
-                    Log.e("resultPassword", resultPassword);
-
                     if(resultUsername != null){
                         if(!originalUsername.equals(resultUsername)){
-                            Log.e("resultUsername_", resultUsername);
+
                             originalUsername = resultUsername;
-                            programPresenter.saveStringValueToJSONFile("Username", originalUsername);
+                            programPresenter.saveStringValueToSharedPreferencesFile("Username", originalUsername);
                         }
                     }
 
                     if(resultPassword != null){
                         if(!originalPassword.equals(resultPassword)){
-                            Log.e("resultPassword_", resultPassword);
+
                             originalPassword = resultPassword;
-                            programPresenter.saveStringValueToJSONFile("Password", originalPassword);
+                            programPresenter.saveStringValueToSharedPreferencesFile("Password", originalPassword);
+                        }
+                    }
+
+                    if(resultHostName != null){
+                        if(!originalHostName.equals(resultHostName)){
+
+                            originalHostName = resultHostName;
+                            Log.e("originalHostName_", originalHostName);
+                            programPresenter.saveStringValueToSharedPreferencesFile("HostName", originalHostName);
+                        }
+                    }
+
+                    if(resultPortNumber != null){
+                        if(!originalPortNumber.equals(resultPortNumber)){
+
+                            originalPortNumber = resultPortNumber;
+                            Log.e("originalPortNumber_", originalPortNumber);
+                            programPresenter.saveStringValueToSharedPreferencesFile("PortNumber", originalPortNumber);
                         }
                     }
                 }
@@ -165,19 +182,22 @@ public class SettingsActivity extends AppCompatActivity implements ISettingsView
                 }
 
                 if((originalBarcodeCheckbox || resultBarcodeCheckbox) && !(originalBarcodeCheckbox && resultBarcodeCheckbox)){
+
                     originalBarcodeCheckbox = resultBarcodeCheckbox;
-                    programPresenter.saveBooleanValueToJSONFile("IsEnableBarcodeReaderMode", originalBarcodeCheckbox);
+                    programPresenter.saveBooleanValueToSharedPreferencesFile("IsEnableBarcodeReaderMode", originalBarcodeCheckbox);
                 }
 
                 if((originalKeyBoardCheckbox || resultKeyBoardCheckbox) && !(originalKeyBoardCheckbox && resultKeyBoardCheckbox)){
+
                     originalKeyBoardCheckbox = resultKeyBoardCheckbox;
-                    programPresenter.saveBooleanValueToJSONFile("IsEnableKeyBoardOnTextBoxes", originalKeyBoardCheckbox);
+                    programPresenter.saveBooleanValueToSharedPreferencesFile("IsEnableKeyBoardOnTextBoxes", originalKeyBoardCheckbox);
                 }
 
                 if(resultFileSeparatorCharachter != null){
                     if(!originalFileSeparatorCharachter.equals(resultFileSeparatorCharachter)){
+
                         originalFileSeparatorCharachter = resultFileSeparatorCharachter;
-                        programPresenter.saveStringValueToJSONFile("FileSeparatorCharacter", originalFileSeparatorCharachter);
+                        programPresenter.saveStringValueToSharedPreferencesFile("FileSeparatorCharacter", originalFileSeparatorCharachter);
                     }
                 }
 
@@ -198,19 +218,21 @@ public class SettingsActivity extends AppCompatActivity implements ISettingsView
         String b = null;
         String c = null;
         String d = null;
-        boolean e = false;
-        boolean f = false;
-        String g = null;
-        String h = null;
+        String e = null;
+        String f = null;
+        boolean g = false;
+        boolean h = false;
+        String i = null;
+        String j = null;
 
         boolean isEnabled = true;
 
-        e = iGeneralFragmentListener.getBarcodeCheckBoxState();
-        f = iGeneralFragmentListener.getKeyBoardCheckBoxState();
-        g = iGeneralFragmentListener.getFileSeparatorCharachter();
+        g = iGeneralFragmentListener.getBarcodeCheckBoxState();
+        h = iGeneralFragmentListener.getKeyBoardCheckBoxState();
+        i = iGeneralFragmentListener.getFileSeparatorCharachter();
 
         if(iGeneralFragmentListener != null){
-            if(originalBarcodeCheckbox == e && originalKeyBoardCheckbox == f && originalFileSeparatorCharachter.equals(g)){
+            if(originalBarcodeCheckbox == g && originalKeyBoardCheckbox == h && originalFileSeparatorCharachter.equals(i)){
                 isEnabled = true;
             }
             else {
@@ -224,11 +246,22 @@ public class SettingsActivity extends AppCompatActivity implements ISettingsView
             }
 
             b = iUploadFileFragmentListener.getGlobalPath();
-            h = iUploadFileFragmentListener.getLocalPath();
+            j = iUploadFileFragmentListener.getLocalPath();
             c = iUploadFileFragmentListener.getUsername();
             d = iUploadFileFragmentListener.getPassword();
+            e = iUploadFileFragmentListener.getHostName();
+            f = iUploadFileFragmentListener.getPortNumber();
 
-            if(originalLocalPath.equals(h) && originalLocalCheckbox == a && originalGlobalPath.equals(b) && originalUsername.equals(c) && originalPassword.equals(d) && isEnabled){
+            if(
+                    originalLocalCheckbox == a &&
+                    originalGlobalPath.equals(b) &&
+                    originalUsername.equals(c) &&
+                    originalPassword.equals(d) &&
+                    originalHostName.equals(e) &&
+                    originalPortNumber.equals(f) &&
+                    originalLocalPath.equals(j) &&
+                    isEnabled)
+            {
                 isEnabled = true;
             }
             else {
@@ -294,23 +327,36 @@ public class SettingsActivity extends AppCompatActivity implements ISettingsView
     }
 
     private void initStartingValuesOfView() {
-        boolean isExist = JSONFileHelper.isExist(getApplicationContext(), "values.json");
-        if(isExist) {
-            originalGlobalPath = JSONFileHelper.getString(getApplicationContext(), "values.json", "GlobalSavePath");
-            originalLocalPath = JSONFileHelper.getString(getApplicationContext(), "values.json", "LocalSavePath");
-            originalFileSeparatorCharachter = JSONFileHelper.getString(getApplicationContext(), "values.json", "FileSeparatorCharacter");
-            originalUsername = JSONFileHelper.getString(getApplicationContext(), "values.json", "Username");
-            originalPassword = JSONFileHelper.getString(getApplicationContext(), "values.json", "Password");
 
-            originalBarcodeCheckbox = JSONFileHelper.getBoolean(getApplicationContext(), "values.json", "IsEnableBarcodeReaderMode");
-            originalLocalCheckbox = JSONFileHelper.getBoolean(getApplicationContext(), "values.json", "IsEnableSaveLocalStorage");
-            originalKeyBoardCheckbox = JSONFileHelper.getBoolean(getApplicationContext(), "values.json", "IsEnableKeyBoardOnTextBoxes");
+        if(preferences != null) {
+
+            originalGlobalPath = preferences.getStringValueByKey("GlobalSavePath");
+            originalLocalPath = preferences.getStringValueByKey("LocalSavePath");
+            originalFileSeparatorCharachter = preferences.getStringValueByKey("FileSeparatorCharacter");
+            originalUsername = preferences.getStringValueByKey("Username");
+            originalPassword = preferences.getStringValueByKey("Password");
+            originalHostName = preferences.getStringValueByKey("HostName");
+            originalPortNumber = preferences.getStringValueByKey("PortNumber");
+
+            originalBarcodeCheckbox = preferences.getBooleanValueByKey("IsEnableBarcodeReaderMode");
+            originalLocalCheckbox = preferences.getBooleanValueByKey("IsEnableSaveLocalStorage");
+            originalKeyBoardCheckbox = preferences.getBooleanValueByKey("IsEnableKeyBoardOnTextBoxes");
         }
     }
 
     private void initPresenter() {
         programPresenter = new ProgramPresenter(this, getApplicationContext());
         programPresenter.initTaskManager();
+    }
+
+    private void initLocalPreferences() {
+        preferences = LocalEncryptedPreferences.getInstance(
+                "values",
+                MasterKeys.AES256_GCM_SPEC,
+                getApplicationContext(),
+                EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
+                EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
+        );
     }
 
     @Override
