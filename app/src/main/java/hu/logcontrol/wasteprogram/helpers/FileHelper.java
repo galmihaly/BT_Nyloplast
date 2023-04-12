@@ -25,7 +25,7 @@ public class FileHelper {
                 EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
         );
 
-        String fileName = ApplicationLogger.getDateTimeString() + listType + "." + fileExtension;
+        String fileName = ApplicationLogger.getDateTimeFileString() + listType + "." + fileExtension;
         String path = preferences.getStringValueByKey("LocalSavePath");
 
         if(path != null){
@@ -56,11 +56,6 @@ public class FileHelper {
         String password = preferences.getStringValueByKey("Password");
         String globalSavePath = preferences.getStringValueByKey("GlobalSavePath");
 
-//        Log.e("hostName+", hostName);
-//        Log.e("portNumber+", portNumber);
-//        Log.e("userName+", username);
-//        Log.e("password+", password);
-//        Log.e("globalSavePath+", globalSavePath);
 
         if(globalSavePath != null && username != null && password != null){
 

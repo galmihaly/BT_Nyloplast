@@ -201,7 +201,25 @@ public class ApplicationLogger {
 
         try {
             Calendar date = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
-            SimpleDateFormat df = new SimpleDateFormat("yyyy_MM_dd_HH_mm");
+            SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            result = df.format(date.getTimeInMillis());
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+
+        if(result == null) return null;
+        return result;
+    }
+
+    @SuppressLint("SimpleDateFormat")
+    public static String getDateTimeFileString(){
+
+        String result = null;
+
+        try {
+            Calendar date = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+            SimpleDateFormat df = new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss");
             result = df.format(date.getTimeInMillis());
         }
         catch (Exception e){

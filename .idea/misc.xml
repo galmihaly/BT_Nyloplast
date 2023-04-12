@@ -9,6 +9,7 @@
         <entry key="..\:/Munka/Waste/Waste/program/app/src/main/res/drawable/cardview_green_background.xml" value="0.296" />
         <entry key="..\:/Munka/Waste/Waste/program/app/src/main/res/drawable/cardview_red_background.xml" value="0.295" />
         <entry key="..\:/Munka/Waste/Waste/program/app/src/main/res/drawable/checkbox.xml" value="0.296" />
+        <entry key="..\:/Munka/Waste/Waste/program/app/src/main/res/drawable/constraint_green_background.xml" value="0.3185" />
         <entry key="..\:/Munka/Waste/Waste/program/app/src/main/res/drawable/delete_button_background.xml" value="0.2985" />
         <entry key="..\:/Munka/Waste/Waste/program/app/src/main/res/drawable/delete_icon.xml" value="0.2985" />
         <entry key="..\:/Munka/Waste/Waste/program/app/src/main/res/drawable/disable_button_background_circle.xml" value="0.296" />
@@ -18,6 +19,7 @@
         <entry key="..\:/Munka/Waste/Waste/program/app/src/main/res/drawable/ic_checkbox_checked.xml" value="0.296" />
         <entry key="..\:/Munka/Waste/Waste/program/app/src/main/res/drawable/ic_delete_icon.xml" value="0.2985" />
         <entry key="..\:/Munka/Waste/Waste/program/app/src/main/res/drawable/ic_launcher_background.xml" value="0.296" />
+        <entry key="..\:/Munka/Waste/Waste/program/app/src/main/res/drawable/ic_settings_icon.xml" value="0.3185" />
         <entry key="..\:/Munka/Waste/Waste/program/app/src/main/res/drawable/modesbuttons_background.xml" value="0.2985" />
         <entry key="..\:/Munka/Waste/Waste/program/app/src/main/res/drawable/save_button_background.xml" value="0.3185" />
         <entry key="..\:/Munka/Waste/Waste/program/app/src/main/res/drawable/separator_line.xml" value="0.3185" />
@@ -26,8 +28,8 @@
         <entry key="..\:/Munka/Waste/Waste/program/app/src/main/res/layout/activity_modes_one.xml" value="0.33" />
         <entry key="..\:/Munka/Waste/Waste/program/app/src/main/res/layout/activity_modes_three.xml" value="0.27219202898550726" />
         <entry key="..\:/Munka/Waste/Waste/program/app/src/main/res/layout/activity_modes_two.xml" value="0.27219202898550726" />
-        <entry key="..\:/Munka/Waste/Waste/program/app/src/main/res/layout/activity_raw_material_creation.xml" value="0.27853260869565216" />
-        <entry key="..\:/Munka/Waste/Waste/program/app/src/main/res/layout/activity_raw_material_type_mass_creation.xml" value="0.25" />
+        <entry key="..\:/Munka/Waste/Waste/program/app/src/main/res/layout/activity_raw_material_creation.xml" value="0.67" />
+        <entry key="..\:/Munka/Waste/Waste/program/app/src/main/res/layout/activity_raw_material_type_mass_creation.xml" value="0.5" />
         <entry key="..\:/Munka/Waste/Waste/program/app/src/main/res/layout/activity_recycled_material_creation.xml" value="0.33" />
         <entry key="..\:/Munka/Waste/Waste/program/app/src/main/res/layout/activity_settings.xml" value="0.25" />
         <entry key="..\:/Munka/Waste/Waste/program/app/src/main/res/layout/fileseparator_dropdownmenu_item.xml" value="0.31521739130434784" />

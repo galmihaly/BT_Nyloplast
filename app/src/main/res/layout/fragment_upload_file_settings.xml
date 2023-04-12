@@ -81,6 +81,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="55dp"
                     android:singleLine="true"
+                    android:inputType="textPassword"
                     android:textColor="#000000"
                     app:textInputLayoutFocusedRectEnabled="true" />
 

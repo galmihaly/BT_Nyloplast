@@ -18,38 +18,49 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/typeRMC_CL">
 
-        <ImageButton
-            android:id="@+id/enterCommentRMC_BUT"
-            android:layout_width="45dp"
-            android:layout_height="45dp"
-            android:background="@drawable/disable_button_background_rectangle"
-            android:visibility="visible"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/constraintLayout15"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_marginEnd="10dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/commentRMC_TL"
-            app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/ic_fluent_arrow_enter_left_20_regular" />
+            app:layout_constraintTop_toTopOf="parent">
+
+            <ImageButton
+                android:id="@+id/enterCommentRMC_BUT"
+                android:layout_width="45dp"
+                android:layout_height="45dp"
+                android:background="@drawable/enter_button_background"
+                android:visibility="visible"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/ic_fluent_arrow_enter_left_20_regular" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/commentRMC_TL"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-            android:layout_width="230dp"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
             android:hint="Megjegyzés:"
             android:textColorHint="@color/black"
-            app:counterTextColor="@color/black"
             app:boxStrokeColor="@color/black"
-            app:hintTextColor="@color/black"
             app:boxStrokeWidth="2dp"
             app:boxStrokeWidthFocused="1dp"
+            app:counterTextColor="@color/black"
+            app:hintTextColor="@color/black"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/constraintLayout15"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/commentRMC_TB"
-                android:layout_width="230dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:singleLine="true" />
 
@@ -114,22 +125,32 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/countRMC_CL">
 
-        <ImageButton
-            android:id="@+id/enterTypeRMC_BUT"
-            android:layout_width="45dp"
-            android:layout_height="45dp"
-            android:background="@drawable/disable_button_background_rectangle"
-            android:visibility="visible"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/constraintLayout14"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_marginEnd="10dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/typeRMC_TL"
-            app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/ic_fluent_arrow_enter_left_20_regular" />
+            app:layout_constraintTop_toTopOf="parent">
+
+            <ImageButton
+                android:id="@+id/enterTypeRMC_BUT"
+                android:layout_width="45dp"
+                android:layout_height="45dp"
+                android:background="@drawable/disable_button_background_rectangle"
+                android:visibility="visible"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/ic_fluent_arrow_enter_left_20_regular" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/typeRMC_TL"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-            android:layout_width="230dp"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
             android:hint="Alapanyag típusa:"
@@ -140,12 +161,13 @@
             app:counterTextColor="@color/black"
             app:hintTextColor="@color/black"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/constraintLayout14"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/typeRMC_TB"
-                android:layout_width="230dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:singleLine="true" />
 
@@ -184,22 +206,32 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/titleRMC_CL">
 
-        <ImageButton
-            android:id="@+id/enterCountRMC_BUT"
-            android:layout_width="45dp"
-            android:layout_height="45dp"
-            android:background="@drawable/disable_button_background_rectangle"
-            android:visibility="visible"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/constraintLayout12"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_marginEnd="10dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/countRMC_TL"
-            app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/ic_fluent_arrow_enter_left_20_regular" />
+            app:layout_constraintTop_toTopOf="parent">
+
+            <ImageButton
+                android:id="@+id/enterCountRMC_BUT"
+                android:layout_width="45dp"
+                android:layout_height="45dp"
+                android:background="@drawable/disable_button_background_rectangle"
+                android:visibility="visible"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/ic_fluent_arrow_enter_left_20_regular" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/countRMC_TL"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-            android:layout_width="230dp"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
             android:hint="Alapanyag adagszáma:"
@@ -210,12 +242,13 @@
             app:counterTextColor="@color/black"
             app:hintTextColor="@color/black"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/constraintLayout12"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/countRMC_TB"
-                android:layout_width="230dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:singleLine="true" />
 

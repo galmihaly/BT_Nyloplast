@@ -193,7 +193,7 @@ public class MainActivity extends AppCompatActivity implements IMainView {
 
         preferences.putString("GlobalSavePath", "");
         preferences.putString("LocalSavePath", "");
-        preferences.putString("FileSeparatorCharacter", "");
+        preferences.putString("FileSeparatorCharacter", "pontosvessző");
         preferences.putString("Username", "");
         preferences.putString("Password", "");
         preferences.putString("HostName", "");

@@ -8,6 +8,7 @@ import androidx.security.crypto.MasterKeys;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.Editable;
@@ -48,13 +49,13 @@ public class RawMaterialTypeMassCreationView extends AppCompatActivity {
     private ImageButton enterBut_4;
     private ImageButton enterBut_5;
 
-    private final String disableColor = "#B7C0C1";
     private final String enableColor = "#000000";
 
     private boolean isEnableKeyBoardOnTextBoxes = false;
     private boolean isFirstGettingText = true;
 
     private boolean isClickAddButton = false;
+    private int next = 0;
 
     private Drawable enterEnableBackground;
     private Drawable enterDisableBackground;
@@ -110,7 +111,8 @@ public class RawMaterialTypeMassCreationView extends AppCompatActivity {
                             TextWatcherHelper.changeStateButton(deleteBut, deleteEnableBackground, true);
 
                             enterBut_1.setOnClickListener(v -> {
-                                TextWatcherHelper.setElementsToFinishState(constraint_1, constraint_2, textBox_1, textBox_2, enterBut_1, disableColor, clEnableBackground, enterDisableBackground);
+                                TextWatcherHelper.setElementsToFinishState(constraint_1, constraint_2, textBox_1, textBox_2, enterBut_1, clEnableBackground, enterDisableBackground);
+                                next++;
                             });
 
                             textBox_1.setOnKeyListener((v, keyCode, event) -> {
@@ -153,7 +155,8 @@ public class RawMaterialTypeMassCreationView extends AppCompatActivity {
                             TextWatcherHelper.changeStateButton(enterBut_2, enterEnableBackground, true);
 
                             enterBut_2.setOnClickListener(v -> {
-                                TextWatcherHelper.setElementsToFinishState(constraint_2, constraint_3, textBox_2, textBox_3, enterBut_2, disableColor, clEnableBackground, enterDisableBackground);
+                                TextWatcherHelper.setElementsToFinishState(constraint_2, constraint_3, textBox_2, textBox_3, enterBut_2, clEnableBackground, enterDisableBackground);
+                                next++;
                             });
 
 
@@ -196,7 +199,8 @@ public class RawMaterialTypeMassCreationView extends AppCompatActivity {
                             TextWatcherHelper.changeStateButton(enterBut_3, enterEnableBackground, true);
 
                             enterBut_3.setOnClickListener(v -> {
-                                TextWatcherHelper.setElementsToFinishState(constraint_3, constraint_4, textBox_3, textBox_4, enterBut_3, disableColor, clEnableBackground, enterDisableBackground);
+                                TextWatcherHelper.setElementsToFinishState(constraint_3, constraint_4, textBox_3, textBox_4, enterBut_3, clEnableBackground, enterDisableBackground);
+                                next++;
                             });
 
                             textBox_3.setOnKeyListener((v, keyCode, event) -> {
@@ -242,7 +246,8 @@ public class RawMaterialTypeMassCreationView extends AppCompatActivity {
                             TextWatcherHelper.changeStateButton(enterBut_4, enterEnableBackground, true);
 
                             enterBut_4.setOnClickListener(v -> {
-                                TextWatcherHelper.setElementsToFinishState(constraint_4, constraint_5, textBox_4, textBox_5, enterBut_4, disableColor, clEnableBackground, enterDisableBackground);
+                                TextWatcherHelper.setElementsToFinishState(constraint_4, constraint_5, textBox_4, textBox_5, enterBut_4, clEnableBackground, enterDisableBackground);
+                                next++;
                             });
 
                             textBox_4.setOnKeyListener((v, keyCode, event) -> {
@@ -279,6 +284,7 @@ public class RawMaterialTypeMassCreationView extends AppCompatActivity {
                                 constraint_5, textBox_5, true, enterBut_5,
                                 false, enableColor, enterDisableBackground, clDisableBackground
                         );
+                        TextWatcherHelper.changeStateButton(enterBut_5, enterEnableBackground, true);
 
                         isFirstGettingText = true;
                     }
@@ -287,44 +293,51 @@ public class RawMaterialTypeMassCreationView extends AppCompatActivity {
 
                             isFirstGettingText = false;
                             TextWatcherHelper.changeStateButton(enterBut_5, enterEnableBackground, true);
-
-                            enterBut_5.setOnClickListener(v -> {
-                                TextWatcherHelper.setLastElementsToFinishState(constraint_5, textBox_5, enterBut_5, addBut,
-                                        disableColor, clEnableBackground, enterDisableBackground, addEnableBackground
-                                );
-
-                                isClickAddButton = true;
-                            });
-
-                            textBox_5.setOnKeyListener((v, keyCode, event) -> {
-                                if(keyCode == KeyEvent.KEYCODE_ENTER){
-                                    if(event.getAction() == KeyEvent.ACTION_UP){
-                                        enterBut_5.callOnClick();
-                                    }
-                                }
-
-                                return false;
-                            });
-
-                            addBut.setOnFocusChangeListener((view, hasFocus) -> {
-                                if(hasFocus){
-                                    addBut.setOnClickListener(v -> {
-                                        Intent intent = new Intent();
-
-                                        intent.putExtra("typeMassCountTextBox", textBox_1.getText().toString());
-                                        intent.putExtra("typeMassTypeTextBox", textBox_2.getText().toString());
-                                        intent.putExtra("storageBoxIdentifierTextBox", textBox_3.getText().toString());
-                                        intent.putExtra("massDataTextBox", textBox_4.getText().toString());
-                                        intent.putExtra("commentDataTextBox", textBox_5.getText().toString());
-
-                                        setResult(1, intent);
-
-                                        RawMaterialTypeMassCreationView.super.onBackPressed();
-                                    });
-                                }
-                            });
                         }
                     }
+                    
+                    enterBut_5.setOnClickListener(v -> {
+                        TextWatcherHelper.setLastElementsToFinishState(constraint_5, textBox_5, enterBut_5, addBut,
+                                clEnableBackground, enterDisableBackground, addEnableBackground
+                        );
+
+                        isClickAddButton = true;
+                    });
+
+                    textBox_5.setOnKeyListener((v, keyCode, event) -> {
+                        if(keyCode == KeyEvent.KEYCODE_ENTER){
+                            if(event.getAction() == KeyEvent.ACTION_UP){
+                                enterBut_5.callOnClick();
+                            }
+                        }
+
+                        if(keyCode == KeyEvent.KEYCODE_BUTTON_R1 || keyCode == KeyEvent.KEYCODE_BUTTON_L1){
+                            if(event.getAction() == KeyEvent.ACTION_UP){
+                                if(next == 5) enterBut_5.callOnClick();
+                                next++;
+                            }
+                        }
+
+                        return false;
+                    });
+
+                    addBut.setOnFocusChangeListener((view, hasFocus) -> {
+                        if(hasFocus){
+                            addBut.setOnClickListener(v -> {
+                                Intent intent = new Intent();
+
+                                intent.putExtra("typeMassCountTextBox", textBox_1.getText().toString());
+                                intent.putExtra("typeMassTypeTextBox", textBox_2.getText().toString());
+                                intent.putExtra("storageBoxIdentifierTextBox", textBox_3.getText().toString());
+                                intent.putExtra("massDataTextBox", textBox_4.getText().toString());
+                                intent.putExtra("commentDataTextBox", textBox_5.getText().toString());
+
+                                setResult(1, intent);
+
+                                RawMaterialTypeMassCreationView.super.onBackPressed();
+                            });
+                        }
+                    });
                 }
 
                 @Override public void afterTextChanged(Editable s) {}
@@ -339,6 +352,8 @@ public class RawMaterialTypeMassCreationView extends AppCompatActivity {
                 textBox_3.setText("");
                 textBox_4.setText("");
                 textBox_5.setText("");
+
+                next = 0;
 
                 constraint_2.setVisibility(View.INVISIBLE);
                 constraint_3.setVisibility(View.INVISIBLE);
@@ -388,6 +403,12 @@ public class RawMaterialTypeMassCreationView extends AppCompatActivity {
         textBox_3 = findViewById(R.id.storageBoxIdentifierTextBox);
         textBox_4 = findViewById(R.id.massDataTextBox);
         textBox_5 = findViewById(R.id.commentDataTextBox);
+
+        textBox_1.setTextColor(Color.BLACK);
+        textBox_2.setTextColor(Color.BLACK);
+        textBox_3.setTextColor(Color.BLACK);
+        textBox_4.setTextColor(Color.BLACK);
+        textBox_5.setTextColor(Color.BLACK);
 
         textBox_1.requestFocus();
 

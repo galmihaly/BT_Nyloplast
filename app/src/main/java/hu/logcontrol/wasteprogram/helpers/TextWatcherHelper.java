@@ -31,11 +31,10 @@ public class TextWatcherHelper {
         editText.requestFocus();
     }
 
-    public static void setElementsToFinishState(ConstraintLayout cl_1, ConstraintLayout cl_2, EditText tb_1, EditText tb_2, ImageButton imageButton, String disableColor, Drawable constraintBackground, Drawable enterButtonBackground){
+    public static void setElementsToFinishState(ConstraintLayout cl_1, ConstraintLayout cl_2, EditText tb_1, EditText tb_2, ImageButton imageButton, Drawable constraintBackground, Drawable enterButtonBackground){
         cl_2.setVisibility(View.VISIBLE);
         cl_1.setBackground(constraintBackground);
 
-        tb_1.setTextColor(Color.parseColor(disableColor));
         tb_1.setEnabled(false);
 
         imageButton.setBackground(enterButtonBackground);
@@ -45,10 +44,9 @@ public class TextWatcherHelper {
         if(!tb_2.isFocused()) tb_2.requestFocus();
     }
 
-    public static void setLastElementsToFinishState(ConstraintLayout cl, EditText tb, ImageButton imageButton_1, ImageButton imageButton_2, String disableColor, Drawable clBackground, Drawable imageButton1Background, Drawable imageButton2Background){
+    public static void setLastElementsToFinishState(ConstraintLayout cl, EditText tb, ImageButton imageButton_1, ImageButton imageButton_2, Drawable clBackground, Drawable imageButton1Background, Drawable imageButton2Background){
         cl.setBackground(clBackground);
 
-        tb.setTextColor(Color.parseColor(disableColor));
         tb.setEnabled(false);
 
         imageButton_1.setBackground(imageButton1Background);

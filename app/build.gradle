@@ -8,7 +8,7 @@ android {
     defaultConfig {
         applicationId "hu.logcontrol.wasteprogram"
         minSdk 23
-        targetSdk 30
+        targetSdk 28
         versionCode 1
         versionName "1.0"
 
@@ -35,7 +35,7 @@ dependencies {
     implementation 'com.google.android.material:material:1.8.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     implementation 'androidx.window:window:1.0.0'
-    implementation files('c:\\Munkahely_Programok\\WasteProgram\\commons-net-3.8.0.jar')
+    implementation files('c:\\Munka\\Waste\\commons-net-3.8.0.jar')
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'

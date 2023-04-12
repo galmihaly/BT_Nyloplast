@@ -7,10 +7,12 @@ import androidx.security.crypto.EncryptedSharedPreferences;
 import androidx.security.crypto.MasterKeys;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.EditText;
@@ -38,13 +40,13 @@ public class RawMaterialCreationView extends AppCompatActivity {
     private ImageButton enterBut_2;
     private ImageButton enterBut_3;
 
-    private final String disableColor = "#B7C0C1";
     private final String enableColor = "#000000";
 
     private boolean isEnableKeyBoardOnTextBoxes = false;
     private boolean isFirstGettingText = true;
 
     private boolean isClickAddButton = false;
+    private int next = 0;
 
     private Drawable enterEnableBackground;
     private Drawable enterDisableBackground;
@@ -101,7 +103,8 @@ public class RawMaterialCreationView extends AppCompatActivity {
                             TextWatcherHelper.changeStateButton(deleteBut, deleteEnableBackground, true);
 
                             enterBut_1.setOnClickListener(v -> {
-                                TextWatcherHelper.setElementsToFinishState(constraint_1, constraint_2, textBox_1, textBox_2, enterBut_1, disableColor, clEnableBackground, enterDisableBackground);
+                                next++;
+                                TextWatcherHelper.setElementsToFinishState(constraint_1, constraint_2, textBox_1, textBox_2, enterBut_1, clEnableBackground, enterDisableBackground);
                             });
 
                             textBox_1.setOnKeyListener((v, keyCode, event) -> {
@@ -143,7 +146,8 @@ public class RawMaterialCreationView extends AppCompatActivity {
                             TextWatcherHelper.changeStateButton(enterBut_2, enterEnableBackground, true);
 
                             enterBut_2.setOnClickListener(v -> {
-                                TextWatcherHelper.setElementsToFinishState(constraint_2, constraint_3, textBox_2, textBox_3, enterBut_2, disableColor, clEnableBackground, enterDisableBackground);
+                                TextWatcherHelper.setElementsToFinishState(constraint_2, constraint_3, textBox_2, textBox_3, enterBut_2, clEnableBackground, enterDisableBackground);
+                                next++;
                             });
 
                             textBox_2.setOnKeyListener((v, keyCode, event) -> {
@@ -176,8 +180,9 @@ public class RawMaterialCreationView extends AppCompatActivity {
 
                         TextWatcherHelper.setElementsToBaseState(
                                 constraint_3, textBox_3, true, enterBut_3,
-                                false, enableColor, enterDisableBackground, clDisableBackground
+                                true, enableColor, enterEnableBackground, clDisableBackground
                         );
+                        TextWatcherHelper.changeStateButton(enterBut_3, enterEnableBackground, true);
 
                         isFirstGettingText = true;
                     }
@@ -186,43 +191,49 @@ public class RawMaterialCreationView extends AppCompatActivity {
 
                             isFirstGettingText = false;
                             TextWatcherHelper.changeStateButton(enterBut_3, enterEnableBackground, true);
-
-                            enterBut_3.setOnClickListener(v -> {
-
-                                TextWatcherHelper.setLastElementsToFinishState(constraint_3, textBox_3, enterBut_3, addBut,
-                                        disableColor, clEnableBackground, enterDisableBackground, addEnableBackground
-                                );
-
-                                isClickAddButton = true;
-                            });
-
-                            textBox_3.setOnKeyListener((v, keyCode, event) -> {
-                                if(keyCode == KeyEvent.KEYCODE_ENTER){
-                                    if(event.getAction() == KeyEvent.ACTION_UP){
-                                        enterBut_3.callOnClick();
-                                    }
-                                }
-
-                                return false;
-                            });
-
-                            addBut.setOnFocusChangeListener((view, hasFocus) -> {
-                                if(hasFocus){
-                                    addBut.setOnClickListener(v -> {
-                                        Intent intent = new Intent();
-
-                                        intent.putExtra("rawMatCountTextBox", textBox_1.getText().toString());
-                                        intent.putExtra("rawMatTypeTextBox", textBox_2.getText().toString());
-                                        intent.putExtra("rawMatContentTextBox", textBox_3.getText().toString());
-
-                                        setResult(1, intent);
-
-                                        RawMaterialCreationView.super.onBackPressed();
-                                    });
-                                }
-                            });
                         }
                     }
+
+                    enterBut_3.setOnClickListener(v -> {
+                        TextWatcherHelper.setLastElementsToFinishState(constraint_3, textBox_3, enterBut_3, addBut,
+                                clEnableBackground, enterDisableBackground, addEnableBackground
+                        );
+
+                        isClickAddButton = true;
+                    });
+
+                    textBox_3.setOnKeyListener((v, keyCode, event) -> {
+                        if(keyCode == KeyEvent.KEYCODE_ENTER){
+                            if(event.getAction() == KeyEvent.ACTION_DOWN){
+                                enterBut_3.callOnClick();
+                            }
+                        }
+
+                        if(keyCode == KeyEvent.KEYCODE_BUTTON_R1 || keyCode == KeyEvent.KEYCODE_BUTTON_L1){
+                            if(event.getAction() == KeyEvent.ACTION_UP){
+                                if(next == 3) enterBut_3.callOnClick();
+                                next++;
+                            }
+                        }
+
+                        return false;
+                    });
+
+                    addBut.setOnFocusChangeListener((view, hasFocus) -> {
+                        if(hasFocus){
+                            addBut.setOnClickListener(v -> {
+                                Intent intent = new Intent();
+
+                                intent.putExtra("rawMatCountTextBox", textBox_1.getText().toString());
+                                intent.putExtra("rawMatTypeTextBox", textBox_2.getText().toString());
+                                intent.putExtra("rawMatContentTextBox", textBox_3.getText().toString());
+
+                                setResult(1, intent);
+
+                                RawMaterialCreationView.super.onBackPressed();
+                            });
+                        }
+                    });
                 }
 
                 @Override public void afterTextChanged(Editable s) {}
@@ -237,6 +248,7 @@ public class RawMaterialCreationView extends AppCompatActivity {
                 textBox_3.setText("");
 
                 isClickAddButton = false;
+                next = 0;
 
                 constraint_2.setVisibility(View.INVISIBLE);
                 constraint_3.setVisibility(View.INVISIBLE);
@@ -278,6 +290,10 @@ public class RawMaterialCreationView extends AppCompatActivity {
         textBox_1 = findViewById(R.id.countRMC_TB);
         textBox_2 = findViewById(R.id.typeRMC_TB);
         textBox_3 = findViewById(R.id.commentRMC_TB);
+
+        textBox_1.setTextColor(Color.BLACK);
+        textBox_2.setTextColor(Color.BLACK);
+        textBox_3.setTextColor(Color.BLACK);
 
         textBox_1.requestFocus();
 

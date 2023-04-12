@@ -142,12 +142,8 @@ public class UploadFileSettingsFragment extends Fragment implements IUploadFileS
     }
 
     private void initDefaultValues() {
-        Log.e("initDefaultValues", "initDefaultValues");
 
         if(settingsGlobalPathTB != null && settingsLocalSavePathTB != null && settingsHostNameTB != null && settingsPortNumberTB != null && localSavePathCheckbox != null && localSavePathCL != null && folderPickerButton != null && usernameTIET != null && passwordTIET != null){
-
-            Log.e("preferences", "preferences");
-
             if(preferences != null) {
 
                 resultGlobalPath = preferences.getStringValueByKey("GlobalSavePath");

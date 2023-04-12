@@ -104,16 +104,13 @@ public class GeneralSettingsFragment extends Fragment implements IGeneralSetting
             if(preferences != null) {
 
                 resultBarcodeCheckbox = preferences.getBooleanValueByKey("IsEnableBarcodeReaderMode");
-                Log.e("resultBarcodeCheckbox", String.valueOf(resultBarcodeCheckbox));
                 settingBarcodeNextCheckBox.setChecked(resultBarcodeCheckbox);
 
                 resultKeyBoardCheckbox = preferences.getBooleanValueByKey("IsEnableKeyBoardOnTextBoxes");
-                Log.e("resultKeyBoardCheckbox", String.valueOf(resultKeyBoardCheckbox));
                 settingKeyboardCheckBox.setChecked(resultKeyBoardCheckbox);
 
                 int resultPosition = -1;
                 resultFileSeparator = preferences.getStringValueByKey("FileSeparatorCharacter");
-                Log.e("resultFileSeparator", String.valueOf(resultFileSeparator));
 
                 for (int i = 0; i < fileSeparators.length; i++) {
                     if(fileSeparators[i].equals(resultFileSeparator)) resultPosition = i;

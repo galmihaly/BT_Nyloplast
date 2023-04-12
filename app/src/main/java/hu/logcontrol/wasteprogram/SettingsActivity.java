@@ -241,9 +241,11 @@ public class SettingsActivity extends AppCompatActivity implements ISettingsView
         }
 
         if(iUploadFileFragmentListener != null){
-            if(isReadyLocalCheckbox){
-                a = iUploadFileFragmentListener.getLocalSaveCheckBoxState();
-            }
+//            if(isReadyLocalCheckbox){
+//                a = iUploadFileFragmentListener.getLocalSaveCheckBoxState();
+//            }
+
+            a = iUploadFileFragmentListener.getLocalSaveCheckBoxState();
 
             b = iUploadFileFragmentListener.getGlobalPath();
             j = iUploadFileFragmentListener.getLocalPath();
