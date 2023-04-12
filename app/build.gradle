@@ -4,20 +4,12 @@ plugins {
 
 android {
 
-    signingConfigs {
-        unsigned {
-            storePassword = ""
-            keyAlias = ""
-            keyPassword = ""
-        }
-    }
-
     compileSdk 33
 
     defaultConfig {
         applicationId "hu.logcontrol.wasteprogram"
         minSdk 23
-        targetSdk 28
+        targetSdk 32
         versionCode 1
         versionName "1.0"
 
@@ -30,7 +22,6 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-            signingConfig signingConfigs.unsigned
         }
     }
     compileOptions {
