@@ -3,6 +3,15 @@ plugins {
 }
 
 android {
+
+    signingConfigs {
+        unsigned {
+            storePassword = ""
+            keyAlias = ""
+            keyPassword = ""
+        }
+    }
+
     compileSdk 33
 
     defaultConfig {
