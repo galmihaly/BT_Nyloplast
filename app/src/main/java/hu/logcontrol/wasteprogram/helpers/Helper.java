@@ -4,12 +4,14 @@ import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Message;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -41,12 +43,16 @@ public class Helper {
         decorView.setSystemUiVisibility(flags);
     }
 
+    @SuppressLint("SdCardPath")
     public static String formatPathString(List<String> path) {
         if(path == null) return null;
 
         StringBuilder sb = new StringBuilder();
 
         String[] pathSegmens = path.get(1).split(":");
+
+        if(pathSegmens.length == 0){ return sb.append("").toString(); }
+        if(pathSegmens.length == 1){ return sb.append("/sdcard").toString(); }
 
         return sb
                 .append("/sdcard")

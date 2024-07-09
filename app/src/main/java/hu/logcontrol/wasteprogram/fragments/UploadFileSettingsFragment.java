@@ -37,7 +37,6 @@ import hu.logcontrol.wasteprogram.presenters.ProgramPresenter;
 public class UploadFileSettingsFragment extends Fragment implements IUploadFileSettingsFragment, IUploadFileFragmentListener {
 
     private View view;
-
     private TextInputEditText settingsLocalSavePathTB;
     private TextInputEditText settingsGlobalPathTB;
     private TextInputEditText settingsPortNumberTB;
@@ -62,7 +61,7 @@ public class UploadFileSettingsFragment extends Fragment implements IUploadFileS
 
     private LocalEncryptedPreferences preferences;
 
-    private String path = null;
+    private String path = "";
 
     @SuppressLint("SetTextI18n")
     private final ActivityResultLauncher<Intent> activityResultLauncher = registerForActivityResult(
@@ -75,14 +74,10 @@ public class UploadFileSettingsFragment extends Fragment implements IUploadFileS
                     path = Helper.formatPathString(intent.getData().getPathSegments());
 
                     if(localSavePathCheckbox.isChecked()){
-                        if(path != null){
-                            uploadFileListener.sendLocalSavePath(path);
-                        }
+                        uploadFileListener.sendLocalSavePath(path);
                     }
 
-                    if(settingsLocalSavePathTB != null){
-                        settingsLocalSavePathTB.setText(path);
-                    }
+                    settingsLocalSavePathTB.setText(path);
                 }
             }
     );

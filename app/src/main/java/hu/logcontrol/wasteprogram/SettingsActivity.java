@@ -133,6 +133,7 @@ public class SettingsActivity extends AppCompatActivity implements ISettingsView
                         if(!originalGlobalPath.equals(resultGlobalPath)){
 
                             originalGlobalPath = resultGlobalPath;
+                            Log.e("s", originalGlobalPath);
                             programPresenter.saveStringValueToSharedPreferencesFile("GlobalSavePath", originalGlobalPath);
                         }
                     }
@@ -157,7 +158,6 @@ public class SettingsActivity extends AppCompatActivity implements ISettingsView
                         if(!originalHostName.equals(resultHostName)){
 
                             originalHostName = resultHostName;
-                            Log.e("originalHostName_", originalHostName);
                             programPresenter.saveStringValueToSharedPreferencesFile("HostName", originalHostName);
                         }
                     }
@@ -166,7 +166,6 @@ public class SettingsActivity extends AppCompatActivity implements ISettingsView
                         if(!originalPortNumber.equals(resultPortNumber)){
 
                             originalPortNumber = resultPortNumber;
-                            Log.e("originalPortNumber_", originalPortNumber);
                             programPresenter.saveStringValueToSharedPreferencesFile("PortNumber", originalPortNumber);
                         }
                     }
