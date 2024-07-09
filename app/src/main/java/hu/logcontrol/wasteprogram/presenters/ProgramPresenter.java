@@ -111,7 +111,6 @@ public class ProgramPresenter implements IProgramPresenter, PresenterThreadCallb
         if(activityEnum == null) return;
 
         Intent intent = null;
-        int requestCode = -1;
 
         switch (activityEnum){
             case MAIN_ACTIVITY:{
@@ -256,9 +255,16 @@ public class ProgramPresenter implements IProgramPresenter, PresenterThreadCallb
         if(iModesOneView != null) iModesOneView.getMessageFromPresenter(message);
         if(iModesTwoView != null) iModesTwoView.getMessageFromPresenter(message);
         if(iModesThreeView != null) iModesThreeView.getMessageFromPresenter(message);
-        if(iSettingsView != null) iSettingsView.getMessageFromPresenter(message);
+        /*if(iSettingsView != null) iSettingsView.getMessageFromPresenter(message);*/
         if(iGeneralSettingFragment != null) iGeneralSettingFragment.getMessageFromPresenter(message);
         if(iUploadFileSettingsFragment != null) iUploadFileSettingsFragment.getMessageFromPresenter(message);
+    }
+
+    @Override
+    public void sendMessageToSettingsView(String message) {
+        if(message == null) return;
+
+        if(iSettingsView != null) iSettingsView.getMessageFromPresenter(message);
     }
 
     @Override
@@ -319,7 +325,6 @@ public class ProgramPresenter implements IProgramPresenter, PresenterThreadCallb
                 case HandlerMessageIdentifiers.RAWMATERIAL_LIST_ADD_ELEMENT_SUCCESS:{
                     ApplicationLogger.logging(LogLevel.INFORMATION, getWeakReferenceNotification(msg));
 
-                    //iProgramPresenterWeakReference.get().setSaveButtonState(EditButtonEnums.SAVE_BUTTON_ENABLED);
                     break;
                 }
                 case HandlerMessageIdentifiers.RAWMATERIAL_LIST_ADD_ELEMENT_FAILED:
@@ -336,13 +341,13 @@ public class ProgramPresenter implements IProgramPresenter, PresenterThreadCallb
                 case HandlerMessageIdentifiers.WRITE_VAULE_SUCCES:{
                     ApplicationLogger.logging(LogLevel.INFORMATION, getWeakReferenceNotification(msg));
 
-                    iProgramPresenterWeakReference.get().sendMessageToView("Beállítások mentése sikeres!");
+                    iProgramPresenterWeakReference.get().sendMessageToSettingsView("Beállítások mentése sikeres!");
                     break;
                 }
                 case HandlerMessageIdentifiers.READ_VAULES_FAILED:{
                     ApplicationLogger.logging(LogLevel.FATAL, getWeakReferenceNotification(msg));
 
-                    iProgramPresenterWeakReference.get().sendMessageToView("Beállítások mentése sikertelen!");
+                    iProgramPresenterWeakReference.get().sendMessageToSettingsView("Beállítások mentése sikertelen!");
                     break;
                 }
                 case HandlerMessageIdentifiers.FILECREATE_FAILED:{

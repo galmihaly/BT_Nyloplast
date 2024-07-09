@@ -42,7 +42,7 @@ public class MainActivity extends AppCompatActivity implements IMainView {
     private Button mode2;
     private Button mode3;
 
-    private ImageButton exitButton;
+
     private ImageButton settingsButton;
 
     private LocalEncryptedPreferences preferences;
@@ -111,7 +111,6 @@ public class MainActivity extends AppCompatActivity implements IMainView {
         mode2 = findViewById(R.id.modeTwo);
         mode3 = findViewById(R.id.modeThree);
 
-        exitButton = findViewById(R.id.exitButton);
         settingsButton = findViewById(R.id.settingsButton);
     }
 

@@ -26,7 +26,7 @@ public interface IProgramPresenter {
 
     void setSaveButtonState(EditButtonEnums editButtonEnum);
     void sendMessageToView(String message);
-
+    void sendMessageToSettingsView(String message);
     void saveBooleanValueToSharedPreferencesFile(String jsonIdValue, boolean value);
     void saveStringValueToSharedPreferencesFile(String jsonIdValue, String value);
 

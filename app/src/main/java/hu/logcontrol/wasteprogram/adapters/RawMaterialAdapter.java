@@ -65,17 +65,6 @@ public class RawMaterialAdapter extends RecyclerView.Adapter<RawMaterialAdapter.
                     holder.getComment().setText(rawMaterialList.get(position).getComment());
 
                     holder.getDeleteItemButton().setFocusable(false);
-
-//                    modesOneWeakReference.get().settingButton(EditButtonEnums.SAVE_BUTTON_ENABLED);
-
-                    //modesOneWeakReference.get().settingButton(EditButtonEnums.ADD_BUTTON_ENABLED);
-
-//                    if(rawMaterialList.size() == preferences.getIntValueByKey("listvalue")){
-//                        modesOneWeakReference.get().settingButton(EditButtonEnums.ADD_BUTTON_DISABLED);
-//                    }
-//                    else {
-//                        modesOneWeakReference.get().settingButton(EditButtonEnums.ADD_BUTTON_ENABLED);
-//                    }
                 }
             }
 
@@ -110,18 +99,18 @@ public class RawMaterialAdapter extends RecyclerView.Adapter<RawMaterialAdapter.
 
     public static class RawMaterialItemViewHolder extends RecyclerView.ViewHolder {
 
-        private TextView rawMaterialTypeInput;
-        private TextView rawMaterialCountInput;
-        private TextView numberOfItem;
-        private TextView comment;
+        private final TextView rawMaterialTypeInput;
+        private final TextView rawMaterialCountInput;
+        private final TextView numberOfItem;
+        private final  TextView comment;
 
-        private ImageButton deleteItemButton;
+        private final ImageButton deleteItemButton;
 
         public RawMaterialItemViewHolder(@NonNull View itemView) {
             super(itemView);
 
-            rawMaterialTypeInput = itemView.findViewById(R.id.rawMaterialTypeInput_1);
             rawMaterialCountInput = itemView.findViewById(R.id.rawMaterialCountInput_1);
+            rawMaterialTypeInput = itemView.findViewById(R.id.rawMaterialTypeInput_1);
             numberOfItem = itemView.findViewById(R.id.numberOfItem_1);
             comment = itemView.findViewById(R.id.rawMaterialCommentInput_1);
 

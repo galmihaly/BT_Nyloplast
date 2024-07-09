@@ -64,11 +64,11 @@ public class ModesOne extends AppCompatActivity implements IModesOneView {
 
                     if(intent == null) return;
 
-                    String rawMatTypeTextBox = intent.getStringExtra("rawMatTypeTextBox");
                     String rawMatCountTextBox = intent.getStringExtra("rawMatCountTextBox");
+                    String rawMatTypeTextBox = intent.getStringExtra("rawMatTypeTextBox");
                     String rawMatContentTextBox = intent.getStringExtra("rawMatContentTextBox");
 
-                    RawMaterial rawMaterial = new RawMaterial(ApplicationLogger.getDateTimeString(),rawMatTypeTextBox, rawMatCountTextBox, rawMatContentTextBox);
+                    RawMaterial rawMaterial = new RawMaterial(ApplicationLogger.getDateTimeString(), rawMatCountTextBox, rawMatTypeTextBox, rawMatContentTextBox);
 
                     char c = Helper.getSeparator(separatorFromSharedPreferences);
                     if(c != 0) rawMaterial.setSeparator(c);

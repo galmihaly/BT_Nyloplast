@@ -7,6 +7,7 @@ import androidx.security.crypto.EncryptedSharedPreferences;
 import androidx.security.crypto.MasterKeys;
 import androidx.viewpager2.widget.ViewPager2;
 
+import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -222,8 +223,8 @@ public class SettingsActivity extends AppCompatActivity implements ISettingsView
         String f = null;
         boolean g = false;
         boolean h = false;
-        String i = null;
-        String j = null;
+        String i;
+        String j;
 
         boolean isEnabled = true;
 
@@ -241,9 +242,6 @@ public class SettingsActivity extends AppCompatActivity implements ISettingsView
         }
 
         if(iUploadFileFragmentListener != null){
-//            if(isReadyLocalCheckbox){
-//                a = iUploadFileFragmentListener.getLocalSaveCheckBoxState();
-//            }
 
             a = iUploadFileFragmentListener.getLocalSaveCheckBoxState();
 

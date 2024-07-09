@@ -189,7 +189,6 @@ public class GeneralSettingsFragment extends Fragment implements IGeneralSetting
 
     @Override
     public String getFileSeparatorCharachter() {
-//        if(fileSeparatorACTV == null) return null;
         return fileSeparatorACTV.getText().toString();
     }
 }
